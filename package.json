@@ -1,0 +1,14 @@
+{
+  "name": "evotechly-motion-os",
+  "version": "1.0.0",
+  "description": "Deterministic Figma → motion → After Effects compiler",
+  "main": "index.js",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "test": "node --test tests/engine.test.js"
+  }
+}

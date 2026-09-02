@@ -1,0 +1,87 @@
+{
+  "schema": "evotechly.motion.engine.v1",
+  "sourceType": "figma",
+  "style": "stripe",
+  "layers": [
+    {
+      "layer": "Title",
+      "type": "text",
+      "preset": "fadeUp",
+      "animation": {
+        "duration": 0.55,
+        "easing": "expoOut",
+        "from": {
+          "opacity": 0,
+          "y": 16,
+          "scale": 1
+        },
+        "to": {
+          "opacity": 1,
+          "y": 0,
+          "scale": 1
+        }
+      },
+      "delay": 0
+    },
+    {
+      "layer": "Card 1",
+      "type": "card",
+      "preset": "scaleIn",
+      "animation": {
+        "duration": 0.5,
+        "easing": "expoOut",
+        "from": {
+          "opacity": 0,
+          "y": 0,
+          "scale": 0.96
+        },
+        "to": {
+          "opacity": 1,
+          "y": 0,
+          "scale": 1
+        }
+      },
+      "delay": 0.06
+    },
+    {
+      "layer": "Card 2",
+      "type": "card",
+      "preset": "scaleIn",
+      "animation": {
+        "duration": 0.5,
+        "easing": "expoOut",
+        "from": {
+          "opacity": 0,
+          "y": 0,
+          "scale": 0.96
+        },
+        "to": {
+          "opacity": 1,
+          "y": 0,
+          "scale": 1
+        }
+      },
+      "delay": 0.12
+    },
+    {
+      "layer": "CTA",
+      "type": "cta",
+      "preset": "scaleIn",
+      "animation": {
+        "duration": 0.4,
+        "easing": "expoOut",
+        "from": {
+          "opacity": 0,
+          "y": 0,
+          "scale": 0.96
+        },
+        "to": {
+          "opacity": 1,
+          "y": 0,
+          "scale": 1
+        }
+      },
+      "delay": 0.12
+    }
+  ]
+}

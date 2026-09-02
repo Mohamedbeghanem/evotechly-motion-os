@@ -1,0 +1,199 @@
+{
+  "schema": "evotechly.motion.ae.v1",
+  "sourceType": "figma",
+  "style": "stripe",
+  "layers": [
+    {
+      "layer": "Title",
+      "name": "Title",
+      "type": "text",
+      "preset": "fadeUp",
+      "delay": 0,
+      "duration": 0.55,
+      "easing": "expoOut",
+      "easingAE": "smoothSaaSPremium",
+      "from": {
+        "opacity": 0,
+        "y": 16,
+        "positionY": 16,
+        "scale": [
+          100,
+          100
+        ]
+      },
+      "to": {
+        "opacity": 100,
+        "y": 0,
+        "positionY": 0,
+        "scale": [
+          100,
+          100
+        ]
+      },
+      "keyframes": [
+        {
+          "t": 0,
+          "opacity": 0,
+          "positionY": 16,
+          "scale": [
+            100,
+            100
+          ]
+        },
+        {
+          "t": 0.55,
+          "opacity": 100,
+          "positionY": 0,
+          "scale": [
+            100,
+            100
+          ]
+        }
+      ]
+    },
+    {
+      "layer": "Card 1",
+      "name": "Card 1",
+      "type": "card",
+      "preset": "scaleIn",
+      "delay": 0.06,
+      "duration": 0.5,
+      "easing": "expoOut",
+      "easingAE": "smoothSaaSPremium",
+      "from": {
+        "opacity": 0,
+        "y": 0,
+        "positionY": 0,
+        "scale": [
+          96,
+          96
+        ]
+      },
+      "to": {
+        "opacity": 100,
+        "y": 0,
+        "positionY": 0,
+        "scale": [
+          100,
+          100
+        ]
+      },
+      "keyframes": [
+        {
+          "t": 0.06,
+          "opacity": 0,
+          "positionY": 0,
+          "scale": [
+            96,
+            96
+          ]
+        },
+        {
+          "t": 0.56,
+          "opacity": 100,
+          "positionY": 0,
+          "scale": [
+            100,
+            100
+          ]
+        }
+      ]
+    },
+    {
+      "layer": "Card 2",
+      "name": "Card 2",
+      "type": "card",
+      "preset": "scaleIn",
+      "delay": 0.12,
+      "duration": 0.5,
+      "easing": "expoOut",
+      "easingAE": "smoothSaaSPremium",
+      "from": {
+        "opacity": 0,
+        "y": 0,
+        "positionY": 0,
+        "scale": [
+          96,
+          96
+        ]
+      },
+      "to": {
+        "opacity": 100,
+        "y": 0,
+        "positionY": 0,
+        "scale": [
+          100,
+          100
+        ]
+      },
+      "keyframes": [
+        {
+          "t": 0.12,
+          "opacity": 0,
+          "positionY": 0,
+          "scale": [
+            96,
+            96
+          ]
+        },
+        {
+          "t": 0.62,
+          "opacity": 100,
+          "positionY": 0,
+          "scale": [
+            100,
+            100
+          ]
+        }
+      ]
+    },
+    {
+      "layer": "CTA",
+      "name": "CTA",
+      "type": "cta",
+      "preset": "scaleIn",
+      "delay": 0.12,
+      "duration": 0.4,
+      "easing": "expoOut",
+      "easingAE": "smoothSaaSPremium",
+      "from": {
+        "opacity": 0,
+        "y": 0,
+        "positionY": 0,
+        "scale": [
+          96,
+          96
+        ]
+      },
+      "to": {
+        "opacity": 100,
+        "y": 0,
+        "positionY": 0,
+        "scale": [
+          100,
+          100
+        ]
+      },
+      "keyframes": [
+        {
+          "t": 0.12,
+          "opacity": 0,
+          "positionY": 0,
+          "scale": [
+            96,
+            96
+          ]
+        },
+        {
+          "t": 0.52,
+          "opacity": 100,
+          "positionY": 0,
+          "scale": [
+            100,
+            100
+          ]
+        }
+      ]
+    }
+  ]
+}

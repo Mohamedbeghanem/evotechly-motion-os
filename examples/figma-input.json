@@ -1,0 +1,9 @@
+{
+  "frameName": "Dashboard",
+  "layers": [
+    { "name": "Title", "type": "text", "x": 120, "y": 80, "width": 400, "height": 48 },
+    { "name": "Card 1", "type": "rectangle", "x": 120, "y": 200, "width": 300, "height": 180 },
+    { "name": "Card 2", "type": "rectangle", "x": 440, "y": 200, "width": 300, "height": 180 },
+    { "name": "CTA", "type": "rectangle", "x": 120, "y": 420, "width": 160, "height": 44 }
+  ]
+}
