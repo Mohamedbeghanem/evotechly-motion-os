@@ -1,0 +1,9 @@
+{
+  "name": "Evotechly Motion OS",
+  "id": "evotechly-motion-os",
+  "api": "1.0.0",
+  "main": "code.js",
+  "ui": "ui.html",
+  "editorType": ["figma"],
+  "networkAccess": { "allowedDomains": ["none"] }
+}
