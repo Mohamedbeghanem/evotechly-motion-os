@@ -1,111 +1,39 @@
-# Editor playbook — Evotechly Motion OS
+# Editor playbook (one page) — v0.4
 
-Hand this file to the motion editor. You do not need to read the engine.
+Art from Figma. Motion from Evotechly. Do not hand-key SaaS intros.
 
-## What this is
+## Two tools
 
-A compiler for **SaaS product motion** (Stripe / Linear / Vercel style): short travel, soft ease-out, staggered cards, CTA last.
+1. **Overlord or AEUX** — push the frame so AE has real text and shapes.
+2. **Evotechly Motion OS** — Window → Evotechly Motion OS.
 
-You still design and composite in After Effects. This tool only writes the **intro timing** so every cut of the same UI lands the same way.
+No Overlord? Panel → **Import JSON** from the Figma plugin. Replace solids later with same names.
 
-It does **not** cut talking-head footage, captions, or podcasts.
+## Names
 
-## The deal
+`Title` `Subtitle` `Card 1` `Card 2` `CTA` `Screenshot` `Cursor`
 
-1. You name layers with the words below.
-2. Someone compiles a JSON (or you run one command).
-3. You run **Apply Evotechly Motion.jsx** on the active comp.
-4. You keep directing: camera, grade, type, screenshots, music.
+Also: PricingCard, PrimaryButton, HeroTitle, AppScreenshot.
 
-If a layer name does not match, that layer is skipped. Nothing else breaks.
+Never keyed: cameras, lights, locked layers, names with `EVO_SKIP`.
+UNNAMED row → This layer is a → Rename.
 
-## Layer names that trigger motion
+## Loop
 
-| Name contains | Role | What you should see |
-|---|---|---|
-| `Eyebrow` / `Kicker` | eyebrow | Soft fade up first |
-| `Title` / `Headline` | title | Main fade-up |
-| `Subtitle` / `Subhead` | subtitle | Follows the title |
-| `Nav` / `Navbar` | nav | Chrome in |
-| `Sidebar` | sidebar | Slides in from the left |
-| `Dashboard` | dashboard | App shell rises |
-| `Screenshot` | screenshot | Slow zoom-out settle |
-| `Card 1` `Card 2` `Card 3` | card | Scale-in, left-to-right stagger |
-| `Metric` / `KPI` / `Stat` | metric | Numbers after cards |
-| `Badge` | badge | Small pop |
-| `Tooltip` | tooltip | Late hint |
-| `Button` | button | Quiet scale-in |
-| `CTA` | cta | Last clickable, after the group |
-| `Cursor` | cursor | Moves in after the CTA |
-| `Logo` | logo | First frame identity |
+1. Load brand (`examples/evotechly.brand.json`) if you have one.
+2. Style + Shot.
+3. Scan. READY rows get motion.
+4. Apply. Undo is one step. CTA hover/press is on by default.
+5. Select a recording → Fit footage (needs Screenshot).
+6. Make 9:16 or Queue renders.
+7. Save plan next to the `.aep`.
 
-Numbers in the name are fine (`Card 2`, `Metric 1`). Matching is case-insensitive.
+## Shots
 
-**Do not** name two layers the same thing. The script picks the first exact match.
+Hero · Feature row · Pricing · Dashboard tour · Logo lockup
 
-## After Effects setup
+Cursor flies to CTA when both exist.
 
-Composition: **1920×1080** or **1440×900**, 30 fps is enough for product UI.
+## Install
 
-Build the frame as you already do (AEUX / Overlord / screenshots / rebuilt UI). Then rename layers to the table above.
-
-Anchor points: center of each card / button. Position keys are offsets from the layer’s current position, so layout stays yours.
-
-## Compile (once per shot)
-
-On a machine with Node 18+:
-
-```bash
-cd evotechly-motion-os
-node index.js examples/saas-hero.json --style stripe
-```
-
-That writes:
-
-- `examples/preview.html` — open in a browser, hit Play
-- `examples/ae-output.json` — what the AE script reads
-- `examples/motion-output.json` — the plan (for version control)
-
-Styles you can pass:
-
-- `stripe` — default, premium SaaS
-- `linear` — quieter, longer settles
-- `vercel` — faster, snappier CTA
-
-## Apply in After Effects
-
-1. Open the comp.
-2. **File → Scripts → Apply Evotechly Motion.jsx**
-   First time: `File → Scripts → Install Script File…` and pick `ae/Apply Evotechly Motion.jsx`, then restart AE.
-3. Choose `ae-output.json`.
-4. Read the alert. Missing names are listed. Rename and run again.
-
-The script overwrites Opacity, Position, and Scale keys on matched layers only.
-
-## What you still do by hand
-
-- Cursor click + hover states after the intro
-- Screen recording inside the screenshot frame
-- Type layout, colors, logo lockup
-- Camera push on the dashboard
-- Music and whooshes
-- Export for Premiere / captions / social crop
-
-This compiler owns the first 0.6–1.2 seconds of UI choreography. That is the part that usually drifts between editors.
-
-## Shot recipe (SaaS hero)
-
-Use `examples/saas-hero.json` as the board:
-
-1. Eyebrow + Title + Subtitle
-2. Screenshot settles
-3. Three feature cards stagger
-4. Metrics on the cards
-5. CTA
-6. Cursor arrives
-
-If marketing changes copy, keep the layer names. Recompile only if the **set of layers** changed.
-
-## Sending work back
-
-Commit `motion-output.json` with the video. Same JSON = same timing next month. That is the point.
+Copy `Evotechly Motion OS.jsx` into **Scripts/ScriptUI Panels** (not Scripts). Restart AE. First run: **Demo comp → Apply**.

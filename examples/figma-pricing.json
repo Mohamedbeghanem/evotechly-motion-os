@@ -1,0 +1,16 @@
+{
+  "schema": "evotechly.motion.design.v1",
+  "frameName": "Pricing",
+  "style": "stripe",
+  "width": 1440,
+  "height": 900,
+  "source": "figma",
+  "layers": [
+    { "name": "HeroTitle", "role": "title", "x": 80, "y": 80, "width": 640, "height": 72 },
+    { "name": "Subtitle", "role": "subtitle", "x": 80, "y": 168, "width": 520, "height": 40 },
+    { "name": "PricingCard", "role": "card", "x": 80, "y": 280, "width": 360, "height": 420 },
+    { "name": "Feature tile", "role": "card", "x": 470, "y": 280, "width": 360, "height": 420 },
+    { "name": "PrimaryButton", "role": "cta", "x": 80, "y": 730, "width": 180, "height": 48 },
+    { "name": "AppScreenshot", "role": "screenshot", "x": 860, "y": 80, "width": 500, "height": 740 }
+  ]
+}

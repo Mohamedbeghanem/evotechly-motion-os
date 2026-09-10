@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <style>
+    body { font: 12px/1.4 Inter, sans-serif; margin: 12px; color: #111; }
+    h1 { font-size: 13px; margin: 0 0 8px; }
+    textarea { width: 100%; height: 320px; font: 11px ui-monospace, monospace; }
+    button { margin-right: 6px; margin-top: 8px; }
+    .meta { color: #555; margin-bottom: 8px; }
+  </style>
+</head>
+<body>
+  <h1>Evotechly Motion OS</h1>
+  <div class="meta" id="meta">Select a frame and run the plugin.</div>
+  <textarea id="out" readonly></textarea>
+  <div>
+    <button id="copy">Copy JSON</button>
+    <button id="refresh">Re-export</button>
+    <button id="close">Close</button>
+  </div>
+  <p class="meta">In After Effects: Evotechly panel → Import JSON.</p>
+  <script>
+    onmessage = function (e) {
+      var msg = e.data.pluginMessage;
+      if (!msg || msg.type !== "plan") return;
+      document.getElementById("out").value = JSON.stringify(msg.plan, null, 2);
+      document.getElementById("meta").textContent = msg.plan.frameName + " · " + msg.plan.layers.length + " layers · " + msg.plan.width + "×" + msg.plan.height;
+    };
+    document.getElementById("copy").onclick = function () {
+      document.getElementById("out").select();
+      document.execCommand("copy");
+    };
+    document.getElementById("refresh").onclick = function () {
+      parent.postMessage({ pluginMessage: { type: "export" } }, "*");
+    };
+    document.getElementById("close").onclick = function () {
+      parent.postMessage({ pluginMessage: { type: "close" } }, "*");
+    };
+  </script>
+</body>
+</html>
