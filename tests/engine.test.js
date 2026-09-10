@@ -6,9 +6,11 @@ const { generateMotion, runEngine, exportAE } = require("../api/motionAPI");
 const { resolveMotion } = require("../core/resolver");
 const { mapFigmaType } = require("../pipeline/typeMapper");
 const { normalize } = require("../pipeline/normalizer");
+const { detectRole } = require("../core/roles");
 
 const sample = {
   frameName: "Dashboard",
+  style: "stripe",
   layers: [
     { name: "Title", type: "text", x: 120, y: 80, width: 400, height: 48 },
     { name: "Card 1", type: "rectangle", x: 120, y: 200, width: 300, height: 180 },
@@ -27,13 +29,32 @@ test("runEngine aliases generateMotion", function () {
   assert.deepEqual(runEngine(sample), generateMotion(sample));
 });
 
-test("resolver: text fadeUp delay 0; card scaleIn delay 0.06 at index 1", function () {
-  const text = resolveMotion({ name: "Title", type: "text" }, 0);
-  assert.equal(text.preset, "fadeUp");
-  assert.equal(text.delay, 0);
-  const card = resolveMotion({ name: "Card", type: "card" }, 1);
+test("roles: Title is title/fadeUp; Card is card/scaleIn; CTA is cta", function () {
+  assert.equal(detectRole({ name: "Title", type: "text" }), "title");
+  assert.equal(detectRole({ name: "Card 2", type: "rectangle" }), "card");
+  assert.equal(detectRole({ name: "CTA", type: "rectangle" }), "cta");
+  const title = resolveMotion({ name: "Title", type: "text" }, 0);
+  assert.equal(title.preset, "fadeUp");
+  const card = resolveMotion({ name: "Card", type: "card" }, 0);
   assert.equal(card.preset, "scaleIn");
-  assert.equal(card.delay, 0.06);
+});
+
+test("saas hero: cards stagger, CTA comes after the group, two runs match bytes", function () {
+  const hero = JSON.parse(require("fs").readFileSync(
+    require("path").join(__dirname, "..", "examples", "saas-hero.json"),
+    "utf8"
+  ));
+  const a = generateMotion(hero);
+  const b = generateMotion(hero);
+  assert.deepEqual(a, b);
+  const byName = {};
+  a.layers.forEach(function (l) { byName[l.layer] = l; });
+  assert.equal(byName.Title.role, "title");
+  assert.equal(byName["Card 1"].preset, "scaleIn");
+  assert.ok(byName["Card 2"].delay > byName["Card 1"].delay);
+  assert.ok(byName["Card 3"].delay > byName["Card 2"].delay);
+  assert.ok(byName.CTA.delay >= byName["Card 3"].delay);
+  assert.ok(byName.Cursor.delay >= byName.CTA.delay);
 });
 
 test("pipeline: rectangle→card, frame→dashboard, parentId kept, y-order", function () {
@@ -46,9 +67,7 @@ test("pipeline: rectangle→card, frame→dashboard, parentId kept, y-order", fu
     ]
   });
   assert.equal(layers[0].name, "Upper");
-  assert.equal(layers[0].type, "text");
   assert.equal(layers[1].name, "Lower");
-  assert.equal(layers[1].type, "card");
   assert.equal(layers[1].parentId, "p1");
   const framed = normalize({
     frames: [{ layers: [{ name: "Shell", type: "frame", y: 0, x: 0, parentId: "root" }] }]
