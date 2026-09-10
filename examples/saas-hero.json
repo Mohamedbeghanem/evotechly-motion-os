@@ -1,0 +1,20 @@
+{
+  "schema": "evotechly.motion.design.v1",
+  "frameName": "SaaS Hero",
+  "style": "stripe",
+  "width": 1440,
+  "height": 900,
+  "layers": [
+    { "name": "Eyebrow", "type": "text", "x": 80, "y": 72, "width": 220, "height": 24 },
+    { "name": "Title", "type": "text", "x": 80, "y": 108, "width": 560, "height": 72 },
+    { "name": "Subtitle", "type": "text", "x": 80, "y": 192, "width": 520, "height": 48 },
+    { "name": "CTA", "type": "rectangle", "x": 80, "y": 268, "width": 168, "height": 44 },
+    { "name": "Screenshot", "type": "image", "x": 700, "y": 80, "width": 640, "height": 420, "parentId": null },
+    { "name": "Card 1", "type": "rectangle", "x": 80, "y": 560, "width": 400, "height": 220 },
+    { "name": "Card 2", "type": "rectangle", "x": 520, "y": 560, "width": 400, "height": 220 },
+    { "name": "Card 3", "type": "rectangle", "x": 960, "y": 560, "width": 400, "height": 220 },
+    { "name": "Metric 1", "type": "text", "x": 108, "y": 588, "width": 160, "height": 36, "parentId": "Card 1" },
+    { "name": "Metric 2", "type": "text", "x": 548, "y": 588, "width": 160, "height": 36, "parentId": "Card 2" },
+    { "name": "Cursor", "type": "vector", "x": 1180, "y": 360, "width": 24, "height": 24 }
+  ]
+}

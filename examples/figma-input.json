@@ -1,5 +1,9 @@
 {
+  "schema": "evotechly.motion.design.v1",
   "frameName": "Dashboard",
+  "style": "stripe",
+  "width": 1440,
+  "height": 900,
   "layers": [
     { "name": "Title", "type": "text", "x": 120, "y": 80, "width": 400, "height": 48 },
     { "name": "Card 1", "type": "rectangle", "x": 120, "y": 200, "width": 300, "height": 180 },
