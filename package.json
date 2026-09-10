@@ -1,7 +1,7 @@
 {
   "name": "evotechly-motion-os",
-  "version": "1.0.0",
-  "description": "Deterministic Figma → motion → After Effects compiler",
+  "version": "1.1.0",
+  "description": "Deterministic SaaS-style motion compiler for editors — Figma JSON → motion plan → After Effects",
   "main": "index.js",
   "license": "MIT",
   "engines": {
@@ -9,6 +9,11 @@
   },
   "scripts": {
     "start": "node index.js",
-    "test": "node --test tests/engine.test.js"
+    "compile": "node index.js",
+    "test": "node --test tests/engine.test.js",
+    "example": "node index.js examples/saas-hero.json --style stripe"
+  },
+  "bin": {
+    "evotechly-motion": "./index.js"
   }
 }
