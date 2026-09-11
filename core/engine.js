@@ -7,6 +7,7 @@ const { detectRole, roleIndex } = require("./roles");
 const { getStyle } = require("./styles");
 const { normalizeDirection } = require("./direction");
 const { normalizeShot } = require("./shots");
+const { applyLockup } = require("./lockup");
 
 function sortForMotion(layers) {
   const list = layers.slice();
@@ -83,6 +84,7 @@ function createEngine(config) {
       plan.push(item);
     }
     resolveAfterRules(plan, stylePack);
+    const lockup = applyLockup(plan, shot);
 
     for (let j = 0; j < plan.length; j++) {
       delete plan[j]._duration;
@@ -94,7 +96,7 @@ function createEngine(config) {
     });
     const duration = ends.length ? Math.max.apply(null, ends) : 0;
 
-    return {
+    const out = {
       schema: "evotechly.motion.engine.v1",
       sourceType: sourceType || "manual",
       style: styleId,
@@ -103,6 +105,8 @@ function createEngine(config) {
       duration: Math.round(duration * 10000) / 10000,
       layers: plan
     };
+    if (lockup && lockup.applied) out.lockup = lockup;
+    return out;
   }
 
   function runMotion(layers) {
