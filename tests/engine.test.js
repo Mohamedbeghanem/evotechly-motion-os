@@ -167,6 +167,7 @@ test("shots taxonomy recorded on plan", function () {
 });
 
 test("logo lockup shot pins mark and type; hero is unchanged", function () {
+  const { pinSet, lockupPart, isLockupSkip, guidesFromPins } = require("../core/lockup");
   const lock = generateMotion({
     style: "stripe",
     shot: "logoLockup",
@@ -178,13 +179,43 @@ test("logo lockup shot pins mark and type; hero is unchanged", function () {
   assert.equal(lock.shot, "logoLockup");
   assert.ok(lock.lockup && lock.lockup.applied);
   assert.ok(lock.lockup.pins.opticalGap >= 8);
+  assert.ok(lock.lockup.guides && lock.lockup.guides.length === 5);
   const logo = lock.layers.find(function (l) { return l.role === "logo"; });
   const title = lock.layers.find(function (l) { return l.role === "title"; });
   assert.equal(logo.lockup.part, "mark");
   assert.equal(title.lockup.part, "type");
   assert.ok(title.delay > logo.delay);
 
+  const worded = generateMotion({
+    shot: "logoLockup",
+    layers: [
+      { name: "Logo", type: "rectangle", x: 20, y: 20, width: 40, height: 40 },
+      { name: "Wordmark", type: "text", x: 72, y: 28, width: 180, height: 24 }
+    ]
+  });
+  const wm = worded.layers.find(function (l) { return l.layer === "Wordmark"; });
+  assert.equal(lockupPart({ name: "Wordmark", role: "logo" }), "type");
+  assert.equal(wm.lockup.part, "type");
+  assert.ok(wm.delay > 0.1);
+
+  const pins = pinSet(
+    { x: 0, y: 0, width: 40, height: 40 },
+    { x: 56, y: 8, width: 120, height: 24 }
+  );
+  assert.equal(pins.opticalGap, 16);
+  assert.equal(guidesFromPins(pins).length, 5);
+  assert.equal(isLockupSkip("EVO_SKIP_LOCKUP_BASE"), true);
+  assert.equal(isLockupSkip("Title"), false);
+
   const hero = generateMotion(sample);
   assert.equal(hero.shot, "hero");
   assert.equal(hero.lockup, undefined);
+  const aeLock = exportAE({
+    shot: "logoLockup",
+    layers: [
+      { name: "Logo", type: "rectangle", x: 40, y: 40, width: 48, height: 48 },
+      { name: "Title", type: "text", x: 100, y: 48, width: 220, height: 32 }
+    ]
+  });
+  assert.ok(aeLock.lockup && aeLock.lockup.applied);
 });
