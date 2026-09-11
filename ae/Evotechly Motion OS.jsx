@@ -78,15 +78,31 @@
     var comp = app.project ? app.project.activeItem : null;
     return (comp && comp instanceof CompItem) ? comp : null;
   }
+  function isSkip(name) {
+    var n = lower(name);
+    return n.indexOf("evo_skip") !== -1 || n.indexOf("evo_lockup") !== -1;
+  }
+  function layerBounds(comp, layer) {
+    var x = layer.transform.position.value[0], y = layer.transform.position.value[1], w = 48, h = 48;
+    try {
+      var r = layer.sourceRectAtTime(comp.time, false);
+      w = r.width; h = r.height;
+      x = layer.transform.position.value[0] + r.left;
+      y = layer.transform.position.value[1] + r.top;
+    } catch (e) {}
+    return { x: x, y: y, width: w, height: h };
+  }
   function collectLayers(comp, selectedOnly) {
-    var out = [], ignored = [], i, layer, role;
+    var out = [], ignored = [], i, layer, role, b;
     for (i = 1; i <= comp.numLayers; i++) {
       layer = comp.layer(i);
       if (selectedOnly && !layer.selected) continue;
+      if (isSkip(layer.name)) { ignored.push(layer.name); continue; }
       if (!isAnimatable(layer)) { ignored.push(layer.name); continue; }
       role = detectRole(layer.name);
       if (!role) { ignored.push(layer.name); continue; }
-      out.push({ name: layer.name, role: role, x: layer.transform.position.value[0], y: layer.transform.position.value[1] });
+      b = layerBounds(comp, layer);
+      out.push({ name: layer.name, role: role, x: b.x, y: b.y, width: b.width, height: b.height });
     }
     return { layers: out, ignored: ignored };
   }
@@ -104,16 +120,82 @@
     if (direction === "out") return { from: preset.to, to: preset.from, both: false };
     return { from: preset.from, to: preset.to, both: direction === "both" };
   }
-  function applyLockupShot(plan, shot) {
-    if (shot !== "logoLockup") return plan;
-    var markN = 0, typeN = 0, i;
+  function lockupPart(item) {
+    var n = lower(item.name), role = item.role;
+    if (n.indexOf("wordmark") !== -1) return "type";
+    if (n.indexOf("logo") !== -1 || n.indexOf("mark") !== -1 || n.indexOf("icon") !== -1) return "mark";
+    if (role === "logo") return "mark";
+    if (role === "title" || role === "subtitle" || role === "eyebrow") return "type";
+    return null;
+  }
+  function typeMetrics(layer) {
+    var h = Number(layer && layer.height) || 48;
+    var w = Number(layer && layer.width) || h;
+    var y = Number(layer && layer.y) || 0;
+    var x = Number(layer && layer.x) || 0;
+    return { x: x, y: y, width: w, height: h, capHeight: round4(h * 0.72), xHeight: round4(h * 0.52), baseline: round4(y + h * 0.82) };
+  }
+  function pinSet(mark, word) {
+    var m = typeMetrics(mark || {}), t = typeMetrics(word || mark || {});
+    var markRight = m.x + m.width;
+    var gap = word ? (t.x - markRight) : m.height * 0.28;
+    return {
+      markCenter: { x: round4(m.x + m.width / 2), y: round4(m.y + m.height / 2) },
+      opticalGap: round4(Math.max(8, gap)),
+      gapX: round4(markRight + Math.max(8, gap)),
+      baseline: t.baseline,
+      capY: round4(t.baseline - t.capHeight),
+      xHeightY: round4(t.baseline - t.xHeight)
+    };
+  }
+  function findLockupPart(plan, part) {
+    var fallback = null, i, n;
     for (i = 0; i < plan.length; i++) {
-      if (plan[i].role === "logo") { plan[i].delay = round4(0.02 + markN * 0.05); markN += 1; }
-      else if (plan[i].role === "title" || plan[i].role === "subtitle" || plan[i].role === "eyebrow") {
-        plan[i].delay = round4(0.16 + typeN * 0.08); typeN += 1;
-      }
+      if (lockupPart(plan[i]) !== part) continue;
+      n = lower(plan[i].name);
+      if (part === "type" && n.indexOf("wordmark") !== -1) return plan[i];
+      if (part === "mark" && n.indexOf("logo") !== -1) return plan[i];
+      if (!fallback) fallback = plan[i];
     }
+    return fallback;
+  }
+  function applyLockupShot(plan, shot) {
+    if (shot !== "logoLockup") { plan._lockup = null; return plan; }
+    var pins = pinSet(findLockupPart(plan, "mark"), findLockupPart(plan, "type"));
+    var markN = 0, typeN = 0, i, part;
+    for (i = 0; i < plan.length; i++) {
+      part = lockupPart(plan[i]);
+      if (part === "mark") { plan[i].delay = round4(0.02 + markN * 0.05); plan[i].lockupPart = "mark"; markN += 1; }
+      else if (part === "type") { plan[i].delay = round4(0.16 + typeN * 0.08); plan[i].lockupPart = "type"; typeN += 1; }
+    }
+    plan._lockup = { applied: true, pins: pins, marks: markN, type: typeN };
     return plan;
+  }
+  function clearLockupGuides(comp) {
+    var i, layer;
+    for (i = comp.numLayers; i >= 1; i--) {
+      layer = comp.layer(i);
+      if (isSkip(layer.name)) try { layer.remove(); } catch (e) {}
+    }
+  }
+  function applyLockupGuides(comp, lockup) {
+    if (!lockup || !lockup.pins) return 0;
+    var pins = lockup.pins, made = 0;
+    function addGuide(id, x, y) {
+      var n = comp.layers.addNull();
+      n.name = "EVO_SKIP_LOCKUP_" + id;
+      try { n.guideLayer = true; } catch (e) {}
+      try { n.shy = true; } catch (e2) {}
+      n.transform.position.setValue([x, y]);
+      made += 1;
+    }
+    clearLockupGuides(comp);
+    addGuide("MARK", pins.markCenter.x, pins.markCenter.y);
+    addGuide("GAP", pins.gapX, pins.markCenter.y);
+    addGuide("BASE", pins.markCenter.x, pins.baseline);
+    addGuide("CAP", pins.markCenter.x, pins.capY);
+    addGuide("XHT", pins.markCenter.x, pins.xHeightY);
+    return made;
   }
   function buildPlan(rawLayers, styleId, direction, shot) {
     var style = STYLES[styleId] || STYLES.stripe;
@@ -210,7 +292,7 @@
     var buttons = win.add("group"); buttons.alignment = ["fill", "bottom"];
     var scanBtn = buttons.add("button", undefined, "Scan comp");
     var applyBtn = buttons.add("button", undefined, "Apply motion"); applyBtn.enabled = false;
-    win.add("statictext", undefined, "Names: Title, Card 1, CTA, Logo, Modal, Toast", { multiline: true });
+    win.add("statictext", undefined, "Names: Title, Card 1, CTA, Logo, Wordmark, Modal", { multiline: true });
     var state = { plan: [] };
     var styleIds = ["stripe", "linear", "vercel", "evotechly", "apple"];
     var dirIds = ["in", "out", "both"];
@@ -236,14 +318,18 @@
       if (!state.plan.length) scan();
       if (!state.plan.length) { alert("No layers matched. Rename to Title, Card 1, CTA, Logo…"); return; }
       app.beginUndoGroup("Evotechly Motion OS");
-      var applied = 0, missing = [], i, layer;
+      var applied = 0, missing = [], i, layer, guides = 0;
       for (i = 0; i < state.plan.length; i++) {
         layer = findLayer(comp, state.plan[i].name);
         if (!layer) { missing.push(state.plan[i].name); continue; }
         applySpec(layer, state.plan[i]); applied += 1;
       }
+      if (currentShot() === "logoLockup" && state.plan._lockup) {
+        guides = applyLockupGuides(comp, state.plan._lockup);
+      }
       app.endUndoGroup();
       var msg = "Applied SaaS motion to " + applied + " layer(s).";
+      if (guides) msg += "\nLockup guides: " + guides + " (EVO_SKIP, not keyed).";
       if (missing.length) msg += "\n\nMissing:\n- " + missing.join("\n- ");
       alert(msg);
     }
