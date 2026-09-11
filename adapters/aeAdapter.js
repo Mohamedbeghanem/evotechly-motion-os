@@ -76,7 +76,8 @@ function toAE(plan) {
     const posed = poseKeys(a.from || {}, a.to || {}, delay, duration);
     const keyframes = posed.keyframes.slice();
     if (a.out) {
-      const tOut = Math.round((delay + duration) * 10000) / 10000;
+      const hold = a.hold || 0;
+      const tOut = Math.round((delay + duration + hold) * 10000) / 10000;
       const outPose = poseKeys(a.out.from || {}, a.out.to || {}, tOut, a.out.duration || duration);
       keyframes.push(outPose.keyframes[1]);
     }
