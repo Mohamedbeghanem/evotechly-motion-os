@@ -28,6 +28,11 @@ function resolveMotion(layer, index, ctx) {
   );
   let animation = getPreset(presetId, ctx.presets);
   animation.duration = round4(animation.duration * (roleRule.durationScale || 1));
+  const travel = style.travel == null ? 1 : style.travel;
+  if (travel !== 1 && animation.from) {
+    if (animation.from.y) animation.from.y = round4(animation.from.y * travel);
+    if (animation.from.x) animation.from.x = round4(animation.from.x * travel);
+  }
   animation = applyDirection(animation, direction);
 
   let delay;
@@ -60,8 +65,9 @@ function resolveMotion(layer, index, ctx) {
 }
 
 function layerSpan(L) {
-  let d = L.animation.duration || 0;
-  if (L.animation.out && L.animation.out.duration) d += L.animation.out.duration;
+  const a = L.animation || {};
+  let d = a.duration || 0;
+  if (a.out) d += (a.hold || 0) + (a.out.duration || 0);
   return d;
 }
 
