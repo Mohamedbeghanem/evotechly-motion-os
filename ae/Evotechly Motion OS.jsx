@@ -1,12 +1,13 @@
 #target aftereffects
 /*
-  Evotechly Motion OS v0.5 Ultimate
+  Evotechly Motion OS v0.6 SaaS 10 + Reel
   Scripts/ScriptUI Panels → Window > Evotechly Motion OS
-  Style / Direction / Shot. L2 lockup. No Node.
+  Style / Direction / Shot. L2 lockup. Reel shots. No Node.
 */
 (function (thisObj) {
-  var ROLE_ORDER = ["logo","eyebrow","title","subtitle","nav","sidebar","dashboard","screenshot","image","card","metric","badge","tooltip","button","cta","cursor","modal","toast","row","stack"];
+  var ROLE_ORDER = ["logo","eyebrow","title","subtitle","nav","sidebar","dashboard","screenshot","image","card","metric","badge","tooltip","button","cta","cursor","modal","toast","row","stack","caption"];
   var ALIASES = [
+    { role: "caption", match: ["caption", "burn-in", "lower third"] },
     { role: "cta", match: ["cta", "get started", "start free", "book demo"] },
     { role: "button", match: ["button", "btn", "primarybutton"] },
     { role: "cursor", match: ["cursor", "pointer", "mouse"] },
@@ -43,17 +44,21 @@
     uiCard:     { duration: 0.46, easing: "easeOut",   from: { o: 0, x: 0, y: 8,  s: 97  }, to: { o: 100, x: 0, y: 0, s: 100 } },
     uiModal:    { duration: 0.42, easing: "easeOut",   from: { o: 0, x: 0, y: 10, s: 96  }, to: { o: 100, x: 0, y: 0, s: 100 } },
     uiNav:      { duration: 0.38, easing: "easeOut",   from: { o: 0, x: 0, y: 8,  s: 100 }, to: { o: 100, x: 0, y: 0, s: 100 } },
-    uiToast:    { duration: 0.36, easing: "easeOut",   from: { o: 0, x: 0, y:-14, s: 98  }, to: { o: 100, x: 0, y: 0, s: 100 } }
+    uiToast:    { duration: 0.36, easing: "easeOut",   from: { o: 0, x: 0, y:-14, s: 98  }, to: { o: 100, x: 0, y: 0, s: 100 } },
+    hookSlam:   { duration: 0.28, easing: "easeOut",   from: { o: 0, x: 0, y: 22, s: 86  }, to: { o: 100, x: 0, y: 0, s: 100 } },
+    typeBuild:  { duration: 0.32, easing: "easeOut",   from: { o: 0, x: 0, y: 14, s: 100 }, to: { o: 100, x: 0, y: 0, s: 100 } },
+    punchIn:    { duration: 0.70, easing: "easeInOut", from: { o: 0, x: 0, y: 0,  s: 112 }, to: { o: 100, x: 0, y: 0, s: 100 } },
+    captionIn:  { duration: 0.28, easing: "easeOut",   from: { o: 0, x: 0, y: 10, s: 100 }, to: { o: 100, x: 0, y: 0, s: 100 } }
   };
   function R(p, b, s, sc, a) { return { preset: p, base: b, stagger: s, durationScale: sc, after: a || null }; }
-  function ui() { return { modal: R("uiModal", 0.2, 0, 1), toast: R("uiToast", 0.52, 0.04, 0.9), row: R("uiRow", 0.22, 0.05, 1), stack: R("uiStack", 0.22, 0.05, 1) }; }
+  function ui() { return { modal: R("uiModal", 0.2, 0, 1), toast: R("uiToast", 0.52, 0.04, 0.9), row: R("uiRow", 0.22, 0.05, 1), stack: R("uiStack", 0.22, 0.05, 1), caption: R("captionIn", 0.1, 0.08, 0.85) }; }
   function mix(roles) { var e = ui(), k; for (k in e) if (e.hasOwnProperty(k) && !roles[k]) roles[k] = e[k]; return roles; }
   var STYLES = {
-    stripe: { id: "stripe", gap: 0.12, roles: mix({ logo: R("fadeUp",0,0,0.9), eyebrow: R("fadeUp",0.02,0,0.85), title: R("fadeUp",0.06,0,1), subtitle: R("fadeUpSoft",0.14,0,1), nav: R("uiNav",0.08,0.03,0.8), sidebar: R("slideRight",0.12,0,1), dashboard: R("slideUp",0.18,0,1), screenshot: R("zoomOut",0.16,0,1), image: R("zoomOut",0.16,0.08,1), card: R("scaleIn",0.28,0.07,1), metric: R("slideUp",0.34,0.05,0.9), badge: R("pop",0.4,0.04,0.8), tooltip: R("fadeUpSoft",0.48,0.04,0.75), button: R("scaleIn",0.5,0.04,0.84), cta: R("pop",null,0,0.8,"group"), cursor: R("cursorIn",null,0,1,"cta") }) },
-    linear: { id: "linear", gap: 0.1, roles: mix({ logo: R("fadeUp",0,0,0.9), eyebrow: R("fadeUp",0,0,0.8), title: R("slideUp",0.04,0,0.95), subtitle: R("fadeUpSoft",0.12,0,1), nav: R("uiNav",0.06,0.03,0.8), sidebar: R("slideRight",0.1,0,1), dashboard: R("fadeUp",0.16,0,1.1), screenshot: R("zoomOut",0.14,0,1.05), image: R("zoomOut",0.14,0.08,1), card: R("fadeUp",0.24,0.06,1), metric: R("fadeUp",0.3,0.05,0.9), badge: R("pop",0.36,0.04,0.75), tooltip: R("fadeUpSoft",0.44,0.04,0.75), button: R("scaleIn",0.46,0.04,0.84), cta: R("scaleIn",null,0,0.8,"group"), cursor: R("cursorIn",null,0,1,"cta") }) },
-    vercel: { id: "vercel", gap: 0.08, roles: mix({ logo: R("fadeUp",0,0,0.75), eyebrow: R("fadeUp",0,0,0.7), title: R("fadeUp",0.04,0,0.85), subtitle: R("fadeUpSoft",0.1,0,0.9), nav: R("uiNav",0.04,0.02,0.7), sidebar: R("slideRight",0.08,0,0.85), dashboard: R("scaleIn",0.12,0,0.9), screenshot: R("zoomOut",0.1,0,0.85), image: R("zoomOut",0.1,0.06,0.85), card: R("scaleIn",0.2,0.05,0.9), metric: R("slideUp",0.24,0.04,0.8), badge: R("pop",0.3,0.03,0.7), tooltip: R("fadeUpSoft",0.36,0.03,0.7), button: R("pop",0.38,0.03,0.75), cta: R("pop",null,0,0.72,"group"), cursor: R("cursorIn",null,0,0.9,"cta") }) },
-    evotechly: { id: "evotechly", gap: 0.11, roles: mix({ logo: R("fadeUpSoft",0,0,0.9), eyebrow: R("fadeUpSoft",0.02,0,0.85), title: R("fadeUp",0.06,0,1), subtitle: R("fadeUpSoft",0.14,0,1), nav: R("uiNav",0.06,0.03,0.85), sidebar: R("slideRight",0.1,0,0.95), dashboard: R("uiCard",0.16,0,1), screenshot: R("zoomOut",0.14,0,1), image: R("zoomOut",0.14,0.08,1), card: R("uiCard",0.26,0.06,1), metric: R("fadeUpSoft",0.32,0.05,0.9), badge: R("pop",0.38,0.04,0.8), tooltip: R("fadeUpSoft",0.46,0.04,0.75), button: R("uiCard",0.48,0.04,0.84), cta: R("pop",null,0,0.8,"group"), cursor: R("cursorIn",null,0,1,"cta") }) },
-    apple: { id: "apple", gap: 0.14, roles: mix({ logo: R("fadeUpCalm",0,0,1), eyebrow: R("fadeUpCalm",0.04,0,0.9), title: R("fadeUpCalm",0.08,0,1.05), subtitle: R("fadeUpCalm",0.16,0,1.05), nav: R("uiNav",0.06,0.04,1), sidebar: R("fadeUpCalm",0.1,0,1.05), dashboard: R("fadeUpCalm",0.16,0,1.1), screenshot: R("fadeUpCalm",0.14,0,1.15), image: R("fadeUpCalm",0.14,0.06,1.1), card: R("uiCard",0.26,0.08,1.05), metric: R("fadeUpCalm",0.34,0.06,1), badge: R("fadeUpSoft",0.4,0.05,0.9), tooltip: R("fadeUpCalm",0.48,0.04,0.85), button: R("uiCard",0.5,0.04,0.95), cta: R("uiCard",null,0,0.95,"group"), cursor: R("cursorIn",null,0,1.05,"cta") }) }
+    stripe: { id: "stripe", gap: 0.12, travel: 1, roles: mix({ logo: R("fadeUp",0,0,0.9), eyebrow: R("fadeUp",0.02,0,0.85), title: R("fadeUp",0.06,0,1), subtitle: R("fadeUpSoft",0.14,0,1), nav: R("uiNav",0.08,0.03,0.8), sidebar: R("slideRight",0.12,0,1), dashboard: R("slideUp",0.18,0,1), screenshot: R("zoomOut",0.16,0,1), image: R("zoomOut",0.16,0.08,1), card: R("scaleIn",0.28,0.07,1), metric: R("slideUp",0.34,0.05,0.9), badge: R("pop",0.4,0.04,0.8), tooltip: R("fadeUpSoft",0.48,0.04,0.75), button: R("scaleIn",0.5,0.04,0.84), cta: R("pop",null,0,0.8,"group"), cursor: R("cursorIn",null,0,1,"cta") }) },
+    linear: { id: "linear", gap: 0.1, travel: 0.88, roles: mix({ logo: R("fadeUp",0,0,0.9), eyebrow: R("fadeUp",0,0,0.8), title: R("slideUp",0.04,0,0.95), subtitle: R("fadeUpSoft",0.12,0,1), nav: R("uiNav",0.06,0.03,0.8), sidebar: R("slideRight",0.1,0,1), dashboard: R("fadeUp",0.16,0,1.1), screenshot: R("zoomOut",0.14,0,1.05), image: R("zoomOut",0.14,0.08,1), card: R("fadeUp",0.24,0.06,1), metric: R("fadeUp",0.3,0.05,0.9), badge: R("pop",0.36,0.04,0.75), tooltip: R("fadeUpSoft",0.44,0.04,0.75), button: R("scaleIn",0.46,0.04,0.84), cta: R("scaleIn",null,0,0.8,"group"), cursor: R("cursorIn",null,0,1,"cta") }) },
+    vercel: { id: "vercel", gap: 0.08, travel: 0.72, roles: mix({ logo: R("fadeUp",0,0,0.75), eyebrow: R("fadeUp",0,0,0.7), title: R("fadeUp",0.04,0,0.85), subtitle: R("fadeUpSoft",0.1,0,0.9), nav: R("uiNav",0.04,0.02,0.7), sidebar: R("slideRight",0.08,0,0.85), dashboard: R("scaleIn",0.12,0,0.9), screenshot: R("zoomOut",0.1,0,0.85), image: R("zoomOut",0.1,0.06,0.85), card: R("scaleIn",0.2,0.05,0.9), metric: R("slideUp",0.24,0.04,0.8), badge: R("pop",0.3,0.03,0.7), tooltip: R("fadeUpSoft",0.36,0.03,0.7), button: R("pop",0.38,0.03,0.75), cta: R("pop",null,0,0.72,"group"), cursor: R("cursorIn",null,0,0.9,"cta") }) },
+    evotechly: { id: "evotechly", gap: 0.16, travel: 0.62, roles: mix({ logo: R("fadeUpSoft",0,0,0.85), eyebrow: R("fadeUpSoft",0.03,0,0.8), title: R("fadeUpSoft",0.08,0,0.92), subtitle: R("fadeUpSoft",0.16,0,0.95), nav: R("uiNav",0.05,0.03,0.8), sidebar: R("slideRight",0.1,0,0.9), dashboard: R("uiCard",0.14,0,0.95), screenshot: R("zoomOut",0.12,0,0.92), image: R("zoomOut",0.12,0.06,0.92), card: R("uiCard",0.24,0.05,0.95), metric: R("fadeUpSoft",0.3,0.04,0.85), badge: R("fadeUpSoft",0.36,0.03,0.8), tooltip: R("fadeUpSoft",0.42,0.03,0.75), button: R("uiCard",0.46,0.03,0.84), cta: R("uiCard",null,0,0.95,"group"), cursor: R("cursorIn",null,0,0.95,"cta") }) },
+    apple: { id: "apple", gap: 0.22, travel: 0.38, roles: mix({ logo: R("fadeUpCalm",0,0,1.05), eyebrow: R("fadeUpCalm",0.06,0,1), title: R("fadeUpCalm",0.1,0,1.2), subtitle: R("fadeUpCalm",0.2,0,1.18), nav: R("uiNav",0.08,0.05,1.1), sidebar: R("fadeUpCalm",0.12,0,1.15), dashboard: R("fadeUpCalm",0.18,0,1.2), screenshot: R("fadeUpCalm",0.16,0,1.25), image: R("fadeUpCalm",0.16,0.08,1.2), card: R("fadeUpCalm",0.3,0.1,1.15), metric: R("fadeUpCalm",0.4,0.08,1.1), badge: R("fadeUpSoft",0.48,0.06,1), tooltip: R("fadeUpCalm",0.54,0.05,0.95), button: R("fadeUpCalm",0.56,0.05,1.05), cta: R("fadeUpCalm",null,0,1.1,"group"), cursor: R("cursorIn",null,0,1.15,"cta") }) }
   };
   function round4(n) { return Math.round(n * 10000) / 10000; }
   function lower(s) { return String(s || "").toLowerCase(); }
@@ -160,13 +165,14 @@
     return fallback;
   }
   function applyLockupShot(plan, shot) {
-    if (shot !== "logoLockup") { plan._lockup = null; return plan; }
+    if (shot !== "logoLockup" && shot !== "logoSting") { plan._lockup = null; return plan; }
     var pins = pinSet(findLockupPart(plan, "mark"), findLockupPart(plan, "type"));
+    var sting = shot === "logoSting";
     var markN = 0, typeN = 0, i, part;
     for (i = 0; i < plan.length; i++) {
       part = lockupPart(plan[i]);
-      if (part === "mark") { plan[i].delay = round4(0.02 + markN * 0.05); plan[i].lockupPart = "mark"; markN += 1; }
-      else if (part === "type") { plan[i].delay = round4(0.16 + typeN * 0.08); plan[i].lockupPart = "type"; typeN += 1; }
+      if (part === "mark") { plan[i].delay = round4((sting ? 0 : 0.02) + markN * (sting ? 0.03 : 0.05)); plan[i].lockupPart = "mark"; markN += 1; }
+      else if (part === "type") { plan[i].delay = round4((sting ? 0.08 : 0.16) + typeN * (sting ? 0.05 : 0.08)); plan[i].lockupPart = "type"; typeN += 1; }
     }
     plan._lockup = { applied: true, pins: pins, marks: markN, type: typeN };
     return plan;
@@ -208,8 +214,11 @@
       sibling = counts[role]; counts[role] += 1;
       preset = PRESETS[rule.preset] || PRESETS.fadeUp;
       poses = directedPoses(preset, direction);
+      if (style.travel && style.travel !== 1) {
+        poses.from = { o: poses.from.o, x: round4(poses.from.x * style.travel), y: round4(poses.from.y * style.travel), s: poses.from.s };
+      }
       delay = rule.base == null ? 0 : rule.base + sibling * rule.stagger;
-      plan.push({ name: item.name, role: role, preset: rule.preset, after: rule.after, direction: direction, delay: round4(delay), duration: round4(preset.duration * rule.durationScale), easing: preset.easing, from: poses.from, to: poses.to, both: poses.both });
+      plan.push({ name: item.name, role: role, preset: rule.preset, after: rule.after, direction: direction, delay: round4(delay), duration: round4(preset.duration * rule.durationScale), easing: preset.easing, from: poses.from, to: poses.to, both: poses.both, hold: 0 });
     }
     var groupEnd = 0, ctaEnd = 0;
     for (i = 0; i < plan.length; i++) {
@@ -231,7 +240,47 @@
     }
     if (ctaEnd === 0) ctaEnd = groupEnd;
     for (i = 0; i < plan.length; i++) if (plan[i].after === "cta") plan[i].delay = round4(ctaEnd + 0.06);
+    applyReelShot(plan, shot, direction);
     return applyLockupShot(plan, shot);
+  }
+  function applyReelShot(plan, shot, direction) {
+    var i, p, reel = shot === "hook" || shot === "kineticType" || shot === "uiPunchIn" || shot === "logoSting" || shot === "captions";
+    if (shot === "hook") {
+      for (i = 0; i < plan.length; i++) {
+        p = plan[i]; p.delay = round4(p.delay * 0.35); p.duration = round4(p.duration * 0.55);
+        if (p.role === "title" || p.role === "eyebrow") { p.preset = "hookSlam"; p.from = PRESETS.hookSlam.from; p.to = PRESETS.hookSlam.to; }
+      }
+    }
+    if (shot === "kineticType") {
+      var types = [];
+      for (i = 0; i < plan.length; i++) {
+        p = plan[i];
+        if (p.role === "eyebrow" || p.role === "title" || p.role === "subtitle" || p.role === "caption") types.push(p);
+      }
+      for (i = 0; i < types.length; i++) {
+        types[i].delay = round4(0.02 + i * 0.07);
+        types[i].preset = "typeBuild";
+        types[i].from = PRESETS.typeBuild.from;
+        types[i].to = PRESETS.typeBuild.to;
+        types[i].duration = Math.min(types[i].duration, 0.36);
+      }
+    }
+    if (shot === "uiPunchIn") {
+      for (i = 0; i < plan.length; i++) {
+        p = plan[i];
+        if (p.role === "screenshot" || p.role === "dashboard" || p.role === "image") { p.preset = "punchIn"; p.from = PRESETS.punchIn.from; p.to = PRESETS.punchIn.to; p.delay = 0.04; }
+      }
+    }
+    if (shot === "captions") {
+      var n = 0;
+      for (i = 0; i < plan.length; i++) {
+        p = plan[i];
+        if (p.role === "caption" || p.role === "subtitle" || p.role === "title") { p.delay = round4(0.04 + n * 0.1); p.preset = "captionIn"; n += 1; }
+      }
+    }
+    if (reel && direction === "both") {
+      for (i = 0; i < plan.length; i++) plan[i].hold = shot === "hook" ? 0.12 : 0.22;
+    }
   }
   function clearKeys(prop) { var i; for (i = prop.numKeys; i >= 1; i--) prop.removeKey(i); }
   function easePair(kind) {
@@ -269,20 +318,20 @@
     clearKeys(op); clearKeys(pos); clearKeys(sc);
     setPose(pos, sc, op, current, is3d, t0, spec.from, kind);
     setPose(pos, sc, op, current, is3d, t1, spec.to, kind);
-    if (spec.both) setPose(pos, sc, op, current, is3d, t1 + spec.duration, spec.from, kind);
+    if (spec.both) setPose(pos, sc, op, current, is3d, t1 + (spec.hold || 0) + spec.duration, spec.from, kind);
   }
   function buildUI(thisObj) {
     var win = (thisObj instanceof Panel) ? thisObj : new Window("palette", "Evotechly Motion OS", undefined, { resizeable: true });
     win.orientation = "column"; win.alignChildren = ["fill", "top"]; win.spacing = 8; win.margins = 12;
     win.add("group").add("statictext", undefined, "EVOTECHLY MOTION OS");
     var styleRow = win.add("group"); styleRow.add("statictext", undefined, "Style");
-    var styleList = styleRow.add("dropdownlist", undefined, ["Stripe / premium SaaS", "Linear / product-native", "Vercel / sharp reveal", "Evotechly / brand taste", "Apple / calm"]);
+    var styleList = styleRow.add("dropdownlist", undefined, ["Stripe / premium SaaS", "Linear / product-native", "Vercel / sharp reveal", "Evotechly / product-native", "Calm / system"]);
     styleList.selection = 0; styleList.alignment = ["fill", "center"];
     var dirRow = win.add("group"); dirRow.add("statictext", undefined, "Direction");
     var dirList = dirRow.add("dropdownlist", undefined, ["In", "Out", "Both"]);
     dirList.selection = 0; dirList.alignment = ["fill", "center"];
     var shotRow = win.add("group"); shotRow.add("statictext", undefined, "Shot");
-    var shotList = shotRow.add("dropdownlist", undefined, ["Hero", "Feature row", "Pricing", "Dashboard tour", "Logo lockup", "UI screen"]);
+    var shotList = shotRow.add("dropdownlist", undefined, ["Hero", "Feature row", "Pricing", "Dashboard tour", "Logo lockup", "UI screen", "Hook", "Kinetic type", "UI punch-in", "Logo sting", "Captions"]);
     shotList.selection = 0; shotList.alignment = ["fill", "center"];
     var selectedOnly = win.add("checkbox", undefined, "Selected layers only"); selectedOnly.value = false;
     var status = win.add("statictext", undefined, "Open a comp, name layers, then Scan."); status.characters = 36;
@@ -292,11 +341,12 @@
     var buttons = win.add("group"); buttons.alignment = ["fill", "bottom"];
     var scanBtn = buttons.add("button", undefined, "Scan comp");
     var applyBtn = buttons.add("button", undefined, "Apply motion"); applyBtn.enabled = false;
-    win.add("statictext", undefined, "Names: Title, Card 1, CTA, Logo, Wordmark, Modal", { multiline: true });
+    var fitBtn = buttons.add("button", undefined, "Fit footage");
+    win.add("statictext", undefined, "Names: Title, Card, CTA, Logo, Caption. Fit footage = cover crop.", { multiline: true });
     var state = { plan: [] };
     var styleIds = ["stripe", "linear", "vercel", "evotechly", "apple"];
     var dirIds = ["in", "out", "both"];
-    var shotIds = ["hero", "featureRow", "pricing", "dashboardTour", "logoLockup", "uiScreen"];
+    var shotIds = ["hero", "featureRow", "pricing", "dashboardTour", "logoLockup", "uiScreen", "hook", "kineticType", "uiPunchIn", "logoSting", "captions"];
     function currentStyle() { return styleIds[styleList.selection ? styleList.selection.index : 0] || "stripe"; }
     function currentDirection() { return dirIds[dirList.selection ? dirList.selection.index : 0] || "in"; }
     function currentShot() { return shotIds[shotList.selection ? shotList.selection.index : 0] || "hero"; }
@@ -324,7 +374,7 @@
         if (!layer) { missing.push(state.plan[i].name); continue; }
         applySpec(layer, state.plan[i]); applied += 1;
       }
-      if (currentShot() === "logoLockup" && state.plan._lockup) {
+      if ((currentShot() === "logoLockup" || currentShot() === "logoSting") && state.plan._lockup) {
         guides = applyLockupGuides(comp, state.plan._lockup);
       }
       app.endUndoGroup();
@@ -333,7 +383,33 @@
       if (missing.length) msg += "\n\nMissing:\n- " + missing.join("\n- ");
       alert(msg);
     }
-    scanBtn.onClick = scan; applyBtn.onClick = apply;
+    function fitFootage() {
+      var comp = activeComp(); if (!comp) { alert("Open a composition first."); return; }
+      var layer = null, i, role;
+      for (i = 1; i <= comp.numLayers; i++) {
+        if (comp.layer(i).selected && isAnimatable(comp.layer(i))) { layer = comp.layer(i); break; }
+      }
+      if (!layer) {
+        for (i = 1; i <= comp.numLayers; i++) {
+          role = detectRole(comp.layer(i).name);
+          if (role === "screenshot" || role === "image" || role === "dashboard") { layer = comp.layer(i); break; }
+        }
+      }
+      if (!layer) { alert("Select a recording or name a layer Screenshot."); return; }
+      try {
+        var src = layer.source;
+        var sw = src ? src.width : layer.width;
+        var sh = src ? src.height : layer.height;
+        if (!sw || !sh) { alert("Layer has no footage size."); return; }
+        var scale = Math.max(comp.width / sw, comp.height / sh) * 100;
+        app.beginUndoGroup("Evotechly Fit footage");
+        layer.transform.scale.setValue([scale, scale]);
+        layer.transform.position.setValue([comp.width / 2, comp.height / 2]);
+        app.endUndoGroup();
+        alert("Fit footage: cover crop at " + Math.round(scale) + "% (9:16-safe).");
+      } catch (e) { alert("Fit footage failed: " + e.toString()); }
+    }
+    scanBtn.onClick = scan; applyBtn.onClick = apply; fitBtn.onClick = fitFootage;
     styleList.onChange = function () { if (state.plan.length) scan(); };
     dirList.onChange = function () { if (state.plan.length) scan(); };
     shotList.onChange = function () { if (state.plan.length) scan(); };
