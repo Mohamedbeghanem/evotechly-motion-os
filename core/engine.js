@@ -1,10 +1,12 @@
 "use strict";
 
-const { resolveMotion, resolveAfterRules } = require("./resolver");
+const { resolveMotion, resolveAfterRules, layerSpan } = require("./resolver");
 const { PRESETS, mergePresets } = require("./presets");
 const { mergeBehaviors } = require("./behaviors");
 const { detectRole, roleIndex } = require("./roles");
 const { getStyle } = require("./styles");
+const { normalizeDirection } = require("./direction");
+const { normalizeShot } = require("./shots");
 
 function sortForMotion(layers) {
   const list = layers.slice();
@@ -41,6 +43,8 @@ function createEngine(config) {
   const stylePack = getStyle(styleId);
   const presets = mergePresets(PRESETS, config.presets || null);
   const behaviors = mergeBehaviors(config.behaviors || null);
+  const direction = normalizeDirection(config.direction);
+  const shot = normalizeShot(config.shot);
 
   function run(layers, sourceType) {
     const raw = Array.isArray(layers) ? layers : [];
@@ -61,6 +65,8 @@ function createEngine(config) {
       behaviors: behaviors,
       style: styleId,
       stylePack: stylePack,
+      direction: direction,
+      shot: shot,
       byName: byName,
       byId: byId,
       useParent: true
@@ -70,7 +76,7 @@ function createEngine(config) {
     for (let i = 0; i < sorted.length; i++) {
       ctx.siblingIndex = siblings[i];
       const item = resolveMotion(sorted[i], i, ctx);
-      item._duration = item.animation.duration;
+      item._duration = layerSpan(item);
       item._delay = item.delay;
       byName[item.layer] = item;
       if (sorted[i].id) byId[sorted[i].id] = item;
@@ -84,7 +90,7 @@ function createEngine(config) {
     }
 
     const ends = plan.map(function (p) {
-      return p.delay + p.animation.duration;
+      return p.delay + layerSpan(p);
     });
     const duration = ends.length ? Math.max.apply(null, ends) : 0;
 
@@ -92,6 +98,8 @@ function createEngine(config) {
       schema: "evotechly.motion.engine.v1",
       sourceType: sourceType || "manual",
       style: styleId,
+      direction: direction,
+      shot: shot,
       duration: Math.round(duration * 10000) / 10000,
       layers: plan
     };

@@ -3,6 +3,7 @@
 const { getPreset } = require("./presets");
 const { detectRole } = require("./roles");
 const { getStyle } = require("./styles");
+const { applyDirection, normalizeDirection } = require("./direction");
 
 function round4(n) {
   return Math.round(n * 10000) / 10000;
@@ -22,8 +23,12 @@ function resolveMotion(layer, index, ctx) {
   const role = detectRole(layer);
   const roleRule = (style.roles && style.roles[role]) || style.roles.card;
   const presetId = (layer && layer.preset) || roleRule.preset;
-  const animation = getPreset(presetId, ctx.presets);
+  const direction = normalizeDirection(
+    (layer && layer.direction) || ctx.direction || "in"
+  );
+  let animation = getPreset(presetId, ctx.presets);
   animation.duration = round4(animation.duration * (roleRule.durationScale || 1));
+  animation = applyDirection(animation, direction);
 
   let delay;
   if (layer && layer.delay != null) {
@@ -43,6 +48,7 @@ function resolveMotion(layer, index, ctx) {
     type: role,
     role: role,
     preset: presetId,
+    direction: direction,
     animation: animation,
     delay: round4(delay),
     x: layer && layer.x,
@@ -51,6 +57,12 @@ function resolveMotion(layer, index, ctx) {
     height: layer && layer.height,
     parentId: (layer && layer.parentId) || null
   };
+}
+
+function layerSpan(L) {
+  let d = L.animation.duration || 0;
+  if (L.animation.out && L.animation.out.duration) d += L.animation.out.duration;
+  return d;
 }
 
 function resolveAfterRules(planLayers, stylePack) {
@@ -63,7 +75,7 @@ function resolveAfterRules(planLayers, stylePack) {
     const L = planLayers[i];
     const rule = style.roles[L.role] || {};
     if (rule.after) continue;
-    const end = L.delay + L.animation.duration;
+    const end = L.delay + layerSpan(L);
     if (end > groupEnd) groupEnd = end;
   }
 
@@ -79,7 +91,7 @@ function resolveAfterRules(planLayers, stylePack) {
   for (let k = 0; k < planLayers.length; k++) {
     const L = planLayers[k];
     if (L.role === "cta") {
-      const end = L.delay + L.animation.duration;
+      const end = L.delay + layerSpan(L);
       if (end > ctaEnd) ctaEnd = end;
     }
   }
@@ -95,4 +107,4 @@ function resolveAfterRules(planLayers, stylePack) {
   return planLayers;
 }
 
-module.exports = { resolveMotion, resolveAfterRules, round4 };
+module.exports = { resolveMotion, resolveAfterRules, round4, layerSpan };
