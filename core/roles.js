@@ -27,10 +27,12 @@ const ROLE_ORDER = [
   "modal",
   "toast",
   "row",
-  "stack"
+  "stack",
+  "caption"
 ];
 
 const ROLE_ALIASES = [
+  { role: "caption", match: ["caption", "burn-in", "lower third", "subtitle line"] },
   { role: "cta", match: ["cta", "get started", "start free", "book demo"] },
   { role: "button", match: ["button", "btn", "primarybutton"] },
   { role: "cursor", match: ["cursor", "pointer", "mouse"] },

@@ -1,16 +1,17 @@
 {
   "schema": "evotechly.brand.v1",
   "name": "Evotechly",
-  "style": "stripe",
+  "style": "evotechly",
   "shot": "hero",
-  "gap": 0.12,
+  "gap": 0.16,
+  "travel": 0.62,
   "easing": "easeOut",
   "roles": {
-    "title": { "base": 0.06, "stagger": 0, "durationScale": 1 },
-    "subtitle": { "base": 0.14, "stagger": 0, "durationScale": 1 },
-    "card": { "base": 0.28, "stagger": 0.07, "durationScale": 1 },
-    "metric": { "base": 0.34, "stagger": 0.05, "durationScale": 0.9 },
-    "cta": { "after": "group", "durationScale": 0.8 },
+    "title": { "base": 0.08, "stagger": 0, "durationScale": 0.92 },
+    "subtitle": { "base": 0.16, "stagger": 0, "durationScale": 0.95 },
+    "card": { "base": 0.24, "stagger": 0.05, "durationScale": 0.95 },
+    "metric": { "base": 0.3, "stagger": 0.04, "durationScale": 0.85 },
+    "cta": { "after": "group", "durationScale": 0.95 },
     "cursor": { "after": "cta" }
   }
 }
