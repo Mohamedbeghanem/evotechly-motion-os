@@ -96,6 +96,30 @@ const PRESETS = {
     easing: "expoOut",
     from: { opacity: 0, y: -14, x: 0, scale: 0.98 },
     to: { opacity: 1, y: 0, x: 0, scale: 1 }
+  },
+  hookSlam: {
+    duration: 0.28,
+    easing: "expoOut",
+    from: { opacity: 0, y: 22, x: 0, scale: 0.86 },
+    to: { opacity: 1, y: 0, x: 0, scale: 1 }
+  },
+  typeBuild: {
+    duration: 0.32,
+    easing: "expoOut",
+    from: { opacity: 0, y: 14, x: 0, scale: 1 },
+    to: { opacity: 1, y: 0, x: 0, scale: 1 }
+  },
+  punchIn: {
+    duration: 0.7,
+    easing: "cubicInOut",
+    from: { opacity: 0, y: 0, x: 0, scale: 1.12 },
+    to: { opacity: 1, y: 0, x: 0, scale: 1 }
+  },
+  captionIn: {
+    duration: 0.28,
+    easing: "expoOut",
+    from: { opacity: 0, y: 10, x: 0, scale: 1 },
+    to: { opacity: 1, y: 0, x: 0, scale: 1 }
   }
 };
 
