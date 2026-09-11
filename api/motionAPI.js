@@ -22,7 +22,8 @@ function optionsFrom(input, options) {
   const style = options.style || (input && input.style) || "stripe";
   const direction = options.direction || (input && input.direction) || "in";
   const shot = options.shot || (input && input.shot) || "hero";
-  return { style: style, direction: direction, shot: shot };
+  const brand = options.brand || (input && input.brand) || null;
+  return { style: style, direction: direction, shot: shot, brand: brand };
 }
 
 function generateMotion(input, options) {

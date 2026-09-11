@@ -10,7 +10,8 @@ const { detectRole, ROLE_ORDER } = require("../core/roles");
 const { PRESETS } = require("../core/presets");
 const { getStyle } = require("../core/styles");
 const { applyDirection, normalizeDirection } = require("../core/direction");
-const { SHOT_ORDER } = require("../core/shots");
+const { SHOT_ORDER, REEL_SHOTS, applyShot } = require("../core/shots");
+const { parseBrand, applyBrand } = require("../core/brand");
 
 const sample = {
   frameName: "Dashboard",
@@ -158,12 +159,97 @@ test("style packs evotechly and apple; default remains stripe", function () {
   assert.equal(def.style, "stripe");
 });
 
+test("evotechly and calm packs differ from stripe on the same hero layers", function () {
+  const stripe = generateMotion(sample, { style: "stripe" });
+  const evo = generateMotion(sample, { style: "evotechly" });
+  const calm = generateMotion(sample, { style: "apple" });
+  const sTitle = stripe.layers.find(function (l) { return l.layer === "Title"; });
+  const eTitle = evo.layers.find(function (l) { return l.layer === "Title"; });
+  const aTitle = calm.layers.find(function (l) { return l.layer === "Title"; });
+  const sCard = stripe.layers.find(function (l) { return l.layer === "Card 1"; });
+  const eCard = evo.layers.find(function (l) { return l.layer === "Card 1"; });
+  const aCta = calm.layers.find(function (l) { return l.layer === "CTA"; });
+  const sCta = stripe.layers.find(function (l) { return l.layer === "CTA"; });
+  assert.ok(Math.abs(eTitle.animation.from.y) < Math.abs(sTitle.animation.from.y));
+  assert.ok(Math.abs(aTitle.animation.from.y) < Math.abs(eTitle.animation.from.y));
+  assert.ok(aTitle.animation.duration > sTitle.animation.duration);
+  assert.notEqual(eCard.preset, sCard.preset);
+  assert.notEqual(aCta.preset, sCta.preset);
+  assert.equal(sCta.preset, "pop");
+  assert.equal(evo.travel, 0.62);
+  assert.equal(calm.travel, 0.38);
+  assert.equal(stripe.travel, 1);
+});
+
+test("brand JSON tokens change gap and role timing", function () {
+  const brand = parseBrand(require("../examples/evotechly.brand.json"));
+  assert.equal(brand.travel, 0.62);
+  const styled = applyBrand(getStyle("stripe"), brand);
+  assert.equal(styled.gapAfterGroup, 0.16);
+  assert.equal(styled.roles.card.stagger, 0.05);
+  const plain = generateMotion(sample, { style: "stripe" });
+  const branded = generateMotion(sample, { style: "stripe", brand: brand });
+  const pCard2 = plain.layers.find(function (l) { return l.layer === "Card 2"; });
+  const bCard2 = branded.layers.find(function (l) { return l.layer === "Card 2"; });
+  assert.ok(bCard2.delay < pCard2.delay);
+});
+
 test("shots taxonomy recorded on plan", function () {
-  assert.deepEqual(SHOT_ORDER, [
+  assert.deepEqual(SHOT_ORDER.slice(0, 6), [
     "hero", "featureRow", "pricing", "dashboardTour", "logoLockup", "uiScreen"
   ]);
+  assert.deepEqual(REEL_SHOTS, ["hook", "kineticType", "uiPunchIn", "logoSting", "captions"]);
   const plan = generateMotion(sample, { shot: "uiScreen" });
   assert.equal(plan.shot, "uiScreen");
+  assert.equal(plan.shotFamily, "saas");
+});
+
+test("reel shots + caption role; SaaS both has no hold", function () {
+  assert.equal(detectRole({ name: "Caption 1" }), "caption");
+  assert.ok(ROLE_ORDER.indexOf("caption") > ROLE_ORDER.indexOf("stack"));
+  const hook = generateMotion(sample, { shot: "hook" });
+  assert.equal(hook.shot, "hook");
+  assert.equal(hook.shotFamily, "reel");
+  const hTitle = hook.layers.find(function (l) { return l.layer === "Title"; });
+  const heroTitle = generateMotion(sample).layers.find(function (l) { return l.layer === "Title"; });
+  assert.ok(hTitle.delay < heroTitle.delay);
+  assert.equal(hTitle.preset, "hookSlam");
+
+  const punch = generateMotion(sample, { shot: "uiPunchIn" });
+  const shot = punch.layers.find(function (l) { return l.layer === "Card 1"; });
+  assert.ok(punch.shotFamily === "reel");
+  assert.ok(shot);
+
+  const sting = generateMotion({
+    shot: "logoSting",
+    layers: [
+      { name: "Logo", type: "rectangle", x: 40, y: 40, width: 48, height: 48 },
+      { name: "Title", type: "text", x: 100, y: 48, width: 220, height: 32 }
+    ]
+  });
+  assert.ok(sting.lockup && sting.lockup.applied);
+
+  const bothSaas = generateMotion(sample, { direction: "both", shot: "hero" });
+  const bothTitle = bothSaas.layers.find(function (l) { return l.layer === "Title"; });
+  assert.ok(bothTitle.animation.out);
+  assert.ok(!bothTitle.animation.hold);
+
+  const bothReel = generateMotion(sample, { direction: "both", shot: "hook" });
+  const reelTitle = bothReel.layers.find(function (l) { return l.layer === "Title"; });
+  assert.ok(reelTitle.animation.hold > 0);
+  const aeReel = exportAE(sample, { direction: "both", shot: "hook" });
+  assert.equal(aeReel.layers[0].keyframes.length, 3);
+
+  const cap = generateMotion({
+    shot: "captions",
+    layers: [
+      { name: "Caption 1", type: "text", x: 40, y: 700, width: 400, height: 28 },
+      { name: "Caption 2", type: "text", x: 40, y: 736, width: 400, height: 28 }
+    ]
+  });
+  assert.equal(cap.layers[0].role, "caption");
+  assert.ok(cap.layers[1].delay > cap.layers[0].delay);
+  assert.ok(applyShot);
 });
 
 test("logo lockup shot pins mark and type; hero is unchanged", function () {

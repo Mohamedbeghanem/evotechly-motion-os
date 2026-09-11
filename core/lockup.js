@@ -5,7 +5,7 @@
  * PinRig-inspired only. No vendor code or binaries.
  *
  * v1: pins, optical gap, cap/x-height, baseline, guide list.
- * Applied when shot === "logoLockup". Does not change hero defaults.
+ * Applied when shot === "logoLockup" or "logoSting". Hero is untouched.
  */
 
 function round4(n) {
@@ -93,7 +93,7 @@ function findPart(plan, part) {
 }
 
 function applyLockup(plan, shot) {
-  if (shot !== "logoLockup" || !plan || !plan.length) {
+  if ((shot !== "logoLockup" && shot !== "logoSting") || !plan || !plan.length) {
     return { applied: false, pins: null, guides: [] };
   }
   const mark = findPart(plan, "mark");
@@ -107,11 +107,11 @@ function applyLockup(plan, shot) {
     const p = plan[i];
     const part = lockupPart(p);
     if (part === "mark") {
-      p.delay = round4(0.02 + markCount * 0.05);
+      p.delay = round4((shot === "logoSting" ? 0 : 0.02) + markCount * (shot === "logoSting" ? 0.03 : 0.05));
       p.lockup = { part: "mark", pins: pins };
       markCount += 1;
     } else if (part === "type") {
-      p.delay = round4(0.16 + typeCount * 0.08);
+      p.delay = round4((shot === "logoSting" ? 0.08 : 0.16) + typeCount * (shot === "logoSting" ? 0.05 : 0.08));
       p.lockup = { part: "type", pins: pins };
       typeCount += 1;
     }

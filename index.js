@@ -26,12 +26,14 @@ const inputPath = positionalInput();
 const style = arg("--style", null);
 const direction = arg("--direction", null);
 const shot = arg("--shot", null);
+const brandPath = arg("--brand", null);
 const outDir = arg("--out", path.join(__dirname, "examples"));
 
 const input = JSON.parse(fs.readFileSync(inputPath, "utf8"));
 if (style) input.style = style;
 if (direction) input.direction = direction;
 if (shot) input.shot = shot;
+if (brandPath) input.brand = JSON.parse(fs.readFileSync(brandPath, "utf8"));
 
 const motion = generateMotion(input);
 const again = runEngine(input);
