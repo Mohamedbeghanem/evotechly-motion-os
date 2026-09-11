@@ -42,6 +42,8 @@ Hero · Feature row · Pricing · Dashboard tour · Logo lockup · UI screen
 
 Cursor flies to CTA when both exist.
 
+Logo lockup: name `Logo` + `Title` (or Wordmark). Shot = Logo lockup. Mark first, type after. Own pins — not PinRig.
+
 ## Direction
 
 - In — appear (`from → to`)

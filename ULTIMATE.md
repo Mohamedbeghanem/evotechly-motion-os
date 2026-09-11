@@ -10,7 +10,7 @@ One After Effects panel. Not a separate “Vero Motion” SKU.
 |---|---|---|
 | L0 | Compiler — Scan → Apply, roles, brand JSON, shots | shipped |
 | L1 | UI Kit — In / Out / Both + UI layout presets (own code) | this PR |
-| L2 | Lockup / Brand — PinRig-class logo/type setup (rebuild) | next |
+| L2 | Lockup / Brand — own pins + type metrics for Logo lockup shot | this PR (v1) |
 | L3 | Taste packs — Evotechly + Apple calm + Stripe / Linear / Vercel | this PR (packs) |
 | L4 | Copilot — prompt → editable role plan only | stub |
 
@@ -21,8 +21,16 @@ One After Effects panel. Not a separate “Vero Motion” SKU.
 3. UI presets + roles (`modal`, `toast`, `row`, `stack`) without changing SaaS `ROLE_ORDER` prefix.
 4. Taste packs `evotechly` and `apple`.
 5. Shot ids recorded on the plan (`core/shots.js`).
-6. L2 lockup math in-house.
+6. L2 lockup math in-house (`core/lockup.js`). Active when shot is `logoLockup`.
 7. L4 docs only until a prompt path exists. Never bake image sequences.
+
+## L2 Lockup (v1)
+
+Own code. Name layers `Logo` / `Wordmark` and a `Title`. Pick shot **Logo lockup**, Scan, Apply.
+
+- Pins: mark center, optical gap, baseline, cap-height, x-height.
+- Mark lands first; type follows (~0.16s).
+- Hero / Stripe demos do not use this path. No vendor binaries.
 
 ## Direction
 
