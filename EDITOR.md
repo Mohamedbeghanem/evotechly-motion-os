@@ -1,4 +1,4 @@
-# Editor playbook (one page) — v0.4
+# Editor playbook (one page) — v0.5 Ultimate foundation
 
 Art from Figma. Motion from Evotechly. Do not hand-key SaaS intros.
 
@@ -15,24 +15,38 @@ No Overlord? Panel → **Import JSON** from the Figma plugin. Replace solids lat
 
 Also: PricingCard, PrimaryButton, HeroTitle, AppScreenshot.
 
+UI: `Modal`, `Toast`, `Row`, `Stack`, `Nav`.
+
 Never keyed: cameras, lights, locked layers, names with `EVO_SKIP`.
 UNNAMED row → This layer is a → Rename.
 
 ## Loop
 
 1. Load brand (`examples/evotechly.brand.json`) if you have one.
-2. Style + Shot.
+2. Style + Shot + Direction (In / Out / Both). Default style is Stripe so old demos match.
 3. Scan. READY rows get motion.
 4. Apply. Undo is one step. CTA hover/press is on by default.
 5. Select a recording → Fit footage (needs Screenshot).
 6. Make 9:16 or Queue renders.
 7. Save plan next to the `.aep`.
 
+## Styles
+
+Stripe · Linear · Vercel · Evotechly (brand taste) · Apple (calm)
+
+Default remains **Stripe**. Pick Evotechly or Apple explicitly.
+
 ## Shots
 
-Hero · Feature row · Pricing · Dashboard tour · Logo lockup
+Hero · Feature row · Pricing · Dashboard tour · Logo lockup · UI screen
 
 Cursor flies to CTA when both exist.
+
+## Direction
+
+- In — appear (`from → to`)
+- Out — dismiss (reversed poses)
+- Both — in, then out on the same layer
 
 ## Install
 

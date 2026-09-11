@@ -1,6 +1,6 @@
 # Install Evotechly Motion OS in After Effects
 
-One file. No Node. v0.4
+One file. No Node. v0.5 Ultimate foundation
 
 ## File
 
@@ -16,6 +16,6 @@ If it is missing from Window, the file is in `Scripts` instead of `Scripts/Scrip
 
 ## First run
 
-Demo comp → Scan → Apply. CTA hover/press is on by default.
+Demo comp → Style Stripe → Direction In → Scan → Apply.
 
 Never keyed: cameras, lights, locked layers, names containing `EVO_SKIP`.
