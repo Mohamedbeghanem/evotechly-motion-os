@@ -3,6 +3,9 @@
 /**
  * Editor-facing roles. Name the AE / Figma layer with one of these
  * words and the compiler picks timing + preset.
+ *
+ * ROLE_ORDER prefix (logo…cursor) is frozen for SaaS hero sort.
+ * UI roles append after cursor so existing indexes stay put.
  */
 const ROLE_ORDER = [
   "logo",
@@ -20,13 +23,21 @@ const ROLE_ORDER = [
   "tooltip",
   "button",
   "cta",
-  "cursor"
+  "cursor",
+  "modal",
+  "toast",
+  "row",
+  "stack"
 ];
 
 const ROLE_ALIASES = [
   { role: "cta", match: ["cta", "get started", "start free", "book demo"] },
-  { role: "button", match: ["button", "btn"] },
+  { role: "button", match: ["button", "btn", "primarybutton"] },
   { role: "cursor", match: ["cursor", "pointer", "mouse"] },
+  { role: "modal", match: ["modal", "dialog", "sheet"] },
+  { role: "toast", match: ["toast", "snackbar", "notice"] },
+  { role: "row", match: ["uirow", "feature row", "row"] },
+  { role: "stack", match: ["uistack", "stack"] },
   { role: "tooltip", match: ["tooltip", "hint"] },
   { role: "badge", match: ["badge", "chip", "tag"] },
   { role: "metric", match: ["metric", "kpi", "stat", "number"] },
