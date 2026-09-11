@@ -9,56 +9,66 @@ One After Effects panel. Not a separate “Vero Motion” SKU.
 | Layer | Name | Status |
 |---|---|---|
 | L0 | Compiler — Scan → Apply, roles, brand JSON, shots | shipped |
-| L1 | UI Kit — In / Out / Both + UI layout presets (own code) | this PR |
-| L2 | Lockup / Brand — own pins + type metrics + Scan→Apply guides | this PR (v1 landed) |
-| L3 | Taste packs — Evotechly + Apple calm + Stripe / Linear / Vercel | this PR (packs) |
+| L1 | UI Kit — In / Out / Both + UI layout presets (own code) | shipped |
+| L2 | Lockup / Brand — own pins + type metrics + Scan→Apply guides | shipped |
+| L3 | Taste packs — Evotechly product-native + Calm / system vs Stripe / Linear / Vercel | this PR (distinct) |
+| L3.1 | SaaS shot pack v2 + Reel grammar | this PR |
 | L4 | Copilot — prompt → editable role plan only | stub |
 
-## Build order
+## L3 taste (same hero layers)
 
-1. Keep L0 deterministic. Default style stays **stripe** so existing demos do not shift.
-2. Direction `in` | `out` | `both` in the engine, then the panel.
-3. UI presets + roles (`modal`, `toast`, `row`, `stack`) without changing SaaS `ROLE_ORDER` prefix.
-4. Taste packs `evotechly` and `apple`.
-5. Shot ids recorded on the plan (`core/shots.js`).
-6. L2 lockup math in-house (`core/lockup.js`). Active when shot is `logoLockup`.
-7. L4 docs only until a prompt path exists. Never bake image sequences.
+| Pack | Travel | Title | Cards | CTA | Feel |
+|---|---|---|---|---|---|
+| Stripe | 1.00 | fadeUp 16px | scaleIn, 0.07 stagger | pop after group | premium SaaS default |
+| Linear | 0.88 | slideUp | fadeUp | scaleIn | product-native, quieter scale |
+| Vercel | 0.72 | fadeUp short | scaleIn tight | pop snappy | sharp reveal |
+| Evotechly | **0.62** | fadeUpSoft | uiCard, 0.05 stagger | uiCard settle | quiet product-native |
+| Calm / system | **0.38** | fadeUpCalm, longer | fadeUpCalm, 0.10 stagger | fadeUpCalm, big gap | expensive hold, no pop |
 
-## L2 Lockup (v1 landed)
+Default style stays **stripe**. Pick Evotechly or Calm explicitly.
 
-Own code in `core/lockup.js` + the ScriptUI panel. No PinRig / What? Studio files.
+Brand file `examples/evotechly.brand.json` (`evotechly.brand.v1`) now changes the plan: `gap`, `travel`, and per-role `base` / `stagger` / `durationScale` / `after`. CLI: `--brand examples/evotechly.brand.json`. Not loaded unless you pass it — stripe hero fixtures stay put.
 
-Name `Logo` (mark) and `Wordmark` or `Title` (type). Shot = **Logo lockup**. Scan → Apply.
+## SaaS shots v2
 
-Landed:
+Hero · Feature row · Pricing · Dashboard tour · Logo lockup · UI screen
 
-- Pins: mark center, optical gap, gapX, baseline, cap-height, x-height.
-- `lockupPart`: Wordmark is type even though the role alias is `logo`.
-- Mark keys first (~0.02s); type follows (~0.16s).
-- Scan reads `sourceRectAtTime` for metrics. Apply writes 5 shy guide nulls (`EVO_SKIP_LOCKUP_*`). Next Scan ignores them.
-- AE JSON carries `lockup` when shot is `logoLockup`.
-- Hero / Stripe demos do not use this path.
+Hints in `core/shots.js` (card stagger, screenshot zoom). Hero hints are 1 / no-op so Stripe demos do not move.
+
+Timing is frame-agnostic. 9:16 is a crop, not a different delay table.
+
+**Fit footage:** cover-scale the Screenshot / recording to the active comp, centered. Safe crop (no letterbox). Works on 16:9 and 9:16 comps.
+
+Cursor still flies to CTA. CTA still waits for the group.
+
+## Reel shots (new)
+
+Hook · Kinetic type · UI punch-in · Logo sting · Captions
+
+- **Hook** — 0–1s slam. Delays compressed, title uses `hookSlam`.
+- **Kinetic type** — word/line builds on title / subtitle / caption / eyebrow.
+- **UI punch-in** — product UI proof, 9:16-safe cover zoom (`punchIn`).
+- **Logo sting** — short end card; L2 lockup with faster mark→type.
+- **Captions** — `caption` role (append-only). Two-line stagger.
+
+**Both:** SaaS Both is still in → out with no hold. Reel Both is in → hold → out (loop-friendly). Beat-sync from audio is later.
 
 ## Direction
 
-- **in** (default) — play preset `from → to` (appear).
-- **out** — swap `from` / `to` (dismiss).
-- **both** — `in`, then an `animation.out` phase that reverses the same travel.
+- **in** (default) — `from → to`
+- **out** — swap
+- **both** — in, then out. Reel shots add `animation.hold` from the shot hint.
 
-Schema remains `evotechly.motion.engine.v1`. Plan fields: `style`, `direction`, `shot`.
+## L2 Lockup
 
-## UI presets (L1)
-
-Own implementations in `core/presets.js`: `uiRow`, `uiStack`, `uiCard`, `uiModal`, `uiNav`, `uiToast`.
-
-Inspired by common UI-animator layout ideas. **Do not vendor, copy, or ship What? Studio / UI Animator Pro / Gumroad binaries or source.**
+`logoLockup` and `logoSting`. Own pins. No PinRig.
 
 ## L4 Copilot (stub)
 
-Later: a prompt becomes an **editable role plan** (layers + roles + delays). Editors still Scan / Apply.
+Later: a prompt becomes an **editable role plan**. Editors still Scan / Apply.
 
-Out of scope now: Claude/API wiring, CEP/Premiere, baked frames.
+Out of scope now: Claude/API wiring, CEP/Premiere, baked frames, beat-sync.
 
 ## No third-party binary
 
-This repo is MIT Evotechly code only. No `.aex`, encrypted JSX from other vendors, or copied ScriptUI from paid plugins.
+MIT Evotechly code only. No `.aex`, encrypted JSX, or copied ScriptUI from paid plugins.

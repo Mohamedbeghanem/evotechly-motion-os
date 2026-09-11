@@ -6,8 +6,9 @@ const { mergeBehaviors } = require("./behaviors");
 const { detectRole, roleIndex } = require("./roles");
 const { getStyle } = require("./styles");
 const { normalizeDirection } = require("./direction");
-const { normalizeShot } = require("./shots");
+const { normalizeShot, applyShot } = require("./shots");
 const { applyLockup } = require("./lockup");
+const { applyBrand } = require("./brand");
 
 function sortForMotion(layers) {
   const list = layers.slice();
@@ -41,7 +42,7 @@ function siblingIndexes(sorted) {
 function createEngine(config) {
   config = config || {};
   const styleId = config.style || "stripe";
-  const stylePack = getStyle(styleId);
+  const stylePack = applyBrand(getStyle(styleId), config.brand || null);
   const presets = mergePresets(PRESETS, config.presets || null);
   const behaviors = mergeBehaviors(config.behaviors || null);
   const direction = normalizeDirection(config.direction);
@@ -84,6 +85,7 @@ function createEngine(config) {
       plan.push(item);
     }
     resolveAfterRules(plan, stylePack);
+    const shotInfo = applyShot(plan, shot);
     const lockup = applyLockup(plan, shot);
 
     for (let j = 0; j < plan.length; j++) {
@@ -106,6 +108,8 @@ function createEngine(config) {
       layers: plan
     };
     if (lockup && lockup.applied) out.lockup = lockup;
+    if (shotInfo && shotInfo.family) out.shotFamily = shotInfo.family;
+    if (stylePack && stylePack.travel != null) out.travel = stylePack.travel;
     return out;
   }
 
