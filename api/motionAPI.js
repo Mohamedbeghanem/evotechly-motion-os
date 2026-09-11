@@ -20,7 +20,9 @@ function isFigma(input) {
 function optionsFrom(input, options) {
   options = options || {};
   const style = options.style || (input && input.style) || "stripe";
-  return { style: style };
+  const direction = options.direction || (input && input.direction) || "in";
+  const shot = options.shot || (input && input.shot) || "hero";
+  return { style: style, direction: direction, shot: shot };
 }
 
 function generateMotion(input, options) {

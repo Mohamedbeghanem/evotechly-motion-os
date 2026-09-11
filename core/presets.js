@@ -13,6 +13,12 @@ const PRESETS = {
     from: { opacity: 0, y: 10, scale: 1 },
     to: { opacity: 1, y: 0, scale: 1 }
   },
+  fadeUpCalm: {
+    duration: 0.7,
+    easing: "expoOut",
+    from: { opacity: 0, y: 6, scale: 1 },
+    to: { opacity: 1, y: 0, scale: 1 }
+  },
   scaleIn: {
     duration: 0.5,
     easing: "expoOut",
@@ -53,6 +59,42 @@ const PRESETS = {
     duration: 0.5,
     easing: "cubicInOut",
     from: { opacity: 0, y: 12, x: 12, scale: 1 },
+    to: { opacity: 1, y: 0, x: 0, scale: 1 }
+  },
+  uiRow: {
+    duration: 0.48,
+    easing: "expoOut",
+    from: { opacity: 0, y: 0, x: -16, scale: 1 },
+    to: { opacity: 1, y: 0, x: 0, scale: 1 }
+  },
+  uiStack: {
+    duration: 0.5,
+    easing: "expoOut",
+    from: { opacity: 0, y: 12, x: 0, scale: 1 },
+    to: { opacity: 1, y: 0, x: 0, scale: 1 }
+  },
+  uiCard: {
+    duration: 0.46,
+    easing: "expoOut",
+    from: { opacity: 0, y: 8, x: 0, scale: 0.97 },
+    to: { opacity: 1, y: 0, x: 0, scale: 1 }
+  },
+  uiModal: {
+    duration: 0.42,
+    easing: "expoOut",
+    from: { opacity: 0, y: 10, x: 0, scale: 0.96 },
+    to: { opacity: 1, y: 0, x: 0, scale: 1 }
+  },
+  uiNav: {
+    duration: 0.38,
+    easing: "expoOut",
+    from: { opacity: 0, y: 8, x: 0, scale: 1 },
+    to: { opacity: 1, y: 0, x: 0, scale: 1 }
+  },
+  uiToast: {
+    duration: 0.36,
+    easing: "expoOut",
+    from: { opacity: 0, y: -14, x: 0, scale: 0.98 },
     to: { opacity: 1, y: 0, x: 0, scale: 1 }
   }
 };

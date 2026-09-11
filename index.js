@@ -24,10 +24,14 @@ function positionalInput() {
 
 const inputPath = positionalInput();
 const style = arg("--style", null);
+const direction = arg("--direction", null);
+const shot = arg("--shot", null);
 const outDir = arg("--out", path.join(__dirname, "examples"));
 
 const input = JSON.parse(fs.readFileSync(inputPath, "utf8"));
 if (style) input.style = style;
+if (direction) input.direction = direction;
+if (shot) input.shot = shot;
 
 const motion = generateMotion(input);
 const again = runEngine(input);
@@ -49,7 +53,7 @@ const summary = motion.layers
   })
   .join(" ");
 process.stdout.write(summary + "\n");
-process.stdout.write("style=" + motion.style + " duration=" + motion.duration + "s\n");
+process.stdout.write("style=" + motion.style + " direction=" + motion.direction + " shot=" + motion.shot + " duration=" + motion.duration + "s\n");
 process.stdout.write("wrote " + path.join(outDir, "motion-output.json") + "\n");
 process.stdout.write("wrote " + path.join(outDir, "ae-output.json") + "\n");
 process.stdout.write("wrote " + path.join(outDir, "preview.html") + "\n");
