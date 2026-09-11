@@ -165,3 +165,26 @@ test("shots taxonomy recorded on plan", function () {
   const plan = generateMotion(sample, { shot: "uiScreen" });
   assert.equal(plan.shot, "uiScreen");
 });
+
+test("logo lockup shot pins mark and type; hero is unchanged", function () {
+  const lock = generateMotion({
+    style: "stripe",
+    shot: "logoLockup",
+    layers: [
+      { name: "Logo", type: "rectangle", x: 40, y: 40, width: 48, height: 48 },
+      { name: "Title", type: "text", x: 100, y: 48, width: 220, height: 32 }
+    ]
+  });
+  assert.equal(lock.shot, "logoLockup");
+  assert.ok(lock.lockup && lock.lockup.applied);
+  assert.ok(lock.lockup.pins.opticalGap >= 8);
+  const logo = lock.layers.find(function (l) { return l.role === "logo"; });
+  const title = lock.layers.find(function (l) { return l.role === "title"; });
+  assert.equal(logo.lockup.part, "mark");
+  assert.equal(title.lockup.part, "type");
+  assert.ok(title.delay > logo.delay);
+
+  const hero = generateMotion(sample);
+  assert.equal(hero.shot, "hero");
+  assert.equal(hero.lockup, undefined);
+});
