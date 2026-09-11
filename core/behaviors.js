@@ -8,7 +8,12 @@ const DEFAULT_BEHAVIORS = {
   image: { preset: "zoomOut", stagger: 0.1, durationScale: 1 },
   dashboard: { preset: "slideUp", stagger: 0.05, durationScale: 1 },
   button: { preset: "scaleIn", stagger: 0.04, durationScale: 0.84 },
-  cta: { preset: "pop", stagger: 0.04, durationScale: 0.8 }
+  cta: { preset: "pop", stagger: 0.04, durationScale: 0.8 },
+  modal: { preset: "uiModal", stagger: 0, durationScale: 1 },
+  toast: { preset: "uiToast", stagger: 0.04, durationScale: 1 },
+  row: { preset: "uiRow", stagger: 0.05, durationScale: 1 },
+  stack: { preset: "uiStack", stagger: 0.05, durationScale: 1 },
+  nav: { preset: "uiNav", stagger: 0.03, durationScale: 0.8 }
 };
 
 function detectType(layer) {
