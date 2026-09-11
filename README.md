@@ -2,7 +2,7 @@
 
 Deterministic compiler for **SaaS-style motion**, plus a dockable After Effects panel.
 
-Ultimate foundation (L0 compiler + L1 direction/UI presets + L3 taste packs): see [ULTIMATE.md](ULTIMATE.md).
+SaaS 10 + Reel grammar (L3 distinct taste + reel shots): see [ULTIMATE.md](ULTIMATE.md).
 
 **Editors: install `ae/Evotechly Motion OS.jsx` and read [EDITOR.md](EDITOR.md) + [ae/INSTALL-AE.md](ae/INSTALL-AE.md).**
 
@@ -10,7 +10,7 @@ Ultimate foundation (L0 compiler + L1 direction/UI presets + L3 taste packs): se
 
 Copy `ae/Evotechly Motion OS.jsx` into `Scripts/ScriptUI Panels`, restart AE, open **Window > Evotechly Motion OS**.
 
-Name layers `Title`, `Card 1`, `CTA`, `Screenshot`, `Cursor`. Pick Stripe / Linear / Vercel / Evotechly / Apple. Direction In / Out / Both. Scan. Apply.
+Name layers `Title`, `Card 1`, `CTA`, `Screenshot`, `Cursor`, `Caption`. Pick Stripe / Linear / Vercel / Evotechly / Calm. Direction In / Out / Both. SaaS or Reel shot. Scan. Apply. Fit footage = cover crop.
 
 No Node on the editor machine.
 
@@ -18,7 +18,8 @@ No Node on the editor machine.
 
 ```bash
 node index.js examples/saas-hero.json --style stripe
-node index.js examples/saas-hero.json --style apple --direction both --shot uiScreen
+node index.js examples/saas-hero.json --style evotechly --brand examples/evotechly.brand.json
+node index.js examples/saas-hero.json --style apple --direction both --shot hook
 ```
 
 Default style is `stripe` so existing hero demos stay put.
