@@ -6,7 +6,11 @@ const { generateMotion, runEngine, exportAE } = require("../api/motionAPI");
 const { resolveMotion } = require("../core/resolver");
 const { mapFigmaType } = require("../pipeline/typeMapper");
 const { normalize } = require("../pipeline/normalizer");
-const { detectRole } = require("../core/roles");
+const { detectRole, ROLE_ORDER } = require("../core/roles");
+const { PRESETS } = require("../core/presets");
+const { getStyle } = require("../core/styles");
+const { applyDirection, normalizeDirection } = require("../core/direction");
+const { SHOT_ORDER } = require("../core/shots");
 
 const sample = {
   frameName: "Dashboard",
@@ -47,6 +51,8 @@ test("saas hero: cards stagger, CTA comes after the group, two runs match bytes"
   const a = generateMotion(hero);
   const b = generateMotion(hero);
   assert.deepEqual(a, b);
+  assert.equal(a.style, "stripe");
+  assert.equal(a.direction, "in");
   const byName = {};
   a.layers.forEach(function (l) { byName[l.layer] = l; });
   assert.equal(byName.Title.role, "title");
@@ -87,4 +93,75 @@ test("exportAE: schema, name+layer, keyframes, easingAE, deterministic", functio
     assert.equal(layer.keyframes.length, 2);
     assert.ok(layer.easingAE);
   }
+});
+
+test("ROLE_ORDER keeps SaaS hero prefix; UI roles append", function () {
+  const prefix = [
+    "logo", "eyebrow", "title", "subtitle", "nav", "sidebar",
+    "dashboard", "screenshot", "image", "card", "metric", "badge",
+    "tooltip", "button", "cta", "cursor"
+  ];
+  assert.deepEqual(ROLE_ORDER.slice(0, 16), prefix);
+  assert.ok(ROLE_ORDER.indexOf("modal") > 15);
+  assert.ok(ROLE_ORDER.indexOf("toast") > 15);
+});
+
+test("UI roles and presets exist", function () {
+  assert.equal(detectRole({ name: "Modal" }), "modal");
+  assert.equal(detectRole({ name: "Toast" }), "toast");
+  assert.equal(detectRole({ name: "UI Row" }), "row");
+  assert.equal(detectRole({ name: "Stack" }), "stack");
+  ["uiRow", "uiStack", "uiCard", "uiModal", "uiNav", "uiToast"].forEach(function (id) {
+    assert.ok(PRESETS[id], id);
+  });
+  const modal = resolveMotion({ name: "Modal" }, 0);
+  assert.equal(modal.preset, "uiModal");
+});
+
+test("direction in/out/both", function () {
+  assert.equal(normalizeDirection(undefined), "in");
+  const fade = PRESETS.fadeUp;
+  const inn = applyDirection(fade, "in");
+  assert.equal(inn.from.y, fade.from.y);
+  assert.equal(inn.to.y, fade.to.y);
+  const out = applyDirection(fade, "out");
+  assert.equal(out.from.y, fade.to.y);
+  assert.equal(out.to.y, fade.from.y);
+  const both = applyDirection(fade, "both");
+  assert.equal(both.from.y, fade.from.y);
+  assert.ok(both.out);
+  assert.equal(both.out.to.y, fade.from.y);
+
+  const planOut = generateMotion(sample, { direction: "out" });
+  assert.equal(planOut.direction, "out");
+  const title = planOut.layers.find(function (l) { return l.layer === "Title"; });
+  assert.equal(title.direction, "out");
+  assert.equal(title.animation.from.opacity, 1);
+  assert.equal(title.animation.to.opacity, 0);
+
+  const planBoth = generateMotion(sample, { direction: "both" });
+  const card = planBoth.layers.find(function (l) { return l.layer === "Card 1"; });
+  assert.ok(card.animation.out);
+  const aeBoth = exportAE(sample, { direction: "both" });
+  assert.equal(aeBoth.layers[0].keyframes.length, 3);
+});
+
+test("style packs evotechly and apple; default remains stripe", function () {
+  assert.equal(getStyle("nope").id, "stripe");
+  assert.equal(getStyle("evotechly").id, "evotechly");
+  assert.equal(getStyle("apple").id, "apple");
+  const evo = generateMotion(sample, { style: "evotechly" });
+  assert.equal(evo.style, "evotechly");
+  const apple = generateMotion(sample, { style: "apple" });
+  assert.equal(apple.style, "apple");
+  const def = generateMotion({ layers: sample.layers });
+  assert.equal(def.style, "stripe");
+});
+
+test("shots taxonomy recorded on plan", function () {
+  assert.deepEqual(SHOT_ORDER, [
+    "hero", "featureRow", "pricing", "dashboardTour", "logoLockup", "uiScreen"
+  ]);
+  const plan = generateMotion(sample, { shot: "uiScreen" });
+  assert.equal(plan.shot, "uiScreen");
 });
