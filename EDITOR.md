@@ -42,7 +42,7 @@ Hero · Feature row · Pricing · Dashboard tour · Logo lockup · UI screen
 
 Cursor flies to CTA when both exist.
 
-Logo lockup: name `Logo` + `Title` (or Wordmark). Shot = Logo lockup. Mark first, type after. Own pins — not PinRig.
+Logo lockup: name `Logo` + `Title` or `Wordmark`. Shot = Logo lockup. Scan then Apply. Mark keys first; type after. Apply drops 5 `EVO_SKIP_LOCKUP_*` guide nulls (mark, gap, baseline, cap, x-height). Own pins — not PinRig.
 
 ## Direction
 

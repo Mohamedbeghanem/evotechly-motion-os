@@ -94,10 +94,11 @@ function toAE(plan) {
       easingAE: a.easingAE || EASING_AE[a.easing] || "easeOut",
       from: posed.from,
       to: posed.to,
+      lockup: m.lockup || null,
       keyframes: keyframes
     });
   }
-  return {
+  const result = {
     schema: "evotechly.motion.ae.v1",
     sourceType: plan && plan.sourceType,
     style: plan && plan.style,
@@ -106,6 +107,8 @@ function toAE(plan) {
     duration: plan && plan.duration,
     layers: out
   };
+  if (plan && plan.lockup && plan.lockup.applied) result.lockup = plan.lockup;
+  return result;
 }
 
 module.exports = { toAE, EASING_AE };

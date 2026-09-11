@@ -10,7 +10,7 @@ One After Effects panel. Not a separate “Vero Motion” SKU.
 |---|---|---|
 | L0 | Compiler — Scan → Apply, roles, brand JSON, shots | shipped |
 | L1 | UI Kit — In / Out / Both + UI layout presets (own code) | this PR |
-| L2 | Lockup / Brand — own pins + type metrics for Logo lockup shot | this PR (v1) |
+| L2 | Lockup / Brand — own pins + type metrics + Scan→Apply guides | this PR (v1 landed) |
 | L3 | Taste packs — Evotechly + Apple calm + Stripe / Linear / Vercel | this PR (packs) |
 | L4 | Copilot — prompt → editable role plan only | stub |
 
@@ -24,13 +24,20 @@ One After Effects panel. Not a separate “Vero Motion” SKU.
 6. L2 lockup math in-house (`core/lockup.js`). Active when shot is `logoLockup`.
 7. L4 docs only until a prompt path exists. Never bake image sequences.
 
-## L2 Lockup (v1)
+## L2 Lockup (v1 landed)
 
-Own code. Name layers `Logo` / `Wordmark` and a `Title`. Pick shot **Logo lockup**, Scan, Apply.
+Own code in `core/lockup.js` + the ScriptUI panel. No PinRig / What? Studio files.
 
-- Pins: mark center, optical gap, baseline, cap-height, x-height.
-- Mark lands first; type follows (~0.16s).
-- Hero / Stripe demos do not use this path. No vendor binaries.
+Name `Logo` (mark) and `Wordmark` or `Title` (type). Shot = **Logo lockup**. Scan → Apply.
+
+Landed:
+
+- Pins: mark center, optical gap, gapX, baseline, cap-height, x-height.
+- `lockupPart`: Wordmark is type even though the role alias is `logo`.
+- Mark keys first (~0.02s); type follows (~0.16s).
+- Scan reads `sourceRectAtTime` for metrics. Apply writes 5 shy guide nulls (`EVO_SKIP_LOCKUP_*`). Next Scan ignores them.
+- AE JSON carries `lockup` when shot is `logoLockup`.
+- Hero / Stripe demos do not use this path.
 
 ## Direction
 
