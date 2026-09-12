@@ -305,3 +305,49 @@ test("logo lockup shot pins mark and type; hero is unchanged", function () {
   });
   assert.ok(aeLock.lockup && aeLock.lockup.applied);
 });
+
+test("polish vocabulary is native-only and distinct from stripe hero", function () {
+  const { EASE, TEXT_IN, TYPEWRITER, PLUGINS_REMINDER, easePair } = require("../core/polish");
+  assert.equal(easePair("apple").influenceIn, 80);
+  assert.equal(easePair("soft").influenceIn, 40);
+  assert.ok(TEXT_IN.travel < 16);
+  assert.equal(TYPEWRITER.charsPerSecond, 18);
+  assert.ok(PLUGINS_REMINDER.indexOf("Saber") !== -1);
+  const hero = generateMotion(sample);
+  assert.equal(hero.style, "stripe");
+  assert.equal(hero.travel, 1);
+});
+
+test("caption templates + basic SRT parser; stripe hero unchanged", function () {
+  const { TEMPLATES, TEMPLATE_ORDER, parseSrt, srtTimeToSeconds, getTemplate } = require("../core/captions");
+  assert.deepEqual(TEMPLATE_ORDER, ["hook", "kinetic", "stackArEn", "lowerThird", "burnIn"]);
+  assert.equal(getTemplate("hook").duration, 1);
+  assert.equal(TEMPLATES.stackArEn.defaultPrimary, "ar");
+  assert.equal(srtTimeToSeconds("00:00:01,200"), 1.2);
+  const fs = require("fs");
+  const path = require("path");
+  const en = parseSrt(fs.readFileSync(path.join(__dirname, "..", "examples", "captions", "demo-en.srt"), "utf8"));
+  const ar = parseSrt(fs.readFileSync(path.join(__dirname, "..", "examples", "captions", "demo-ar.srt"), "utf8"));
+  assert.equal(en.length, 3);
+  assert.equal(ar.length, 3);
+  assert.ok(ar[0].text.indexOf("لوحة") !== -1);
+  assert.equal(en[0].start, 0);
+  const hero = generateMotion(sample);
+  assert.equal(hero.style, "stripe");
+  assert.equal(hero.travel, 1);
+  const byName = {};
+  hero.layers.forEach(function (l) { byName[l.layer] = l; });
+  assert.ok(byName.CTA.delay >= byName["Card 2"].delay);
+});
+
+test("editor recipes stay native; hook plugins are reminders only", function () {
+  const { PERSON, EDITOR_SHOTS, KPI } = require("../core/recipes");
+  assert.equal(PERSON.cutout.layerName, "CUTOUT");
+  assert.equal(PERSON.talkingHead.wetOff, true);
+  assert.equal(EDITOR_SHOTS.erpDemo.path, "cursor+ease");
+  assert.ok(EDITOR_SHOTS.hook15.plugins.indexOf("Saber") !== -1);
+  assert.equal(KPI.duration, 1.4);
+  const hero = generateMotion(sample);
+  assert.equal(hero.shot, "hero");
+  assert.equal(hero.lockup, undefined);
+});
