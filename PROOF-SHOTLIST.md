@@ -4,7 +4,7 @@ Do not edit the panel while recording.
 
 ## SaaS path (~60s)
 
-0:00 Window → Evotechly Motion OS (v0.6)
+0:00 Window → Evotechly Motion OS (v0.7)
 0:08 Demo comp (Title, Cards, CTA, Screenshot, Cursor)
 0:16 Style = Stripe, Shot = Hero, Direction = In, Scan
 0:24 Apply + RAM preview (CTA after group, cursor after CTA)
@@ -20,3 +20,13 @@ Do not edit the panel while recording.
 0:10 Shot = UI punch-in, Scan, Apply
 0:16 Shot = Logo sting, Scan, Apply
 0:22 Stop. Do not change dropdowns mid-take.
+
+## Launch smoke (~10 min)
+
+1. Window title is v0.7 Launch. Stripe Hero Scan Apply still works.
+2. Select Title → Apple Text In. RAM preview.
+3. Select Title → Typewriter. Caret layer appears.
+4. Add Cursor. Scan lists Cursor.
+5. Select CTA → Click squash.
+6. Click ripple + Wet look. Comp has ripple + Wet look adj layer.
+7. Confirm no Saber/QCA3/Displacer files in the repo.

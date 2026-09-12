@@ -1,6 +1,6 @@
 # Install Evotechly Motion OS in After Effects
 
-One file. No Node. v0.6 SaaS 10 + Reel
+One file. No Node. v0.7 Launch — compiler + native Polish
 
 ## File
 
@@ -18,5 +18,6 @@ If it is missing from Window, the file is in `Scripts` instead of `Scripts/Scrip
 
 Demo comp → Style Stripe → Shot Hero → Direction In → Scan → Apply.
 Reel: Shot Hook or Logo sting. Fit footage = cover crop.
+Polish: Apple Ease / Text In / Typewriter / Cursor / squash / ripple / Wet look.
 
 Never keyed: cameras, lights, locked layers, names containing `EVO_SKIP`.

@@ -2,7 +2,7 @@
 
 Deterministic compiler for **SaaS-style motion**, plus a dockable After Effects panel.
 
-SaaS 10 + Reel grammar (L3 distinct taste + reel shots): see [ULTIMATE.md](ULTIMATE.md).
+v0.7 Launch: SaaS + reels + **native Polish** in one panel. See [ULTIMATE.md](ULTIMATE.md). Does not include Saber / QCA3 / Displacer.
 
 **Editors: install `ae/Evotechly Motion OS.jsx` and read [EDITOR.md](EDITOR.md) + [ae/INSTALL-AE.md](ae/INSTALL-AE.md).**
 
@@ -10,7 +10,7 @@ SaaS 10 + Reel grammar (L3 distinct taste + reel shots): see [ULTIMATE.md](ULTIM
 
 Copy `ae/Evotechly Motion OS.jsx` into `Scripts/ScriptUI Panels`, restart AE, open **Window > Evotechly Motion OS**.
 
-Name layers `Title`, `Card 1`, `CTA`, `Screenshot`, `Cursor`, `Caption`. Pick Stripe / Linear / Vercel / Evotechly / Calm. Direction In / Out / Both. SaaS or Reel shot. Scan. Apply. Fit footage = cover crop.
+Name layers `Title`, `Card 1`, `CTA`, `Screenshot`, `Cursor`, `Caption`. Pick Stripe / Linear / Vercel / Evotechly / Calm. Direction In / Out / Both. SaaS or Reel shot. Scan. Apply. Fit footage = cover crop. Polish: Apple Ease, Text In, Typewriter, Cursor, squash, ripple, Wet look.
 
 No Node on the editor machine.
 

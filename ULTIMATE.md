@@ -11,8 +11,9 @@ One After Effects panel. Not a separate “Vero Motion” SKU.
 | L0 | Compiler — Scan → Apply, roles, brand JSON, shots | shipped |
 | L1 | UI Kit — In / Out / Both + UI layout presets (own code) | shipped |
 | L2 | Lockup / Brand — own pins + type metrics + Scan→Apply guides | shipped |
-| L3 | Taste packs — Evotechly product-native + Calm / system vs Stripe / Linear / Vercel | this PR (distinct) |
-| L3.1 | SaaS shot pack v2 + Reel grammar | this PR |
+| L3 | Taste packs — Evotechly product-native + Calm / system vs Stripe / Linear / Vercel | shipped |
+| L3.1 | SaaS shot pack v2 + Reel grammar | shipped |
+| L3.2 | Native Polish tab (ease / text / cursor / squash / wet) | this PR (v0.7) |
 | L4 | Copilot — prompt → editable role plan only | stub |
 
 ## L3 taste (same hero layers)
@@ -62,6 +63,14 @@ Hook · Kinetic type · UI punch-in · Logo sting · Captions
 ## L2 Lockup
 
 `logoLockup` and `logoSting`. Own pins. No PinRig.
+
+## L3.2 Native Polish (v0.7)
+
+One panel. Replaces a separate EpicSaaS / polish kit for the tools we can do in stock AE:
+
+Apple Ease · Soft Ease · Spring (Position expression) · Apple Text In · Typewriter + caret · Add Cursor · Click squash · Click ripple · Wet look (Glow + Noise adj layer).
+
+**Not bundled:** Saber, QCA3, Displacer Pro, FX Console, Animation Composer. Reminder row in the panel only. Official sites.
 
 ## L4 Copilot (stub)
 

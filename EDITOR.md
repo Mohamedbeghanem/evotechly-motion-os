@@ -1,4 +1,4 @@
-# Editor playbook (one page) — v0.6 SaaS 10 + Reel
+# Editor playbook (one page) — v0.7 Launch
 
 Art from Figma. Motion from Evotechly. Do not hand-key SaaS intros.
 
@@ -63,6 +63,19 @@ Logo lockup / sting: `Logo` + `Title` or `Wordmark`. Apply drops `EVO_SKIP_LOCKU
 ## Fit footage
 
 Cover-scale the footage layer to the comp (max scale, center). Crops edges. Safe on 9:16 and 16:9. Does not letterbox.
+
+## Polish (native)
+
+Select layers, then: Apple Ease / Soft Ease / Spring / Apple Text In / Typewriter / Add Cursor / Click squash / Click ripple / Wet look.
+
+Spring is a Position expression. Wet look is an adjustment layer (Glow + Noise). No third-party effects.
+
+## Launch install
+
+1. Quit AE. Copy `ae/Evotechly Motion OS.jsx` into **Scripts/ScriptUI Panels**. Restart.
+2. Window → Evotechly Motion OS (header **v0.7 Launch**).
+3. Demo → Stripe → Hero → In → Scan → Apply.
+4. Optional extras (official sites only, not in this zip): Saber, QCA3, Displacer, FX Console, Animation Composer free.
 
 ## Install
 
