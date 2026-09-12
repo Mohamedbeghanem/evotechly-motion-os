@@ -1,20 +1,28 @@
-# Editor playbook (one page) — v0.7 Editor Kit
+# Editor playbook (one page) — v0.8
 
 One kit. Install Motion OS only. Art from Figma. Motion from Evotechly.
 
 ## Install
 
-Quit AE. Copy `ae/Evotechly Motion OS.jsx` into **Scripts/ScriptUI Panels**. Window → Evotechly Motion OS (header **v0.7 Editor Kit**). Caption JSON + sample SRT live in `assets/` and `examples/captions/`.
+Quit AE. Copy `ae/Evotechly Motion OS.jsx` into **Scripts/ScriptUI Panels**. Window → Evotechly Motion OS (header **v0.8**). Caption JSON + sample SRT live in `assets/` and `examples/captions/`.
 
 ## Tabs
 
 | Tab | Use |
 |---|---|
-| Motion | Style / Direction / Shot / Scan / Apply / Fit footage |
+| Motion | Style / Direction / Shot / Scan / Apply / Fit footage (named roles) |
+| Animate | Selected layers, no names. In/Out/Both, 8-way + Scale, Apple/Soft/Expo/Spring, sequence |
 | Polish | Apple Ease, Soft Ease, Spring, Text In, Typewriter, Cursor, squash, ripple, Wet look |
 | Person | Cutout Prep, Keylight recipe, Light wrap, Talking-head stack |
 | Captions | Templates, Import SRT, 9:16 safe, KPI count-up |
 | Recipes | Founder GS / Roto, ERP demo, 15s hook reminders, Feature card |
+| Assets | Local templates + SRT sample paths. No CDN |
+
+## Animate vs Scan → Apply
+
+- **Scan → Apply** — named SaaS/reel roles, style packs, shots, CTA-after-group.
+- **Animate** — any selected layers. Keyframe mode only (v0.8). Expression In/Out is v0.9.
+- They coexist. Animate does not rewrite the compiler plan.
 
 ## Names
 
@@ -24,38 +32,19 @@ Never keyed: cameras, lights, locked layers, names with `EVO_SKIP`.
 
 ## Cutout vs Keylight
 
-- **Keylight** — green/blue studio plate. Person tab → Keylight recipe (Keylight 1.2 + optional Advanced Spill Suppressor). Screen Matte: clip black ~0–15, clip white ~85–100.
-- **Cutout** — no clean key. Person tab → Cutout Prep names `CUTOUT`. You paint Roto Brush 3, Refine, Freeze, pre-render ProRes 4444+Alpha. The panel does not paint strokes.
+- **Keylight** — green/blue studio plate. Person tab → Keylight recipe.
+- **Cutout** — Person tab → Cutout Prep names `CUTOUT`. Paint Roto Brush 3 yourself.
 
-Talking-head stack (top → bottom): CUTOUT|keyed → Captions → Product UI / L3 → BG. Wet / Saber / QCA **off**.
+Talking-head stack: CUTOUT|keyed → Captions → Product UI / L3 → BG. Wet / Saber / QCA **off**.
 
 ## Captions (AR + EN)
 
-Live AE text only. Do not bake PNG.
+Live AE text only. Assets tab applies the same templates. Import SRT is basic SubRip.
 
-- Hook, kinetic, two-line AR+EN (toggle AR-top / EN-top), lower-third, burn-in.
-- Import SRT is basic SubRip (index + timecode + text). No ASS.
-- Set Paragraph direction in AE for Arabic. Fonts: Noto Naskh Arabic / Cairo / IBM Plex Sans Arabic if the machine has them. No font files in the repo.
+## Companions (official sites, never in this zip)
 
-After placing captions: Shot = Captions, Style = Evotechly or Calm, Scan, Apply.
-
-## Polish
-
-Native AE only. Wet look = Glow + Noise adj layer, hooks and logo sting only.
-
-## Optional plugins (official sites, never in this zip)
-
+TFM Liquid Glass + Comp Exporter — aescripts.com/tools-for-motion  
 Saber — videocopilot.net/products/saber  
 QCA3 — aescripts.com/quick-chromatic-aberration  
 Displacer Pro — aescripts.com/displacer-pro  
-FX Console — aescripts.com/fx-console  
-Animation Composer — mrhorse.com/animation-composer  
-
-Hooks only. Off talking-head. Product UI stays Apple-clean.
-
-## Loop
-
-1. Style + Shot + Direction. Default style is Stripe.
-2. Scan. Apply. Undo is one step.
-3. Fit footage = cover crop, 9:16-safe.
-4. Captions / Person / Polish as needed.
+Animation Composer — mrhorse.com/animation-composer

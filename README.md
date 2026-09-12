@@ -2,7 +2,7 @@
 
 Deterministic compiler for **SaaS-style motion**, plus a dockable After Effects panel.
 
-v0.7 Editor Kit: one panel for SaaS + reels + native polish + captions. See [ULTIMATE.md](ULTIMATE.md). Does not include Saber / QCA3 / Displacer.
+v0.8: Editor Kit + selection Auto-Animate + local asset browser. See [ULTIMATE.md](ULTIMATE.md). Does not include Saber / QCA3 / Displacer / Liquid Glass.
 
 **Editors: install `ae/Evotechly Motion OS.jsx` and read [EDITOR.md](EDITOR.md) + [ae/INSTALL-AE.md](ae/INSTALL-AE.md).**
 
@@ -10,7 +10,7 @@ v0.7 Editor Kit: one panel for SaaS + reels + native polish + captions. See [ULT
 
 Copy `ae/Evotechly Motion OS.jsx` into `Scripts/ScriptUI Panels`, restart AE, open **Window > Evotechly Motion OS**.
 
-Name layers `Title`, `Card 1`, `CTA`, `Screenshot`, `Cursor`, `Caption`. Motion tab: Style / Direction / Shot / Scan / Apply / Fit footage. Polish / Person / Captions / Recipes tabs ship with the same file. Caption pack: `assets/` + `examples/captions/`.
+Motion tab: Scan / Apply. Animate tab: selected layers, no names. Assets tab: local caption templates.
 
 No Node on the editor machine.
 
@@ -18,8 +18,6 @@ No Node on the editor machine.
 
 ```bash
 node index.js examples/saas-hero.json --style stripe
-node index.js examples/saas-hero.json --style evotechly --brand examples/evotechly.brand.json
-node index.js examples/saas-hero.json --style apple --direction both --shot hook
 ```
 
 Default style is `stripe` so existing hero demos stay put.
