@@ -1,0 +1,11 @@
+1
+00:00:00,000 --> 00:00:01,200
+One panel. ERP, POS, DMS.
+
+2
+00:00:01,200 --> 00:00:03,000
+Scan the UI. Apply the motion.
+
+3
+00:00:03,000 --> 00:00:05,000
+Captions stay live text.
