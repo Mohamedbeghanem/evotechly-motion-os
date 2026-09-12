@@ -1,0 +1,62 @@
+{
+  "schema": "evotechly.caption.templates.v1",
+  "safe": {
+    "reel916": { "top": 0.12, "bottom": 0.14, "side": 0.08 },
+    "wide169": { "top": 0.08, "bottom": 0.10, "side": 0.06 }
+  },
+  "templates": [
+    {
+      "id": "hook",
+      "label": "Hook caption",
+      "role": "caption",
+      "duration": 1,
+      "fontSizeScale": 1.35,
+      "align": "center",
+      "safe": "reel916",
+      "y": 0.42
+    },
+    {
+      "id": "kinetic",
+      "label": "Word-by-word / line kinetic",
+      "role": "caption",
+      "duration": 2.2,
+      "fontSizeScale": 1.05,
+      "align": "center",
+      "safe": "reel916",
+      "y": 0.62,
+      "stagger": 0.08
+    },
+    {
+      "id": "stackArEn",
+      "label": "Two-line AR+EN stack",
+      "role": "caption",
+      "duration": 3,
+      "fontSizeScale": 1,
+      "align": "center",
+      "safe": "reel916",
+      "y": 0.72,
+      "stack": true,
+      "defaultPrimary": "ar"
+    },
+    {
+      "id": "lowerThird",
+      "label": "Lower-third name + title",
+      "role": "caption",
+      "duration": 4,
+      "fontSizeScale": 0.72,
+      "align": "left",
+      "safe": "wide169",
+      "y": 0.82
+    },
+    {
+      "id": "burnIn",
+      "label": "Subs burn-in",
+      "role": "caption",
+      "duration": 2.4,
+      "fontSizeScale": 0.78,
+      "align": "center",
+      "safe": "reel916",
+      "y": 0.86
+    }
+  ]
+}

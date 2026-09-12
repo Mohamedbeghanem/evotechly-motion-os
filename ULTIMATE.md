@@ -11,8 +11,9 @@ One After Effects panel. Not a separate “Vero Motion” SKU.
 | L0 | Compiler — Scan → Apply, roles, brand JSON, shots | shipped |
 | L1 | UI Kit — In / Out / Both + UI layout presets (own code) | shipped |
 | L2 | Lockup / Brand — own pins + type metrics + Scan→Apply guides | shipped |
-| L3 | Taste packs — Evotechly product-native + Calm / system vs Stripe / Linear / Vercel | this PR (distinct) |
-| L3.1 | SaaS shot pack v2 + Reel grammar | this PR |
+| L3 | Taste packs — Evotechly product-native + Calm / system vs Stripe / Linear / Vercel | shipped |
+| L3.1 | SaaS shot pack v2 + Reel grammar | shipped |
+| L3.2 | Editor Kit — native Polish + Person recipes + reel captions + assets | this PR (v0.7) |
 | L4 | Copilot — prompt → editable role plan only | stub |
 
 ## L3 taste (same hero layers)
@@ -41,7 +42,7 @@ Timing is frame-agnostic. 9:16 is a crop, not a different delay table.
 
 Cursor still flies to CTA. CTA still waits for the group.
 
-## Reel shots (new)
+## Reel shots
 
 Hook · Kinetic type · UI punch-in · Logo sting · Captions
 
@@ -51,13 +52,15 @@ Hook · Kinetic type · UI punch-in · Logo sting · Captions
 - **Logo sting** — short end card; L2 lockup with faster mark→type.
 - **Captions** — `caption` role (append-only). Two-line stagger.
 
-**Both:** SaaS Both is still in → out with no hold. Reel Both is in → hold → out (loop-friendly). Beat-sync from audio is later.
+**Both:** SaaS Both is still in → out with no hold. Reel Both is in → hold → out (loop-friendly).
 
-## Direction
+## L3.2 Editor Kit (v0.7)
 
-- **in** (default) — `from → to`
-- **out** — swap
-- **both** — in, then out. Reel shots add `animation.hold` from the shot hint.
+Tabs: Motion | Polish | Person | Captions | Recipes.
+
+Native only: ease, spring expression, text in, typewriter, cursor, squash, ripple, Wet look (Glow + Noise), Keylight recipe, light wrap, Cutout *prep*, caption templates, basic SRT, KPI slider.
+
+Assets in-repo: `assets/caption-templates.json`, `examples/captions/*.srt`. No `.aex`, no fonts, no LUTs.
 
 ## L2 Lockup
 
@@ -67,8 +70,8 @@ Hook · Kinetic type · UI punch-in · Logo sting · Captions
 
 Later: a prompt becomes an **editable role plan**. Editors still Scan / Apply.
 
-Out of scope now: Claude/API wiring, CEP/Premiere, baked frames, beat-sync.
+Out of scope now: Claude/API wiring, CEP/Premiere, baked frames, beat-sync, Mocha auto-roto, bundled Saber/QCA3/Displacer.
 
 ## No third-party binary
 
-MIT Evotechly code only. No `.aex`, encrypted JSX, or copied ScriptUI from paid plugins.
+MIT Evotechly code only. No `.aex`, encrypted JSX, or copied ScriptUI from paid plugins. Reminder row + official URLs only.
