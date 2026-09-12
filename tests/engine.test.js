@@ -305,3 +305,15 @@ test("logo lockup shot pins mark and type; hero is unchanged", function () {
   });
   assert.ok(aeLock.lockup && aeLock.lockup.applied);
 });
+
+test("polish vocabulary is native-only and distinct from stripe hero", function () {
+  const { EASE, TEXT_IN, TYPEWRITER, PLUGINS_REMINDER, easePair } = require("../core/polish");
+  assert.equal(easePair("apple").influenceIn, 80);
+  assert.equal(easePair("soft").influenceIn, 40);
+  assert.ok(TEXT_IN.travel < 16);
+  assert.equal(TYPEWRITER.charsPerSecond, 18);
+  assert.ok(PLUGINS_REMINDER.indexOf("Saber") !== -1);
+  const hero = generateMotion(sample);
+  assert.equal(hero.style, "stripe");
+  assert.equal(hero.travel, 1);
+});
