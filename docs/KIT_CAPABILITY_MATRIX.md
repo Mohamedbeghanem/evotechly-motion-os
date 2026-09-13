@@ -11,6 +11,7 @@
 | Figma→roles, Style / Direction / Shot, Scan→Apply | Main panel v0.32 |
 | Polish ease, Person cutout/Keylight, Captions AR+EN, Recipes | Main panel |
 | Cursor + click (shape pointer), depth, stagger, carousel | SaaS Demo Tools / `core/saasDemo.js` |
+| **P1a UI presets (in / out / both + mirror)** | **own** — `applyUiPreset` / SaaS **Apply UI Preset** |
 | Glass, gradient wipe, proximity hover | `core/saasDemoFx.js` |
 | Golden comps seed | `Seed Golden Project.jsx` |
 | Asset register (P15) | Assets tab |
@@ -21,7 +22,7 @@
 | Kit | Price | Capabilities extracted | Classification | Motion OS wrap action |
 |---|---|---|---|---|
 | **Solair SaaS Kit** | Paid ~$49 | Figma ship, depth reveal, 3D cursor+click, stagger, carousel, flowing/coloured text, glass, gradient wipe, proximity, AI script, studio playbook | **Own** (feature map only) | Phases 1–2 done; still open: flowing/coloured text explode, richer Figma ship, playbook docs. Never copy Solair. |
-| **UI Animator Pro** (What? Studio) | $0 | UI presets in/out/both; custom presets (relative % / absolute); automation mode; mirror layout; auto ease + motion blur; duration live update; layer reorder; reset | **Own gap + companion** | Own: preset library + mirror automation (Phase 4). Companion: deep-link Gumroad until reimplemented. |
+| **UI Animator Pro** (What? Studio) | $0 | UI presets in/out/both; custom presets (relative % / absolute); automation mode; mirror layout; auto ease + motion blur; duration live update; layer reorder; reset | **P1a own + companion extras** | **Own:** `fade-up`, `fade-scale`, `slide-left`, `slide-right`, `slide-up`, `pop` (90→100) + mirror. Companion: Gumroad for extras we did not reimplement. |
 | **PinRig** | $0 | Logo/type pins, construction guides, typography metrics, anim presets | **Companion** | Kit Hub link. Low priority to reimplement. |
 | **AEJuice Pack Manager + free Starter** | Free | 100+ drag assets: liquid/shape, transitions, slides, 2D/3D/text presets, flat icons, Motion Cafe UI/HUD; also free Auto Captions packs | **Companion (assets)** | Kit Hub install URL. Do **not** ship packs. Optional: Evotechly-owned HUD shapes later. |
 | **Motion Bro** (free tier) | Free core + ~1400 starter presets | In-panel transitions, graphics, SFX; autofit resolution; paid packs separate | **Companion (assets)** | Kit Hub link. Liquid Glass packs often via Motion Bro — personal license only. |
@@ -43,13 +44,13 @@ Main-panel Home / SaaS / Kit Hub tabs were **deferred**. Do not rewrite or stub 
 
 1. **Window → SaaS Demo Tools / Motion OS Hub** — `ae/SaaS Demo Tools.jsx` (palette title **Motion OS Hub**).
 2. **Home** — Seed Golden Project (reuses `ae/Seed Golden Project.jsx`).
-3. **SaaS** — existing engines: cursor, depth, stagger, carousel, glass, wipe, hover.
+3. **SaaS** — existing engines: cursor, depth, stagger, **UI presets**, carousel, glass, wipe, hover.
 4. **Kit Hub** — companion names + official URLs only (`core/kitHub.js`). Copy / alert. Never download or vendor binaries.
 
 Target one-tool IA (later, after soak) still wants those sections inside v0.32. P0 ships the companion hub instead.
 
 ### P1 — reimplement high-ROI gaps
-1. UI preset pack (UI Animator–class in/out/both + mirror).
+1. **P1a own** — UI preset pack (UI Animator–class in/out/both + mirror). `core/uiPresets.js` + **Apply UI Preset**.
 2. Flowing / coloured text reveal.
 3. Caption keyword color + IN/OUT row.
 4. Cursor styles (arrow / hand / I-beam).
@@ -70,4 +71,4 @@ Solair AI script, Overlord Figma clone, Auto-Animate until soak passes.
 Research ≠ copy. Companions never in release zip. Build on v0.32.0-rc.
 
 ## Next
-P0 companion hub is in. P1 PRs → soak #11 before v2. Do not fold the hub into the 297 KB panel until soak passes.
+P0 companion hub is in. **P1a own** is in. Remaining P1 PRs → soak #11 before v2. Do not fold the hub into the 297 KB panel until soak passes.

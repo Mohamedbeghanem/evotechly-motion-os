@@ -6,7 +6,7 @@ Two ScriptUI files. No Node. v0.32 panel + SaaS Demo companion.
 
 `ae/Evotechly Motion OS.jsx` — main panel (~297 KB, v0.32 Reliability)
 
-`ae/SaaS Demo Tools.jsx` — **Window → SaaS Demo Tools / Motion OS Hub** (Home seed, SaaS engines, Kit Hub URLs)
+`ae/SaaS Demo Tools.jsx` — **Window → SaaS Demo Tools / Motion OS Hub** (Home seed, SaaS engines including UI presets, Kit Hub URLs)
 
 `ae/Seed Golden Project.jsx` — File → Scripts → Run Script File… (not a Window panel)
 

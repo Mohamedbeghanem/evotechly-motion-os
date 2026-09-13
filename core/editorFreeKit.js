@@ -14,7 +14,7 @@ const INSTALL_ORDER = [
     name: "UI Animator Pro",
     url: "https://whatstudio.gumroad.com/",
     job: "saas",
-    note: "Optional UI stagger/presets. Motion OS staggerReveal covers the same job natively."
+    note: "Optional UI stagger/presets. Native staggerReveal + applyUiPreset cover the same job."
   },
   {
     id: "pinRig",
@@ -104,7 +104,7 @@ const GOLDEN_SEED = {
 
 const JOB_TABS = {
   saas: [
-    "Window → SaaS Demo Tools / Motion OS Hub (cursor, depth, stagger, carousel, glass, wipe, proximity)",
+    "Window → SaaS Demo Tools / Motion OS Hub (cursor, depth, stagger, UI presets, carousel, glass, wipe, proximity)",
     "Motion (Style / Direction / Shot / Scan / Apply)",
     "Polish (ease, Add Cursor, squash)",
     "Interact (click / hover / drag when the v0.32 panel is installed)",
