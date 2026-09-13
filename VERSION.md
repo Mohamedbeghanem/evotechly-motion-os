@@ -2,6 +2,10 @@
 
 Panel build: **v0.32** (P0–P23) on main — `ae/Evotechly Motion OS.jsx` (~297 KB Reliability).
 
+## Phase 3 — editor-ready golden project seed
+
+No `.aep` binary (AE cannot run in CI). `ae/Seed Golden Project.jsx` builds `00_HOME`, `ERP_DEMO`, `TALKING_HEAD`, `REEL_9x16` when the editor runs it. Idempotent. Shy `EVO_GOLDEN_META` on Home. One-page path: `docs/QUICK_START.md`. Helpers: `core/goldenProject.js`. SaaS Demo Tools has a Seed button. Does not replace v0.32.
+
 ## Phase 2 — native glass, gradient wipe, proximity hover
 
 Own Solair-class FX. No third-party binaries. Liquid Glass remains an optional external pack for personal use only — not redistributed.

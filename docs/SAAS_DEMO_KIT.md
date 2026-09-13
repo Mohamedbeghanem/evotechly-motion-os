@@ -1,4 +1,4 @@
-# SaaS Demo Kit — Phase 2
+# SaaS Demo Kit — Phase 2 (+ Phase 3 seed)
 
 Evotechly-owned tools so a product demo can do **cursor + click**, **depth reveal**, **stagger**, **carousel**, **glass panel**, **gradient wipe**, and **proximity hover** without Solair SaaS Kit and without paid plugins.
 
@@ -32,6 +32,8 @@ Install **both** JSX files into `Scripts/ScriptUI Panels`, restart After Effects
 
 1. `ae/Evotechly Motion OS.jsx` — v0.32 Reliability (do not replace with a stub).
 2. `ae/SaaS Demo Tools.jsx` — this kit. **Window → SaaS Demo Tools**.
+
+**Phase 3 — golden project seed.** There is no binary `.aep`. **File → Scripts → Run Script File…** → `ae/Seed Golden Project.jsx` (or the **Seed Golden Project** button on this panel). Creates `00_HOME`, `ERP_DEMO`, `TALKING_HEAD`, `REEL_9x16` if missing. Idempotent. Editor path: [QUICK_START.md](QUICK_START.md).
 
 The v0.32 Polish tab also notes the companion. It does not reimplement these engines.
 
@@ -129,8 +131,11 @@ proximityHover({
 | `core/saasDemo.js` | Phase 1 plans + re-exports of Phase 2. Node-testable. |
 | `core/saasDemoFx.js` | Phase 2: `glassPanel`, `gradientWipeReveal`, `proximityHover`. |
 | `core/editorFreeKit.js` | Companion install order + which Motion OS tab to use. |
-| `ae/SaaS Demo Tools.jsx` | ScriptUI that applies the same numbers in AE. |
-| `tests/saas-demo.test.js` | Pure helper tests. |
+| `core/goldenProject.js` | Phase 3 seed names, sizes, layer roles, idempotency. |
+| `ae/SaaS Demo Tools.jsx` | ScriptUI that applies the same numbers in AE. **Seed Golden Project** button evals the sibling script. |
+| `ae/Seed Golden Project.jsx` | File → Run Script. Builds the four golden comps. No `.aep`. |
+| `tests/saas-demo.test.js` | Phase 1–2 helper tests. |
+| `tests/golden-project.test.js` | Phase 3 naming / idempotency / job map. |
 
 JSX cannot `require()` Node modules. Constants in the companion match `core/saasDemo.js` / `core/saasDemoFx.js` (`0.55` move, `0.12` press, `0.88` / `0.94` click scales, `3` frame stagger, glass `42` / `18`, wipe softness `12`, hover `140` / `6` / `18`, `EVO_DEPTH` / `EVO_CAROUSEL` / `EVO_GLASS` / `EVO_HOVER`).
 
