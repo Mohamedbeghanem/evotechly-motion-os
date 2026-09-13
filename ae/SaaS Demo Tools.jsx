@@ -440,7 +440,7 @@
     } catch (e0) {}
     rest = layer.transform.position.value;
     matte = comp.layers.addSolid([1, 1, 1], WIPE_MATTE + "_" + layer.index, Math.max(4, Math.round(w)), Math.max(4, Math.round(h)), 1);
-    matte.name = WIPE_MATTE;
+    matte.name = WIPE_MATTE + "_" + layer.index;
     matte.moveBefore(layer);
     try { layer.setTrackMatte(matte, TrackMatteType.ALPHA); } catch (e1) {
       try { layer.trackMatteType = TrackMatteType.ALPHA; } catch (e2) {}
