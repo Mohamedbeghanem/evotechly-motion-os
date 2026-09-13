@@ -72,9 +72,9 @@ Later: a prompt becomes an **editable role plan**. Editors still Scan / Apply.
 
 Out of scope now: Claude/API wiring, CEP/Premiere, baked frames, beat-sync, Mocha auto-roto, bundled Saber/QCA3/Displacer.
 
-## Phase 1 SaaS Demo (own code)
+## Phase 1–2 SaaS Demo (own code)
 
-Companion **Window → SaaS Demo Tools** (`ae/SaaS Demo Tools.jsx`) plus `core/saasDemo.js`: cursor + click, depth reveal, stagger, carousel. Does not replace the v0.32 panel. Docs: `docs/SAAS_DEMO_KIT.md`, `docs/EDITOR_FREE_KIT.md`.
+Companion **Window → SaaS Demo Tools** (`ae/SaaS Demo Tools.jsx`) plus `core/saasDemo.js` / `core/saasDemoFx.js`: cursor + click, depth reveal, stagger, carousel, native glass panel, gradient wipe, proximity hover. Does not replace the v0.32 panel. Liquid Glass is optional personal-use only and is not shipped. Docs: `docs/SAAS_DEMO_KIT.md`, `docs/EDITOR_FREE_KIT.md`.
 
 ## No third-party binary
 

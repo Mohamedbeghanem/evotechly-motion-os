@@ -11,7 +11,7 @@ v0.7 Editor Kit: one panel for SaaS + reels + native polish + captions. See [ULT
 Copy `ae/Evotechly Motion OS.jsx` and `ae/SaaS Demo Tools.jsx` into `Scripts/ScriptUI Panels`, restart AE.
 
 - **Window > Evotechly Motion OS** — v0.32 Reliability (Figma roles, Motion, Polish, Person, Captions, Recipes).
-- **Window > SaaS Demo Tools** — cursor + click, depth reveal, stagger, carousel. See [docs/SAAS_DEMO_KIT.md](docs/SAAS_DEMO_KIT.md).
+- **Window > SaaS Demo Tools** — cursor + click, depth reveal, stagger, carousel, glass panel, gradient wipe, proximity hover. See [docs/SAAS_DEMO_KIT.md](docs/SAAS_DEMO_KIT.md).
 
 Name layers `Title`, `Card 1`, `CTA`, `Screenshot`, `Cursor`, `Caption`. Motion tab: Style / Direction / Shot / Scan / Apply / Fit footage. Optional companions: [docs/EDITOR_FREE_KIT.md](docs/EDITOR_FREE_KIT.md) (not bundled). Caption pack: `assets/` + `examples/captions/`.
 

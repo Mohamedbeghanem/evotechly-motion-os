@@ -1,13 +1,19 @@
 #target aftereffects
 /*
-  Evotechly SaaS Demo Tools — companion ScriptUI panel.
-  Applies core/saasDemo.js numbers in After Effects. Native AE only.
+  Evotechly SaaS Demo Tools — companion ScriptUI panel (Phase 1 + 2).
+  Applies core/saasDemo.js + core/saasDemoFx.js numbers in After Effects.
+  Native AE only. No Liquid Glass, Deep Glow, Saber, QCA, or TFM.
   Does not replace Evotechly Motion OS v0.32. Window → SaaS Demo Tools.
 */
 (function (thisObj) {
   var CURSOR_NAME = "Cursor";
   var DEPTH_NAME = "EVO_DEPTH";
   var CAROUSEL_NAME = "EVO_CAROUSEL";
+  var GLASS_NAME = "EVO_GLASS";
+  var HOVER_NAME = "EVO_HOVER";
+  var WIPE_MATTE = "EVO_WIPE_MATTE";
+  var WIPE_GRAD = "EVO_WIPE_GRAD";
+  var CURSOR_DRIVER = "Cursor";
   var PRESS = 0.12;
   var DIP_RATIO = 0.45;
   var CURSOR_DIP = 0.88;
@@ -16,6 +22,13 @@
   var STAGGER_TRAVEL = 16;
   var STAGGER_HOLD = 0.2;
   var DEFAULT_DUR = 0.55;
+  var GLASS_OPACITY = 42;
+  var GLASS_BLUR = 18;
+  var WIPE_SOFT = 12;
+  var WIPE_HOLD = 0.2;
+  var HOVER_RADIUS = 140;
+  var HOVER_SCALE = 6;
+  var HOVER_OPACITY = 18;
   var VERTS = [[0, 0], [0, 24], [7, 18], [11, 28], [14, 26], [10, 17], [20, 17]];
 
   function clamp(n, lo, hi) {
@@ -292,9 +305,253 @@
     alert("Carousel on " + sel.length + " slide(s), axis " + axis + ".\nScrub EVO_CAROUSEL → Index. Key that slider to change slides.");
   }
 
+  function ensureGuideNull(comp, name) {
+    var layer = findLayer(comp, name);
+    if (!layer) {
+      layer = comp.layers.addNull();
+      layer.name = name;
+      try { layer.guideLayer = true; } catch (e0) {}
+    }
+    return layer;
+  }
+
+  function addGlassShape(comp) {
+    var shape = comp.layers.addShape(), group, rect, fill, size;
+    shape.name = "Glass Panel";
+    group = shape.property("ADBE Root Vectors Group").addProperty("ADBE Vector Group");
+    group.name = "panel";
+    rect = group.property("ADBE Vectors Group").addProperty("ADBE Vector Shape - Rect");
+    size = [Math.round(comp.width * 0.42), Math.round(comp.height * 0.28)];
+    try { rect.property("ADBE Vector Rect Size").setValue(size); } catch (e0) {}
+    try { rect.property("ADBE Vector Rect Roundness").setValue(24); } catch (e1) {}
+    fill = group.property("ADBE Vectors Group").addProperty("ADBE Vector Graphic - Fill");
+    fill.property("ADBE Vector Fill Color").setValue([0.94, 0.96, 0.99]);
+    try { fill.property("ADBE Vector Fill Opacity").setValue(GLASS_OPACITY); } catch (e2) {}
+    shape.transform.position.setValue([comp.width * 0.5, comp.height * 0.5]);
+    return shape;
+  }
+
+  function applyGlassFx(layer, blurExpr, opacityExpr) {
+    var blurFx, tintFx, levelsFx, fillFx;
+    blurFx = tryEffect(layer, ["ADBE Fast Box Blur", "ADBE Box Blur2", "ADBE Gaussian Blur 2"]);
+    if (blurFx) {
+      try { blurFx.property(1).expression = blurExpr; } catch (e1) {}
+      try { blurFx.property("Repeat Edge Pixels").setValue(1); } catch (e1b) {}
+    }
+    tintFx = tryEffect(layer, ["ADBE Tint"]);
+    if (tintFx) {
+      try { tintFx.property("Map White To").setValue([0.92, 0.95, 0.98]); } catch (e2) {}
+    }
+    levelsFx = tryEffect(layer, ["ADBE Easy Levels2", "ADBE Pro Levels2"]);
+    if (levelsFx) {
+      try { levelsFx.property("Gamma").setValue(1.08); } catch (e3) {}
+    }
+    if (layer instanceof ShapeLayer) {
+      fillFx = tryEffect(layer, ["ADBE Fill"]);
+      if (fillFx) {
+        try { fillFx.property("Color").setValue([0.94, 0.96, 0.99]); } catch (e4) {}
+      }
+    }
+    try { layer.property("ADBE Transform Group").property("ADBE Opacity").expression = opacityExpr; } catch (e5) {}
+  }
+
+  function runGlass() {
+    var comp = requireComp(); if (!comp) return;
+    var sel = selectedLayers(comp), ctrl, i, layers, blurExpr, opacityExpr;
+    blurExpr = 'var ctrl = thisComp.layer("' + GLASS_NAME + '");\nctrl.effect("Blur")("Slider");';
+    opacityExpr = 'var ctrl = thisComp.layer("' + GLASS_NAME + '");\nctrl.effect("Opacity")("Slider");';
+    app.beginUndoGroup("Evotechly Glass panel");
+    ctrl = ensureGuideNull(comp, GLASS_NAME);
+    ensureSlider(ctrl, "Opacity", GLASS_OPACITY);
+    ensureSlider(ctrl, "Blur", GLASS_BLUR);
+    layers = sel.length ? sel : [addGlassShape(comp)];
+    for (i = 0; i < layers.length; i++) applyGlassFx(layers[i], blurExpr, opacityExpr);
+    app.endUndoGroup();
+    alert("Glass panel on " + layers.length + " layer(s).\nEVO_GLASS Opacity / Blur drive native frost (Fast Box Blur + Tint/Levels). Liquid Glass pack is not required.");
+  }
+
+  function wipeSide(text) {
+    var d = String(text || "Left").toLowerCase();
+    if (d === "right" || d === "up" || d === "down") return { mode: "in", side: d };
+    if (d === "out") return { mode: "out", side: "left" };
+    if (d === "both") return { mode: "both", side: "left" };
+    if (d === "in") return { mode: "in", side: "left" };
+    return { mode: "in", side: "left" };
+  }
+
+  function wipeRampPoints(comp, side) {
+    var w = comp.width, h = comp.height;
+    if (side === "up") return { a: [w * 0.5, 0], b: [w * 0.5, h] };
+    if (side === "down") return { a: [w * 0.5, h], b: [w * 0.5, 0] };
+    if (side === "right") return { a: [w, h * 0.5], b: [0, h * 0.5] };
+    return { a: [0, h * 0.5], b: [w, h * 0.5] };
+  }
+
+  function ensureWipeGradient(comp, side) {
+    var layer = findLayer(comp, WIPE_GRAD), ramp, pts;
+    pts = wipeRampPoints(comp, side);
+    if (!layer) {
+      layer = comp.layers.addSolid([1, 1, 1], WIPE_GRAD, comp.width, comp.height, 1);
+      layer.name = WIPE_GRAD;
+      try { layer.guideLayer = true; } catch (e0) {}
+      try { layer.enabled = false; } catch (e1) {}
+    }
+    ramp = tryEffect(layer, ["ADBE Ramp"]);
+    if (ramp) {
+      try { ramp.property("Start of Ramp").setValue(pts.a); } catch (e2) {}
+      try { ramp.property("End of Ramp").setValue(pts.b); } catch (e3) {}
+    }
+    return layer;
+  }
+
+  function setWipeKeys(fx, t0, keys, ease) {
+    var prop = null, i;
+    try { prop = fx.property("ADBE Gradient Wipe-0001"); } catch (e0) {}
+    if (!prop) { try { prop = fx.property("Transition Completion"); } catch (e1) {} }
+    if (!prop) { try { prop = fx.property(1); } catch (e2) {} }
+    if (!prop) return false;
+    for (i = 0; i < keys.length; i++) prop.setValueAtTime(t0 + keys[i].t, keys[i].completion);
+    applyEase(prop, ease);
+    try { fx.property("Softness").setValue(WIPE_SOFT); } catch (e3) {}
+    try { fx.property("ADBE Gradient Wipe-0003").setValue(WIPE_SOFT); } catch (e4) {}
+    return true;
+  }
+
+  function wipeKeyTimes(mode, dur) {
+    if (mode === "out") return [{ t: 0, completion: 0 }, { t: dur, completion: 100 }];
+    if (mode === "both") {
+      return [
+        { t: 0, completion: 100 },
+        { t: dur, completion: 0 },
+        { t: dur + WIPE_HOLD, completion: 0 },
+        { t: dur + WIPE_HOLD + dur, completion: 100 }
+      ];
+    }
+    return [{ t: 0, completion: 100 }, { t: dur, completion: 0 }];
+  }
+
+  function addWipeMatte(comp, layer, side, mode, dur, ease, t0) {
+    var matte, pos, rest, w, h, from, to, keys, i, x, y, sx;
+    w = layer.source ? layer.source.width : (layer.width || comp.width);
+    h = layer.source ? layer.source.height : (layer.height || comp.height);
+    try {
+      var r = layer.sourceRectAtTime(t0, false);
+      w = r.width; h = r.height;
+    } catch (e0) {}
+    rest = layer.transform.position.value;
+    matte = comp.layers.addSolid([1, 1, 1], WIPE_MATTE + "_" + layer.index, Math.max(4, Math.round(w)), Math.max(4, Math.round(h)), 1);
+    matte.name = WIPE_MATTE + "_" + layer.index;
+    matte.moveBefore(layer);
+    try { layer.setTrackMatte(matte, TrackMatteType.ALPHA); } catch (e1) {
+      try { layer.trackMatteType = TrackMatteType.ALPHA; } catch (e2) {}
+    }
+    pos = matte.property("ADBE Transform Group").property("ADBE Position");
+    x = rest[0]; y = rest[1];
+    if (side === "up") { from = [x, y - h]; to = [x, y]; }
+    else if (side === "down") { from = [x, y + h]; to = [x, y]; }
+    else if (side === "right") { from = [x + w, y]; to = [x, y]; }
+    else { from = [x - w, y]; to = [x, y]; }
+    keys = wipeKeyTimes(mode, dur);
+    for (i = 0; i < keys.length; i++) {
+      sx = keys[i].completion > 50 ? from : to;
+      pos.setValueAtTime(t0 + keys[i].t, [sx[0], sx[1]].concat(rest.length > 2 ? [rest[2]] : []));
+    }
+    applyEase(pos, ease);
+    tryEffect(matte, ["ADBE Fast Box Blur", "ADBE Gaussian Blur 2"]);
+    blurSoft(matte);
+    return matte;
+  }
+
+  function blurSoft(layer) {
+    var fx = findEffect(layer, ["ADBE Fast Box Blur", "ADBE Gaussian Blur 2", "ADBE Box Blur2"]);
+    if (fx) {
+      try { fx.property(1).setValue(WIPE_SOFT); } catch (e0) {}
+    }
+  }
+
+  function runWipe(dirList, durField, easeList) {
+    var comp = requireComp(); if (!comp) return;
+    var sel = selectedLayers(comp), i, layer, parsed, ease, dur, fx, keyed, t0, grad, keys;
+    if (!sel.length) { alert("Select the layer(s) to gradient-wipe."); return; }
+    parsed = wipeSide(dirList.selection ? dirList.selection.text : "Left");
+    ease = easeList.selection ? easeList.selection.text.toLowerCase() : "apple";
+    dur = clamp(parseNum(durField, DEFAULT_DUR), 0.05, 30);
+    t0 = comp.time;
+    keys = wipeKeyTimes(parsed.mode, dur);
+    app.beginUndoGroup("Evotechly Gradient wipe");
+    grad = ensureWipeGradient(comp, parsed.side);
+    for (i = 0; i < sel.length; i++) {
+      layer = sel[i];
+      fx = tryEffect(layer, ["ADBE Gradient Wipe"]);
+      keyed = false;
+      if (fx) {
+        try { fx.property("Invert Gradient").setValue((parsed.side === "right" || parsed.side === "down") ? 1 : 0); } catch (e1) {}
+        try { fx.property("Gradient Layer").setValue(grad.index); } catch (e2) {}
+        keyed = setWipeKeys(fx, t0, keys, ease);
+      }
+      if (!keyed) addWipeMatte(comp, layer, parsed.side, parsed.mode, dur, ease, t0);
+    }
+    app.endUndoGroup();
+    alert("Gradient wipe " + parsed.mode + " / " + parsed.side + " on " + sel.length + " layer(s), " + dur + "s · " + ease + " ease.\nNative Gradient Wipe (shape matte fallback). Soft edge " + WIPE_SOFT + ".");
+  }
+
+  function hoverScaleExpr(driver) {
+    return 'var drvName = "' + driver + '";\n' +
+      'var ctrl = thisComp.layer("' + HOVER_NAME + '");\n' +
+      "var d;\n" +
+      "try { d = thisComp.layer(drvName); } catch (e) { d = ctrl; }\n" +
+      'var radius = ctrl.effect("Radius")("Slider");\n' +
+      'var boost = ctrl.effect("Scale Boost")("Slider");\n' +
+      "var q = d.toComp(d.anchorPoint);\n" +
+      "var p = toComp(anchorPoint);\n" +
+      "var dist = length(p, q);\n" +
+      "var t = clamp(1 - dist / Math.max(radius, 0.001), 0, 1);\n" +
+      "var s = value[0] + boost * t;\n" +
+      "[s, s];";
+  }
+
+  function hoverOpacityExpr(driver) {
+    return 'var drvName = "' + driver + '";\n' +
+      'var ctrl = thisComp.layer("' + HOVER_NAME + '");\n' +
+      "var d;\n" +
+      "try { d = thisComp.layer(drvName); } catch (e) { d = ctrl; }\n" +
+      'var radius = ctrl.effect("Radius")("Slider");\n' +
+      'var boost = ctrl.effect("Opacity Boost")("Slider");\n' +
+      "var q = d.toComp(d.anchorPoint);\n" +
+      "var p = toComp(anchorPoint);\n" +
+      "var dist = length(p, q);\n" +
+      "var t = clamp(1 - dist / Math.max(radius, 0.001), 0, 1);\n" +
+      "clamp(value + boost * t, 0, 100);";
+  }
+
+  function runHover(radiusField, scaleField, opacityField) {
+    var comp = requireComp(); if (!comp) return;
+    var sel = selectedLayers(comp), ctrl, i, layer, driver, radius, scaleBoost, opacityBoost;
+    if (!sel.length) { alert("Select the layers that should react when the cursor is near."); return; }
+    radius = clamp(parseNum(radiusField, HOVER_RADIUS), 1, 10000);
+    scaleBoost = clamp(parseNum(scaleField, HOVER_SCALE), 0, 80);
+    opacityBoost = clamp(parseNum(opacityField, HOVER_OPACITY), 0, 100);
+    driver = findLayer(comp, CURSOR_DRIVER) ? CURSOR_DRIVER : HOVER_NAME;
+    app.beginUndoGroup("Evotechly Proximity hover");
+    ctrl = ensureGuideNull(comp, HOVER_NAME);
+    ensureSlider(ctrl, "Radius", radius);
+    ensureSlider(ctrl, "Scale Boost", scaleBoost);
+    ensureSlider(ctrl, "Opacity Boost", opacityBoost);
+    for (i = 0; i < sel.length; i++) {
+      layer = sel[i];
+      if (String(layer.name).toLowerCase() === CURSOR_DRIVER.toLowerCase()) continue;
+      if (String(layer.name).toLowerCase() === HOVER_NAME.toLowerCase()) continue;
+      try { layer.property("ADBE Transform Group").property("ADBE Scale").expression = hoverScaleExpr(driver); } catch (e1) {}
+      try { layer.property("ADBE Transform Group").property("ADBE Opacity").expression = hoverOpacityExpr(driver); } catch (e2) {}
+    }
+    app.endUndoGroup();
+    alert("Proximity hover on " + sel.length + " layer(s).\nDriver: " + driver + " (Phase 1 Cursor + click if present).\nEVO_HOVER Radius / Scale Boost / Opacity Boost. Move the cursor near a card to scale + brighten.");
+  }
+
   function buildUI(thisObj) {
     var win = (thisObj instanceof Panel) ? thisObj : new Window("palette", "SaaS Demo Tools", undefined, { resizeable: true });
     var g, durField, clickField, dirList, offsetField, easeList, axisList;
+    var wipeDirList, wipeDurField, wipeEaseList, hoverRadiusField, hoverScaleField, hoverOpacityField;
     win.orientation = "column";
     win.alignChildren = ["fill", "top"];
     win.spacing = 8;
@@ -335,6 +592,35 @@
     axisList = g.add("dropdownlist", undefined, ["X", "Y"]);
     axisList.selection = 0;
     win.add("button", undefined, "Carousel setup (selected)").onClick = function () { runCarousel(axisList); };
+
+    win.add("statictext", undefined, "Glass panel");
+    win.add("button", undefined, "Glass Panel (selected)").onClick = runGlass;
+
+    win.add("statictext", undefined, "Gradient wipe");
+    g = win.add("group");
+    g.add("statictext", undefined, "Dir");
+    wipeDirList = g.add("dropdownlist", undefined, ["Left", "Right", "Up", "Down", "In", "Out", "Both"]);
+    wipeDirList.selection = 0;
+    g.add("statictext", undefined, "Dur");
+    wipeDurField = g.add("edittext", undefined, "0.55");
+    wipeDurField.characters = 5;
+    g.add("statictext", undefined, "Ease");
+    wipeEaseList = g.add("dropdownlist", undefined, ["Apple", "Soft", "Linear"]);
+    wipeEaseList.selection = 0;
+    win.add("button", undefined, "Gradient Wipe (selected)").onClick = function () { runWipe(wipeDirList, wipeDurField, wipeEaseList); };
+
+    win.add("statictext", undefined, "Proximity hover");
+    g = win.add("group");
+    g.add("statictext", undefined, "Radius");
+    hoverRadiusField = g.add("edittext", undefined, "140");
+    hoverRadiusField.characters = 5;
+    g.add("statictext", undefined, "Scale");
+    hoverScaleField = g.add("edittext", undefined, "6");
+    hoverScaleField.characters = 4;
+    g.add("statictext", undefined, "Opac");
+    hoverOpacityField = g.add("edittext", undefined, "18");
+    hoverOpacityField.characters = 4;
+    win.add("button", undefined, "Proximity Hover (selected)").onClick = function () { runHover(hoverRadiusField, hoverScaleField, hoverOpacityField); };
 
     var foot = win.add("statictext", undefined, "Install: copy this file into Scripts/ScriptUI Panels. See docs/SAAS_DEMO_KIT.md. Companions stay external — docs/EDITOR_FREE_KIT.md.", { multiline: true });
     foot.characters = 42;

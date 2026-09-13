@@ -2,6 +2,14 @@
 
 Panel build: **v0.32** (P0–P23) on main — `ae/Evotechly Motion OS.jsx` (~297 KB Reliability).
 
+## Phase 2 — native glass, gradient wipe, proximity hover
+
+Own Solair-class FX. No third-party binaries. Liquid Glass remains an optional external pack for personal use only — not redistributed.
+
+- `core/saasDemoFx.js` — `glassPanel`, `gradientWipeReveal`, `proximityHover` (re-exported from `core/saasDemo.js`)
+- `ae/SaaS Demo Tools.jsx` — Glass Panel, Gradient Wipe, Proximity Hover buttons
+- Tests in `tests/saas-demo.test.js`. Phase 1 APIs unchanged.
+
 ## Phase 1 — Solair-class SaaS Demo Kit (own code)
 
 Own SaaS Demo tools + Editor Free Kit docs. Not a Solair port. Companions stay external.
