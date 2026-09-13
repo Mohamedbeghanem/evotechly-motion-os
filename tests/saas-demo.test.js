@@ -202,7 +202,8 @@ test("gradientWipeReveal keys match Phase 1 ease and directions", function () {
   const up = S.gradientWipeReveal({ layers: layers, direction: "up" });
   assert.equal(up.side, "up");
   assert.equal(up.layers.length, 3);
-  assert.ok(JSON.stringify(left).indexOf("Saber") === -1);
+  assert.ok(left.note.indexOf("No Saber") !== -1);
+  assert.equal(left.effect.indexOf("Saber"), -1);
 });
 
 test("proximityHover expressions pair with Phase 1 Cursor", function () {
