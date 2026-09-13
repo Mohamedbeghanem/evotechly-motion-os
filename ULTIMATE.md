@@ -72,6 +72,10 @@ Later: a prompt becomes an **editable role plan**. Editors still Scan / Apply.
 
 Out of scope now: Claude/API wiring, CEP/Premiere, baked frames, beat-sync, Mocha auto-roto, bundled Saber/QCA3/Displacer.
 
+## Phase 1 SaaS Demo (own code)
+
+Companion **Window → SaaS Demo Tools** (`ae/SaaS Demo Tools.jsx`) plus `core/saasDemo.js`: cursor + click, depth reveal, stagger, carousel. Does not replace the v0.32 panel. Docs: `docs/SAAS_DEMO_KIT.md`, `docs/EDITOR_FREE_KIT.md`.
+
 ## No third-party binary
 
 MIT Evotechly code only. No `.aex`, encrypted JSX, or copied ScriptUI from paid plugins. Reminder row + official URLs only.

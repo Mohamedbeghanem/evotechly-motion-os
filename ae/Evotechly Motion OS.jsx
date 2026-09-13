@@ -4143,6 +4143,7 @@
     var rippleBtn = p3.add("button", undefined, "Click ripple");
     var wetBtn = p3.add("button", undefined, "Wet look");
     tabPolish.add("statictext", undefined, "Wet look = native Glow + grain. Hooks & logo sting only.", { multiline: true });
+    tabPolish.add("statictext", undefined, "SaaS Demo (cursor path, depth, stagger, carousel): Window → SaaS Demo Tools.", { multiline: true });
     tabPerson.add("statictext", undefined, "Talking-head: QCA / Saber / Wet OFF by default.", { multiline: true });
     var cutoutBtn = tabPerson.add("button", undefined, "Cutout Prep");
     var keyBtn = tabPerson.add("button", undefined, "Keylight recipe");
@@ -4165,7 +4166,7 @@
     tabRecipes.add("button", undefined, "15s hook reminders").onClick = recipeHook15;
     tabRecipes.add("button", undefined, "Feature card").onClick = recipeFeatureCard;
     tabRecipes.add("statictext", undefined, "ERP demo = screen record + cursor + ease. No Saber.", { multiline: true });
-    win.add("statictext", undefined, "Companions: TFM Liquid Glass / Comp Exporter + Saber / QCA3 / Displacer / AC — official sites only; hooks only; off talking-head.", { multiline: true });
+    win.add("statictext", undefined, "Companions: TFM Liquid Glass / Comp Exporter + Saber / QCA3 / Displacer / AC — official sites only; hooks only; off talking-head. SaaS Demo Tools is a separate Window panel.", { multiline: true });
     var state = { plan: [], compId: null, styleId: null, shotId: null, dirId: null, scanned: false };
     var styleIds = ["stripe", "linear", "vercel", "evotechly", "apple"];
     var dirIds = ["in", "out", "both"];

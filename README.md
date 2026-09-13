@@ -4,13 +4,16 @@ Deterministic compiler for **SaaS-style motion**, plus a dockable After Effects 
 
 v0.7 Editor Kit: one panel for SaaS + reels + native polish + captions. See [ULTIMATE.md](ULTIMATE.md). Does not include Saber / QCA3 / Displacer.
 
-**Editors: install `ae/Evotechly Motion OS.jsx` and read [EDITOR.md](EDITOR.md) + [ae/INSTALL-AE.md](ae/INSTALL-AE.md).**
+**Editors: install `ae/Evotechly Motion OS.jsx` and `ae/SaaS Demo Tools.jsx`, then read [EDITOR.md](EDITOR.md), [docs/SAAS_DEMO_KIT.md](docs/SAAS_DEMO_KIT.md), and [ae/INSTALL-AE.md](ae/INSTALL-AE.md).**
 
 ## After Effects app
 
-Copy `ae/Evotechly Motion OS.jsx` into `Scripts/ScriptUI Panels`, restart AE, open **Window > Evotechly Motion OS**.
+Copy `ae/Evotechly Motion OS.jsx` and `ae/SaaS Demo Tools.jsx` into `Scripts/ScriptUI Panels`, restart AE.
 
-Name layers `Title`, `Card 1`, `CTA`, `Screenshot`, `Cursor`, `Caption`. Motion tab: Style / Direction / Shot / Scan / Apply / Fit footage. Polish / Person / Captions / Recipes tabs ship with the same file. Caption pack: `assets/` + `examples/captions/`.
+- **Window > Evotechly Motion OS** — v0.32 Reliability (Figma roles, Motion, Polish, Person, Captions, Recipes).
+- **Window > SaaS Demo Tools** — cursor + click, depth reveal, stagger, carousel. See [docs/SAAS_DEMO_KIT.md](docs/SAAS_DEMO_KIT.md).
+
+Name layers `Title`, `Card 1`, `CTA`, `Screenshot`, `Cursor`, `Caption`. Motion tab: Style / Direction / Shot / Scan / Apply / Fit footage. Optional companions: [docs/EDITOR_FREE_KIT.md](docs/EDITOR_FREE_KIT.md) (not bundled). Caption pack: `assets/` + `examples/captions/`.
 
 No Node on the editor machine.
 

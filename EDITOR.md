@@ -4,7 +4,7 @@ One kit. Install Motion OS only. Art from Figma. Motion from Evotechly.
 
 ## Install
 
-Quit AE. Copy `ae/Evotechly Motion OS.jsx` into **Scripts/ScriptUI Panels**. Window → Evotechly Motion OS (header **v0.7 Editor Kit**). Caption JSON + sample SRT live in `assets/` and `examples/captions/`.
+Quit AE. Copy `ae/Evotechly Motion OS.jsx` and `ae/SaaS Demo Tools.jsx` into **Scripts/ScriptUI Panels**. Window → Evotechly Motion OS (header **v0.32 Reliability**) and Window → SaaS Demo Tools. Caption JSON + sample SRT live in `assets/` and `examples/captions/`. SaaS cursor / depth / stagger / carousel: [docs/SAAS_DEMO_KIT.md](docs/SAAS_DEMO_KIT.md). Optional free companions: [docs/EDITOR_FREE_KIT.md](docs/EDITOR_FREE_KIT.md).
 
 ## Tabs
 
@@ -15,6 +15,7 @@ Quit AE. Copy `ae/Evotechly Motion OS.jsx` into **Scripts/ScriptUI Panels**. Win
 | Person | Cutout Prep, Keylight recipe, Light wrap, Talking-head stack |
 | Captions | Templates, Import SRT, 9:16 safe, KPI count-up |
 | Recipes | Founder GS / Roto, ERP demo, 15s hook reminders, Feature card |
+| *(companion)* | **Window → SaaS Demo Tools** — cursor + click, depth reveal, stagger, carousel |
 
 ## Names
 
