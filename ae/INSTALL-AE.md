@@ -1,18 +1,20 @@
 # Install Evotechly Motion OS in After Effects
 
-One file. No Node. v0.7 Editor Kit — compiler + polish + person + captions
+Two ScriptUI files. No Node. v0.32 panel + SaaS Demo companion.
 
-## File
+## Files
 
-`ae/Evotechly Motion OS.jsx`
+`ae/Evotechly Motion OS.jsx` — main panel (~297 KB, v0.32 Reliability)
+
+`ae/SaaS Demo Tools.jsx` — cursor + click, depth, stagger, carousel
 
 Caption pack (not required inside AE, sit next to the project): `assets/` + `examples/captions/`.
 
 ## Install
 
 1. Quit After Effects.
-2. Copy the JSX into **Scripts/ScriptUI Panels**.
-3. Open AE → **Window → Evotechly Motion OS**.
+2. Copy both JSX files into **Scripts/ScriptUI Panels**.
+3. Open AE → **Window → Evotechly Motion OS** and **Window → SaaS Demo Tools**.
 
 If it is missing from Window, the file is in `Scripts` instead of `Scripts/ScriptUI Panels`.
 

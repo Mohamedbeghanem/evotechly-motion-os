@@ -1,15 +1,7 @@
 # Install panel v0.32
 
-The GitHub Contents API used for this push cannot upload the 298 KB `Evotechly Motion OS v0.32.jsx` (FILE_TOO_LARGE).
+`ae/Evotechly Motion OS.jsx` on main is the v0.32 Reliability panel (~297 KB).
 
-On your machine:
+Also copy `ae/SaaS Demo Tools.jsx` into `Scripts/ScriptUI Panels` for cursor + click, depth reveal, stagger, and carousel. That companion does not replace the main panel.
 
-```bash
-cp "Evotechly Motion OS v0.32.jsx" ae/Evotechly\ Motion\ OS.jsx
-git add "ae/Evotechly Motion OS.jsx"
-git commit -m "ae: Motion OS panel v0.32 (P0-P23)"
-git push origin main
-```
-
-Then copy that file into After Effects `Scripts/ScriptUI Panels/`.
-Never commit PLACEHOLDER_SEE_FILE.
+See `docs/SAAS_DEMO_KIT.md`.
