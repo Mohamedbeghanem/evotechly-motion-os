@@ -3,7 +3,7 @@
   Evotechly Motion OS Hub — companion ScriptUI panel (P0 unify shell).
   Palette title: Motion OS Hub. Window → SaaS Demo Tools (same file).
   Home (Seed) + SaaS engines + Kit Hub official URLs.
-  Applies core/saasDemo.js + core/saasDemoFx.js + core/uiPresets.js numbers in After Effects.
+  Applies core/saasDemo.js + core/saasDemoFx.js + core/uiPresets.js + core/textReveal.js numbers in After Effects.
   Native AE only. No Liquid Glass, Deep Glow, Saber, QCA, or TFM.
   Kit Hub never downloads or vendors binaries — copy/alert official URLs only.
   Does not replace Evotechly Motion OS v0.32.
@@ -745,11 +745,147 @@
     );
   }
 
+  function isTextLayer(layer) {
+    try { return layer.property("ADBE Text Properties") !== null; } catch (e) { return false; }
+  }
+
+  function selectedTextLayers(comp) {
+    var sel = selectedLayers(comp), out = [], i;
+    for (i = 0; i < sel.length; i++) if (isTextLayer(sel[i])) out.push(sel[i]);
+    return out;
+  }
+
+  function rangeUnit(unit) {
+    if (unit === "line") return 4;
+    if (unit === "word") return 3;
+    return 1;
+  }
+
+  function addTextAnimator(layer, name) {
+    var animators, anim;
+    animators = layer.property("ADBE Text Properties").property("ADBE Text Animators");
+    anim = animators.addProperty("ADBE Text Animator");
+    try { anim.name = name; } catch (e) {}
+    return anim;
+  }
+
+  function configureRangeEnd(anim, unit, keys, ease) {
+    var sel, endP, i;
+    try {
+      sel = anim.property("ADBE Text Selectors").property(1);
+      try { sel.property("ADBE Text Range Type2").setValue(unit); } catch (e0) {}
+      try { sel.property("ADBE Text Range Shape").setValue(2); } catch (e1) {}
+      try {
+        endP = sel.property("ADBE Text Range End 2");
+        if (!endP) endP = sel.property("End");
+        for (i = 0; i < keys.length; i++) endP.setValueAtTime(keys[i].t, keys[i].end);
+        applyEase(endP, ease);
+      } catch (e2) {}
+    } catch (e) {}
+    return sel;
+  }
+
+  function hexToRgb(hex) {
+    var s = String(hex || "").replace(/^#/, "").toUpperCase(), n;
+    if (/^[0-9A-F]{3}$/.test(s)) s = s.charAt(0) + s.charAt(0) + s.charAt(1) + s.charAt(1) + s.charAt(2) + s.charAt(2);
+    if (!/^[0-9A-F]{6}$/.test(s)) s = "FF6A00";
+    n = parseInt(s, 16);
+    return [((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255];
+  }
+
+  function enableTextStroke(layer, rgb, width) {
+    var doc;
+    try {
+      doc = layer.property("ADBE Text Properties").property("ADBE Text Document").value;
+      doc.applyStroke = true;
+      doc.strokeWidth = width;
+      doc.strokeColor = rgb;
+      layer.property("ADBE Text Properties").property("ADBE Text Document").setValue(doc);
+    } catch (e) {}
+  }
+
+  function runFlowing(unitList, durField, easeList, dirList) {
+    var comp = requireComp(); if (!comp) return;
+    var sel = selectedTextLayers(comp), i, layer, anim, props, op, pos, unit, dur, ease, dir, t0, keys, hold;
+    if (!sel.length) { alert("Select a text layer for Flowing Text (Captions-adjacent)."); return; }
+    unit = unitList.selection ? unitList.selection.text.toLowerCase() : "char";
+    if (unit === "chars") unit = "char";
+    ease = easeList.selection ? easeList.selection.text.toLowerCase() : "apple";
+    dir = dirList.selection ? dirList.selection.text.toLowerCase() : "in";
+    dur = clamp(parseNum(durField, 0.8), 0.05, 30);
+    hold = 0.2;
+    t0 = comp.time;
+    if (dir === "out") keys = [{ t: t0, end: 0 }, { t: t0 + dur, end: 100 }];
+    else {
+      keys = [{ t: t0, end: 100 }, { t: t0 + dur, end: 0 }];
+      if (dir === "both") {
+        keys.push({ t: t0 + dur + hold, end: 0 });
+        keys.push({ t: t0 + dur + hold + dur, end: 100 });
+      }
+    }
+    app.beginUndoGroup("Evotechly Flowing Text");
+    for (i = 0; i < sel.length; i++) {
+      layer = sel[i];
+      anim = addTextAnimator(layer, "EVO_FLOW");
+      props = anim.property("ADBE Text Animator Properties");
+      try {
+        op = props.addProperty("ADBE Text Opacity");
+        op.setValue(0);
+      } catch (e0) {}
+      try {
+        pos = props.addProperty("ADBE Text Position 3D");
+        if (!pos) pos = props.addProperty("ADBE Text Position");
+        pos.setValue([0, 12, 0]);
+      } catch (e1) {}
+      configureRangeEnd(anim, rangeUnit(unit), keys, ease);
+    }
+    app.endUndoGroup();
+    alert("Flowing Text on " + sel.length + " layer(s).\nUnit " + unit + " · " + dur + "s · " + ease + " · " + dir + ".\nNative text animator (no vendor presets).");
+  }
+
+  function runColoured(hexField, durField, modeList) {
+    var comp = requireComp(); if (!comp) return;
+    var sel = selectedTextLayers(comp), i, layer, anim, props, fill, stroke, sw, mode, dur, rgb, t0, keys;
+    if (!sel.length) { alert("Select a text layer for Coloured Reveal (Captions-adjacent)."); return; }
+    mode = modeList.selection ? modeList.selection.text.toLowerCase() : "fill";
+    dur = clamp(parseNum(durField, 0.6), 0.05, 30);
+    rgb = hexToRgb(hexField && hexField.text);
+    t0 = comp.time;
+    keys = [{ t: t0, end: 0 }, { t: t0 + dur, end: 100 }];
+    app.beginUndoGroup("Evotechly Coloured Reveal");
+    for (i = 0; i < sel.length; i++) {
+      layer = sel[i];
+      anim = addTextAnimator(layer, "EVO_COLOUR");
+      props = anim.property("ADBE Text Animator Properties");
+      if (mode === "fill" || mode === "both") {
+        try {
+          fill = props.addProperty("ADBE Text Fill Color");
+          fill.setValue(rgb);
+        } catch (e0) {}
+      }
+      if (mode === "stroke" || mode === "both") {
+        try {
+          stroke = props.addProperty("ADBE Text Stroke Color");
+          stroke.setValue(rgb);
+        } catch (e1) {}
+        try {
+          sw = props.addProperty("ADBE Text Stroke Width");
+          sw.setValue(2);
+        } catch (e2) {}
+        enableTextStroke(layer, rgb, 2);
+      }
+      configureRangeEnd(anim, 1, keys, "apple");
+    }
+    app.endUndoGroup();
+    alert("Coloured Reveal on " + sel.length + " layer(s).\n" + mode + " · " + dur + "s · native fill/stroke animator.");
+  }
+
   function buildUI(thisObj) {
     var win = (thisObj instanceof Panel) ? thisObj : new Window("palette", "Motion OS Hub", undefined, { resizeable: true });
     var g, durField, clickField, styleList, dirList, offsetField, easeList, axisList;
     var presetList, uiDirList, uiDurField, uiStaggerField, uiEaseList, mirrorBox;
     var wipeDirList, wipeDurField, wipeEaseList, hoverRadiusField, hoverScaleField, hoverOpacityField;
+    var flowUnit, flowDur, flowEase, flowDir, colourHex, colourDur, colourMode;
     var homeP, saasP, kitP, kitNote, kitList, intro, foot;
     win.orientation = "column";
     win.alignChildren = ["fill", "top"];
@@ -859,6 +995,34 @@
     hoverOpacityField = g.add("edittext", undefined, "18");
     hoverOpacityField.characters = 4;
     saasP.add("button", undefined, "Proximity Hover (selected)").onClick = function () { runHover(hoverRadiusField, hoverScaleField, hoverOpacityField); };
+
+    saasP.add("statictext", undefined, "Text reveal (captions-adjacent)");
+    g = saasP.add("group");
+    g.add("statictext", undefined, "Unit");
+    flowUnit = g.add("dropdownlist", undefined, ["Char", "Word", "Line"]);
+    flowUnit.selection = 0;
+    g.add("statictext", undefined, "Dur");
+    flowDur = g.add("edittext", undefined, "0.8");
+    flowDur.characters = 5;
+    g.add("statictext", undefined, "Ease");
+    flowEase = g.add("dropdownlist", undefined, ["Apple", "Soft", "Linear"]);
+    flowEase.selection = 0;
+    g.add("statictext", undefined, "Dir");
+    flowDir = g.add("dropdownlist", undefined, ["In", "Out", "Both"]);
+    flowDir.selection = 0;
+    saasP.add("button", undefined, "Flowing Text").onClick = function () { runFlowing(flowUnit, flowDur, flowEase, flowDir); };
+
+    g = saasP.add("group");
+    g.add("statictext", undefined, "Color");
+    colourHex = g.add("edittext", undefined, "#FF6A00");
+    colourHex.characters = 8;
+    g.add("statictext", undefined, "Dur");
+    colourDur = g.add("edittext", undefined, "0.6");
+    colourDur.characters = 5;
+    g.add("statictext", undefined, "Mode");
+    colourMode = g.add("dropdownlist", undefined, ["Fill", "Stroke", "Both"]);
+    colourMode.selection = 0;
+    saasP.add("button", undefined, "Coloured Reveal").onClick = function () { runColoured(colourHex, colourDur, colourMode); };
 
     kitP = win.add("panel", undefined, "Kit Hub");
     kitP.orientation = "column";

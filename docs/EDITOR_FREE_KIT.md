@@ -9,7 +9,7 @@ Official URLs change. Prefer the vendor’s current site over a mirrored zip.
 ## Policy
 
 - **Optional** — product demos ship with native Motion OS + [SaaS Demo Kit](SAAS_DEMO_KIT.md). Seed the four golden comps from [QUICK_START.md](QUICK_START.md) (`ae/Seed Golden Project.jsx`) — no `.aep` in the repo.
-- **Not required** — cursor, depth, stagger, UI presets, carousel, glass panel, gradient wipe, proximity hover, captions, keyword color, caption in/out, Keylight, and lockup all have native paths.
+- **Not required** — cursor, depth, stagger, UI presets, carousel, glass panel, gradient wipe, proximity hover, flowing / coloured text, captions, keyword color, caption in/out, Keylight, and lockup all have native paths.
 - **Not redistributed** — never commit `.aex`, `.plugin`, encrypted JSX, AEJuice/Motion Bro packs, or third-party scripts.
 - **Research matrix** — own vs companion vs skip, and the one-tool wrap plan: [KIT_CAPABILITY_MATRIX.md](KIT_CAPABILITY_MATRIX.md).
 
@@ -38,7 +38,7 @@ Already documented elsewhere (hooks only, never bundled): Saber, QCA3, Displacer
 
 ### SaaS product demo
 
-1. **Window → SaaS Demo Tools / Motion OS Hub** — cursor + click, depth, stagger, UI presets, carousel, glass panel, gradient wipe, proximity hover. Kit Hub = official URLs only (copy / alert; never download).
+1. **Window → SaaS Demo Tools / Motion OS Hub** — cursor + click, depth, stagger, UI presets, carousel, glass panel, gradient wipe, proximity hover, Flowing Text, Coloured Reveal. Kit Hub = official URLs only (copy / alert; never download).
 2. **Motion** — Style / Direction / Shot / Scan / Apply (Figma names: `Title`, `Card 1`, `CTA`, `Screenshot`, `Cursor`).
 3. **Polish** — Apple Ease, Add Cursor (static pointer), click squash.
 4. **Interact** — click / hover / drag sequences (v0.32 panel).

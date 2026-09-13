@@ -1,6 +1,6 @@
 # SaaS Demo Kit — Phase 2 (+ Phase 3 seed)
 
-Evotechly-owned tools so a product demo can do **cursor + click**, **depth reveal**, **stagger**, **UI presets**, **carousel**, **glass panel**, **gradient wipe**, and **proximity hover** without Solair SaaS Kit and without paid plugins.
+Evotechly-owned tools so a product demo can do **cursor + click**, **depth reveal**, **stagger**, **UI presets**, **carousel**, **glass panel**, **gradient wipe**, **proximity hover**, and **P1b flowing / coloured text reveal** without Solair SaaS Kit and without paid plugins.
 
 Nothing here is copied from Solair. Companions stay on vendor sites. This repo never vendors their scripts, `.mbr` packs, or binaries.
 
@@ -8,23 +8,25 @@ Liquid Glass remains an **optional external pack for personal use only**. It is 
 
 ## What we own vs companion
 
-| Job | Evotechly (this kit) | Companion (optional, not shipped) |
-|---|---|---|
-| Pointer + click | Shape-layer cursor (`pointer` / `hand` / `ibeam`), move to target, scale-down on the clicked layer | UI Animator Pro (presets). Not required. CursorKit is not used. |
-| Depth / glass-ish focus | Native Fast Box Blur + Glow, `EVO_DEPTH` Focus / Strength | Deep Glow. Not required. |
-| Frosted glass panel | Native Fill + Fast Box Blur / Gaussian + Tint/Levels, `EVO_GLASS` Opacity / Blur | Liquid Glass (personal). Not required. Never redistributed. |
-| Linear wipe / reveal | Native Gradient Wipe, or shape matte + soft edge. Apple / Soft / Linear ease | Saber / QCA. Not required. |
-| Proximity hover | `EVO_HOVER` + expressions; driver is Phase 1 `Cursor` | — |
-| Multi-layer in / out / both | `staggerReveal` — frame offset + apple/soft/linear ease | UI Animator Pro, Animation Composer. Not required. |
-| Named UI presets (cards) | `applyUiPreset` — fade-up / fade-scale / slides / pop, in/out/both, optional mirror | UI Animator Pro. Not required. P1a **own**. |
-| Slides / carousel | `EVO_CAROUSEL` Index + Gap, expressions on selected slides | Motion Bro packs, PaulPack ornaments. Not required. |
-| SaaS hero timing | Main panel **Motion** tab — Scan / Apply, Figma→roles | — |
-| Polish / click squash | Main panel **Polish** | — |
-| Click / hover / drag sequences | Main panel **Interact** (v0.32) | — |
-| Talking-head | Main panel **Person** | Crate Light Wrap (optional) |
-| Captions AR+EN | Main panel **Captions** | Meow Captions, Vignette Typer Lite (optional) |
-| Keyword color + caption in/out | **Window → Caption Style Tools** (`colorKeywords`, `captionInOut`) | Meow / Presetify (optional). See [CAPTION_STYLE.md](CAPTION_STYLE.md). |
-| Lockup pins | Main panel Logo lockup shot | PinRig (optional) |
+| Phase | Job | Evotechly (this kit) | Companion (optional, not shipped) |
+|---|---|---|---|
+| P1 / **P1d** | Pointer + click | Shape-layer cursor (`pointer` / `hand` / `ibeam`), move to target, scale-down on the clicked layer | UI Animator Pro (presets). Not required. CursorKit is not used. |
+| P1 | Depth / glass-ish focus | Native Fast Box Blur + Glow, `EVO_DEPTH` Focus / Strength | Deep Glow. Not required. |
+| P2 | Frosted glass panel | Native Fill + Fast Box Blur / Gaussian + Tint/Levels, `EVO_GLASS` Opacity / Blur | Liquid Glass (personal). Not required. Never redistributed. |
+| P2 | Linear wipe / reveal | Native Gradient Wipe, or shape matte + soft edge. Apple / Soft / Linear ease | Saber / QCA. Not required. |
+| P2 | Proximity hover | `EVO_HOVER` + expressions; driver is Phase 1 `Cursor` | — |
+| P1 | Multi-layer in / out / both | `staggerReveal` — frame offset + apple/soft/linear ease | UI Animator Pro, Animation Composer. Not required. |
+| **P1a** | **Named UI presets (cards)** | `applyUiPreset` — fade-up / fade-scale / slides / pop, in/out/both, optional mirror | UI Animator Pro. Not required. P1a **own**. |
+| P1 | Slides / carousel | `EVO_CAROUSEL` Index + Gap, expressions on selected slides | Motion Bro packs, PaulPack ornaments. Not required. |
+| **P1b** | **Flowing text reveal** | `flowingText` — native AE text animator, range selector by **char / word / line**, opacity + Y travel, in / out / both | Presetify, Vignette Typer Lite, Animation Composer. Not required. |
+| **P1b** | **Coloured text reveal** | `colouredReveal` — native AE text **fill / stroke / both** animator sweep (`#FF6A00` default) | Meow Captions keyword color. Not required. |
+| — | SaaS hero timing | Main panel **Motion** tab — Scan / Apply, Figma→roles | — |
+| — | Polish / click squash | Main panel **Polish** | — |
+| — | Click / hover / drag sequences | Main panel **Interact** (v0.32) | — |
+| — | Talking-head | Main panel **Person** | Crate Light Wrap (optional) |
+| — | Captions AR+EN | Main panel **Captions** | Meow Captions, Vignette Typer Lite (optional) |
+| **P1c** | Keyword color + caption in/out | **Window → Caption Style Tools** (`colorKeywords`, `captionInOut`) | Meow / Presetify (optional). See [CAPTION_STYLE.md](CAPTION_STYLE.md). |
+| — | Lockup pins | Main panel Logo lockup shot | PinRig (optional) |
 
 **Rule:** native AE only in our code. Reminder + official URLs for free companions. See [EDITOR_FREE_KIT.md](EDITOR_FREE_KIT.md).
 
@@ -157,6 +159,46 @@ proximityHover({
 });
 ```
 
+### P1b Flowing Text — `flowingText`
+
+Captions-adjacent on the Hub **SaaS** panel. Select a **text** layer (Title, Caption, hook line).
+
+1. Window → SaaS Demo Tools / Motion OS Hub → **SaaS** → **Text reveal (captions-adjacent)**.
+2. Unit **Char / Word / Line**, Dur (default `0.8`), Ease **Apple / Soft / Linear**, Dir **In / Out / Both**.
+3. **Flowing Text**.
+
+Adds a native text animator named `EVO_FLOW`: opacity `0` + Y travel `12px`, range-selector **End** keys (in = `100→0`, out = `0→100`), shape **Ramp Up**. Both = in, hold `0.2s`, then out. No Presetify / Vignette / Animation Composer.
+
+```js
+const { flowingText } = require("../core/textReveal");
+flowingText({
+  layer: "Title",
+  unit: "char",
+  duration: 0.8,
+  ease: "apple",
+  direction: "in"
+});
+```
+
+### P1b Coloured Reveal — `colouredReveal`
+
+Same captions-adjacent section. Select a text layer.
+
+1. Color hex (default `#FF6A00`), Dur (default `0.6`), Mode **Fill / Stroke / Both**.
+2. **Coloured Reveal**.
+
+Adds a native text animator named `EVO_COLOUR`. A character-range sweep applies **ADBE Text Fill Color** and/or **ADBE Text Stroke Color**. Stroke / Both also enables the layer’s native stroke (width `2`). No Meow Captions.
+
+```js
+const { colouredReveal } = require("../core/textReveal");
+colouredReveal({
+  layer: "Title",
+  colorHex: "#FF6A00",
+  duration: 0.6,
+  mode: "fill"
+});
+```
+
 ## Architecture
 
 | File | Role |
@@ -164,6 +206,7 @@ proximityHover({
 | `core/saasDemo.js` | Phase 1 plans + re-exports of Phase 2. Node-testable. |
 | `core/saasDemoFx.js` | Phase 2: `glassPanel`, `gradientWipeReveal`, `proximityHover`. |
 | `core/uiPresets.js` | P1a named UI presets (in / out / both + mirror). |
+| `core/textReveal.js` | P1b `flowingText` + `colouredReveal` plans. Node-testable. |
 | `core/editorFreeKit.js` | Companion install order + which Motion OS tab to use. |
 | `core/kitHub.js` | P0 Kit Hub URL matrix (official sites only). |
 | `core/goldenProject.js` | Phase 3 seed names, sizes, layer roles, idempotency. |
@@ -171,13 +214,14 @@ proximityHover({
 | `ae/Seed Golden Project.jsx` | File → Run Script. Builds the four golden comps. No `.aep`. |
 | `tests/saas-demo.test.js` | Phase 1–2 helper tests. |
 | `tests/ui-presets.test.js` | P1a preset timing / math. |
+| `tests/text-reveal.test.js` | P1b plan tests. |
 | `tests/golden-project.test.js` | Phase 3 naming / idempotency / job map. |
 | `tests/kit-hub.test.js` | Kit Hub URL matrix + hub JSX contract. |
 
-JSX cannot `require()` Node modules. Constants in the companion match `core/saasDemo.js` / `core/saasDemoFx.js` / `core/uiPresets.js` (`0.55` move, `0.12` press, `0.88` / `0.94` click scales, `3` frame stagger, `0.50` UI preset duration, pop `90→100`, glass `42` / `18`, wipe softness `12`, hover `140` / `6` / `18`, `EVO_DEPTH` / `EVO_CAROUSEL` / `EVO_GLASS` / `EVO_HOVER`).
+JSX cannot `require()` Node modules. Constants in the companion match `core/saasDemo.js` / `core/saasDemoFx.js` / `core/uiPresets.js` (`0.55` move, `0.12` press, `0.88` / `0.94` click scales, `3` frame stagger, `0.50` UI preset duration, pop `90→100`, glass `42` / `18`, wipe softness `12`, hover `140` / `6` / `18`, `EVO_DEPTH` / `EVO_CAROUSEL` / `EVO_GLASS` / `EVO_HOVER`) and `core/textReveal.js` (`0.8` flowing, `12px` travel, `0.6` colour, `#FF6A00`, `EVO_FLOW` / `EVO_COLOUR`).
 
 ## Main panel (v0.32) — when to stay there
 
-Use **Window → SaaS Demo Tools / Motion OS Hub** for the engines above (including **Apply UI Preset**). Keep using Motion OS for Figma roles, Style / Direction / Shot, Polish ease, Person, Captions, Recipes, Interact, Assets.
+Use **Window → SaaS Demo Tools / Motion OS Hub** for cursor, depth, stagger, **Apply UI Preset**, carousel, glass, wipe, hover, and P1b flowing / coloured text. Keep using Motion OS for Figma roles, Style / Direction / Shot, Polish ease, Person, Captions, Recipes, Interact, Assets.
 
 Do not paste Solair, UI Animator Pro, AEJuice, Motion Bro, Liquid Glass, CursorKit, Deep Glow, Saber, QCA, or TFM into this repo.

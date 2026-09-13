@@ -14,6 +14,7 @@
 | **P1a UI presets (in / out / both + mirror)** | **own** — `applyUiPreset` / SaaS **Apply UI Preset** |
 | Glass, gradient wipe, proximity hover | `core/saasDemoFx.js` |
 | Home / SaaS / Kit Hub shell (P0) | **Window → Motion OS Hub** (`ae/SaaS Demo Tools.jsx`) |
+| Flowing / coloured text reveal (P1b) | Hub SaaS panel / `core/textReveal.js` |
 | Caption keyword color + in/out presets (P1c) | Caption Style Tools / `core/captionStyle.js` (separate companion) |
 | Golden comps seed | `Seed Golden Project.jsx` |
 | Asset register (P15) | Assets tab |
@@ -23,7 +24,7 @@
 
 | Kit | Price | Capabilities extracted | Classification | Motion OS wrap action |
 |---|---|---|---|---|
-| **Solair SaaS Kit** | Paid ~$49 | Figma ship, depth reveal, 3D cursor+click, stagger, carousel, flowing/coloured text, glass, gradient wipe, proximity, AI script, studio playbook | **Own** (feature map only) | Phases 1–2 done; still open: flowing/coloured text explode, richer Figma ship, playbook docs. Never copy Solair. |
+| **Solair SaaS Kit** | Paid ~$49 | Figma ship, depth reveal, 3D cursor+click, stagger, carousel, flowing/coloured text, glass, gradient wipe, proximity, AI script, studio playbook | **Own** (feature map only) | Phases 1–2 + **P1a UI presets** + **P1b flowing/coloured text** done; still open: richer Figma ship, playbook docs. Never copy Solair. |
 | **UI Animator Pro** (What? Studio) | $0 | UI presets in/out/both; custom presets (relative % / absolute); automation mode; mirror layout; auto ease + motion blur; duration live update; layer reorder; reset | **P1a own + companion extras** | **Own:** `fade-up`, `fade-scale`, `slide-left`, `slide-right`, `slide-up`, `pop` (90→100) + mirror. Companion: Gumroad for extras we did not reimplement. |
 | **PinRig** | $0 | Logo/type pins, construction guides, typography metrics, anim presets | **Companion** | Kit Hub link. Low priority to reimplement. |
 | **AEJuice Pack Manager + free Starter** | Free | 100+ drag assets: liquid/shape, transitions, slides, 2D/3D/text presets, flat icons, Motion Cafe UI/HUD; also free Auto Captions packs | **Companion (assets)** | Kit Hub install URL. Do **not** ship packs. Optional: Evotechly-owned HUD shapes later. |
@@ -46,14 +47,14 @@ Main-panel Home / SaaS / Kit Hub tabs were **deferred**. Do not rewrite or stub 
 
 1. **Window → SaaS Demo Tools / Motion OS Hub** — `ae/SaaS Demo Tools.jsx` (palette title **Motion OS Hub**).
 2. **Home** — Seed Golden Project (reuses `ae/Seed Golden Project.jsx`).
-3. **SaaS** — existing engines: cursor (P1d Style dropdown: pointer / hand / I-beam), depth, stagger, **UI presets**, carousel, glass, wipe, hover.
+3. **SaaS** — existing engines: cursor (P1d Style dropdown: pointer / hand / I-beam), depth, stagger, **UI presets**, carousel, glass, wipe, hover, flowing text, coloured reveal.
 4. **Kit Hub** — companion names + official URLs only (`core/kitHub.js`). Copy / alert. Never download or vendor binaries.
 
 Target one-tool IA (later, after soak) still wants those sections inside v0.32. P0 ships the companion hub instead.
 
 ### P1 — reimplement high-ROI gaps
 1. **P1a own** — UI preset pack (UI Animator–class in/out/both + mirror). `core/uiPresets.js` + Hub **Apply UI Preset**.
-2. Flowing / coloured text reveal. **P1b — open.**
+2. Flowing / coloured text reveal. **P1b — done** (`core/textReveal.js` + Hub SaaS buttons).
 3. Caption keyword color + IN/OUT row. **P1c — shipped.** `core/captionStyle.js` + `ae/Caption Style Tools.jsx`. Apply after Captions tab (templates / SRT). Separate companion — not a Hub tab. Does not edit the 297 KB panel.
 4. **P1d Cursor styles** (pointer / hand / I-beam) — **shipped.** `createCursor({ style })` + SaaS Demo Tools Style dropdown. Native path descriptors. Default remains pointer. No PNG. No CursorKit.
 
@@ -69,6 +70,8 @@ Solair AI script, Overlord Figma clone, Auto-Animate until soak passes.
 
 **P1a shipped:** Hub **Apply UI Preset** (`core/uiPresets.js`).
 
+**P1b shipped:** Hub SaaS **Flowing Text** / **Coloured Reveal** (`core/textReveal.js`).
+
 **P1c shipped:** **Window → Caption Style Tools** — separate companion (keyword color + in/out). Not a Hub tab. Do not fold into the 297 KB panel.
 
 **P1d shipped:** Hub SaaS **Style** dropdown — pointer / hand / I-beam.
@@ -79,4 +82,4 @@ Solair AI script, Overlord Figma clone, Auto-Animate until soak passes.
 Research ≠ copy. Companions never in release zip. Build on v0.32.0-rc.
 
 ## Next
-P0 companion hub is in. **P1a own** is in. **P1d cursor styles shipped** (Hub SaaS Style dropdown). P1c caption style shipped (`core/captionStyle.js` + Caption Style Tools — separate companion). Next: P1b flowing text → soak #11 before v2. Do not fold the hub or Caption Style into the 297 KB panel until soak passes.
+P0 companion hub is in. **P1a own** is in. **P1b flowing / coloured text** is in. **P1c caption style shipped** (`core/captionStyle.js` + Caption Style Tools — separate companion). **P1d cursor styles shipped** (Hub SaaS Style dropdown). Next: soak #11 before v2. Do not fold the hub or Caption Style into the 297 KB panel until soak passes.

@@ -29,7 +29,9 @@ const SAAS_ACTIONS = [
   { id: "carousel", name: "Carousel setup" },
   { id: "glass", name: "Glass Panel" },
   { id: "wipe", name: "Gradient Wipe" },
-  { id: "hover", name: "Proximity Hover" }
+  { id: "hover", name: "Proximity Hover" },
+  { id: "flowing", name: "Flowing Text" },
+  { id: "coloured", name: "Coloured Reveal" }
 ];
 
 function kitHubEntries() {

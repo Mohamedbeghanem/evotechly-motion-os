@@ -55,7 +55,9 @@ test("Hub SaaS actions include existing engines plus seed surface", function () 
     "carousel",
     "glass",
     "wipe",
-    "hover"
+    "hover",
+    "flowing",
+    "coloured"
   ]);
   assert.equal(H.GOLDEN_SEED.script, "ae/Seed Golden Project.jsx");
   assert.ok(H.HUB_SURFACE.window.indexOf("SaaS Demo Tools") !== -1);
@@ -81,6 +83,8 @@ test("SaaS Demo Tools.jsx is the Motion OS Hub and keeps every engine", function
     "function runGlass",
     "function runWipe",
     "function runHover",
+    "function runFlowing",
+    "function runColoured",
     "function runSeedGolden"
   ].forEach(function (fn) {
     assert.ok(jsx.indexOf(fn) !== -1, fn);
