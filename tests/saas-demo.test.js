@@ -33,6 +33,51 @@ test("createCursor is deterministic and uses a shape pointer", function () {
   assert.equal(a.cursor.click.scaleKeys[1].scale[0], 88);
 });
 
+test("cursor style names are pointer, hand, ibeam", function () {
+  assert.deepEqual(S.CURSOR_STYLE_NAMES, ["pointer", "hand", "ibeam"]);
+  assert.equal(S.CURSOR.shape.style, "pointer");
+  assert.equal(S.CURSOR.shape.kind, "pointer");
+  assert.ok(S.CURSOR.styles.pointer);
+  assert.ok(S.CURSOR.styles.hand);
+  assert.ok(S.CURSOR.styles.ibeam);
+  assert.equal(S.normalizeCursorStyle(), "pointer");
+  assert.equal(S.normalizeCursorStyle("pointer"), "pointer");
+  assert.equal(S.normalizeCursorStyle("arrow"), "pointer");
+  assert.equal(S.normalizeCursorStyle("HAND"), "hand");
+  assert.equal(S.normalizeCursorStyle("I-beam"), "ibeam");
+  assert.equal(S.normalizeCursorStyle("ibeam"), "ibeam");
+  assert.equal(S.normalizeCursorStyle("nope"), "pointer");
+});
+
+test("createCursor plan includes style and keeps pointer as default", function () {
+  const def = S.createCursor({ targetLayer: "CTA" });
+  assert.equal(def.cursor.style, "pointer");
+  assert.equal(def.cursor.shape.style, "pointer");
+  assert.equal(def.cursor.shape.kind, "pointer");
+  assert.deepEqual(def.cursor.shape.vertices, S.CURSOR.shape.vertices);
+  assert.ok(def.cursor.shape.path.indexOf("M0,0") === 0);
+  assert.ok(def.cursor.shape.closed);
+
+  const hand = S.createCursor({ style: "hand", targetLayer: "Link" });
+  const handAgain = S.createCursor({ style: "hand", targetLayer: "Link" });
+  assert.deepEqual(hand, handAgain);
+  assert.equal(hand.cursor.style, "hand");
+  assert.equal(hand.cursor.shape.style, "hand");
+  assert.equal(hand.cursor.shape.kind, "hand");
+  assert.ok(hand.cursor.shape.vertices.length >= 3);
+  assert.ok(hand.cursor.shape.path.length > 0);
+  assert.notDeepEqual(hand.cursor.shape.vertices, def.cursor.shape.vertices);
+  assert.notEqual(hand.cursor.shape.path, def.cursor.shape.path);
+
+  const ibeam = S.createCursor({ style: "ibeam" });
+  assert.equal(ibeam.cursor.style, "ibeam");
+  assert.equal(ibeam.cursor.shape.style, "ibeam");
+  assert.ok(ibeam.cursor.shape.vertices.length >= 3);
+  assert.notDeepEqual(ibeam.cursor.shape.vertices, hand.cursor.shape.vertices);
+  assert.notEqual(ibeam.cursor.shape.path, hand.cursor.shape.path);
+  assert.deepEqual(S.cursorShape("I-beam").vertices, S.CURSOR.styles.ibeam.vertices);
+});
+
 test("createCursor clamps clickAt and duration", function () {
   const plan = S.createCursor({
     startPos: [0, 0],
@@ -250,6 +295,8 @@ test("Phase 1 APIs stay exported next to Phase 2", function () {
   assert.equal(typeof S.gradientWipeReveal, "function");
   assert.equal(typeof S.proximityHover, "function");
   assert.equal(S.CURSOR.name, "Cursor");
+  assert.equal(S.CURSOR.shape.style, "pointer");
+  assert.equal(typeof S.normalizeCursorStyle, "function");
   assert.equal(S.GLASS.controller, "EVO_GLASS");
   assert.equal(S.HOVER.driver, "Cursor");
 });

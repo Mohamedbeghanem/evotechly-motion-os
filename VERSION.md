@@ -4,7 +4,7 @@ Panel build: **v0.32** (P0–P23) on main — `ae/Evotechly Motion OS.jsx` (~297
 
 ## P0 — unify shell (companion hub)
 
-Home / SaaS / Kit Hub live on **Window → SaaS Demo Tools / Motion OS Hub** (`ae/SaaS Demo Tools.jsx`). Seed on Home. SaaS engines: cursor, depth, stagger, **UI presets (P1a)**, carousel, glass, wipe, hover. Kit Hub = official URLs only (`core/kitHub.js`) — copy / alert, never download. Does **not** replace or stub v0.32. Main-panel tab fold deferred.
+Home / SaaS / Kit Hub live on **Window → SaaS Demo Tools / Motion OS Hub** (`ae/SaaS Demo Tools.jsx`). Seed on Home. SaaS engines: cursor (P1d styles), depth, stagger, **UI presets (P1a)**, carousel, glass, wipe, hover. Kit Hub = official URLs only (`core/kitHub.js`) — copy / alert, never download. Does **not** replace or stub v0.32. Main-panel tab fold deferred.
 
 ## Phase 3 — editor-ready golden project seed
 
@@ -17,6 +17,10 @@ Own Solair-class FX. No third-party binaries. Liquid Glass remains an optional e
 - `core/saasDemoFx.js` — `glassPanel`, `gradientWipeReveal`, `proximityHover` (re-exported from `core/saasDemo.js`)
 - `ae/SaaS Demo Tools.jsx` — Glass Panel, Gradient Wipe, Proximity Hover buttons
 - Tests in `tests/saas-demo.test.js`. Phase 1 APIs unchanged.
+
+## Phase 1d — native cursor styles
+
+Shape-layer cursor styles on `createCursor`: `pointer` (default / arrow), `hand`, `ibeam`. Deterministic path descriptors in `CURSOR.styles` / `CURSOR.shape.style`. Motion OS Hub **SaaS** panel has a **Style** dropdown before **Cursor + click**. Home / Kit Hub unchanged. No PNG pack. No CursorKit. Existing plans without `style` stay pointer. Does not rewrite the 297 KB v0.32 panel.
 
 ## Phase 1 — Solair-class SaaS Demo Kit (own code)
 

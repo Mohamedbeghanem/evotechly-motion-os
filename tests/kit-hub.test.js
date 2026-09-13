@@ -67,6 +67,9 @@ test("Hub SaaS actions include existing engines plus seed surface", function () 
 test("SaaS Demo Tools.jsx is the Motion OS Hub and keeps every engine", function () {
   assert.ok(jsx.indexOf("Motion OS Hub") !== -1);
   assert.ok(jsx.indexOf("Kit Hub") !== -1);
+  assert.ok(jsx.indexOf("panel\", undefined, \"Home\"") !== -1 || jsx.indexOf("\"Home\"") !== -1);
+  assert.ok(jsx.indexOf("CURSOR_SHAPES") !== -1);
+  assert.ok(jsx.indexOf("Pointer") !== -1 && jsx.indexOf("I-beam") !== -1);
   assert.ok(/never download/i.test(jsx));
 
   [

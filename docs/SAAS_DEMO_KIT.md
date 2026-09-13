@@ -10,7 +10,7 @@ Liquid Glass remains an **optional external pack for personal use only**. It is 
 
 | Job | Evotechly (this kit) | Companion (optional, not shipped) |
 |---|---|---|
-| Pointer + click | Shape-layer cursor, move to target, scale-down on the clicked layer | UI Animator Pro (presets). Not required. |
+| Pointer + click | Shape-layer cursor (`pointer` / `hand` / `ibeam`), move to target, scale-down on the clicked layer | UI Animator Pro (presets). Not required. CursorKit is not used. |
 | Depth / glass-ish focus | Native Fast Box Blur + Glow, `EVO_DEPTH` Focus / Strength | Deep Glow. Not required. |
 | Frosted glass panel | Native Fill + Fast Box Blur / Gaussian + Tint/Levels, `EVO_GLASS` Opacity / Blur | Liquid Glass (personal). Not required. Never redistributed. |
 | Linear wipe / reveal | Native Gradient Wipe, or shape matte + soft edge. Apple / Soft / Linear ease | Saber / QCA. Not required. |
@@ -42,8 +42,8 @@ The v0.32 Polish tab also notes the companion. It does not reimplement these eng
 
 1. Open the product-UI comp.
 2. Select the layer that should receive the click (CTA, button, row).
-3. SaaS Demo Tools → set Duration / Click at (defaults `0.55` / `0.55`) → **Cursor + click**.
-4. A **shape** layer named `Cursor` is created if missing (triangle pointer, not a PNG). It keys from its current position to the target center. At `clickAt` both the cursor and the selected target get a scale-down, then recover.
+3. Motion OS Hub → **SaaS** → **Style** (`Pointer` / `Hand` / `I-beam`, default Pointer) → set Duration / Click at (defaults `0.55` / `0.55`) → **Cursor + click**. Home and Kit Hub stay as they are.
+4. A **shape** layer named `Cursor` is created if missing (native path, not a PNG, not CursorKit). Default style is the existing triangle **pointer**. Hand and I-beam swap the path data. It keys from its current position to the target center. At `clickAt` both the cursor and the selected target get a scale-down, then recover. If `Cursor` already exists, the selected style updates its path.
 
 Node plan (tests / tooling):
 
@@ -55,8 +55,13 @@ createCursor({
   endPos: [400, 320],
   duration: 0.55,
   clickAt: 0.55
+  // style omitted → pointer (default). Also: "hand" | "ibeam"
 });
+createCursor({ style: "hand", targetLayer: "Link" });
+createCursor({ style: "ibeam", targetLayer: "Field" });
 ```
+
+`createCursor` plan includes `cursor.style` and `cursor.shape` (`style`, `kind`, `vertices`, `path`). Unknown styles fall back to `pointer`.
 
 ### Depth reveal — `depthReveal`
 

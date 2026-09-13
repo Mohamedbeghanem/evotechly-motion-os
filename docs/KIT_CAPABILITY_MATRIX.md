@@ -10,7 +10,7 @@
 |---|---|
 | Figma→roles, Style / Direction / Shot, Scan→Apply | Main panel v0.32 |
 | Polish ease, Person cutout/Keylight, Captions AR+EN, Recipes | Main panel |
-| Cursor + click (shape pointer), depth, stagger, carousel | SaaS Demo Tools / `core/saasDemo.js` |
+| Cursor + click (shape pointer / hand / I-beam — P1d), depth, stagger, carousel | SaaS Demo Tools / `core/saasDemo.js` |
 | **P1a UI presets (in / out / both + mirror)** | **own** — `applyUiPreset` / SaaS **Apply UI Preset** |
 | Glass, gradient wipe, proximity hover | `core/saasDemoFx.js` |
 | Golden comps seed | `Seed Golden Project.jsx` |
@@ -34,7 +34,7 @@
 | **Repeater** (Plugin Everything) | $0 | Native .aex: repeat any live layer, mirror, time offset | **Companion** | Kit Hub only — hard to reimplement in JSX. |
 | **PaulPack v1** | $0+ | 14 loopable shape UI elements | **Companion / own shapes later** | Prefer Evotechly shape recipes. |
 | **Liquid Glass UI Kit** | $0 personal / paid commercial | Glass UI animations; often needs Motion Bro | **Companion** | Own glass is native frost (Phase 2). True refraction stays companion. |
-| **CursorKit** | PWYW | Cursor types, click/drag, typewriter | **Skip / reference** | Own shape cursor; add hand/I-beam as own shapes. |
+| **CursorKit** | PWYW | Cursor types, click/drag, typewriter | **Skip / reference** | Own shape cursor. **P1d shipped:** pointer / hand / I-beam as native path data. No CursorKit code. |
 
 ## Capability backlog for ONE tool
 
@@ -44,7 +44,7 @@ Main-panel Home / SaaS / Kit Hub tabs were **deferred**. Do not rewrite or stub 
 
 1. **Window → SaaS Demo Tools / Motion OS Hub** — `ae/SaaS Demo Tools.jsx` (palette title **Motion OS Hub**).
 2. **Home** — Seed Golden Project (reuses `ae/Seed Golden Project.jsx`).
-3. **SaaS** — existing engines: cursor, depth, stagger, **UI presets**, carousel, glass, wipe, hover.
+3. **SaaS** — existing engines: cursor (P1d Style dropdown: pointer / hand / I-beam), depth, stagger, **UI presets**, carousel, glass, wipe, hover.
 4. **Kit Hub** — companion names + official URLs only (`core/kitHub.js`). Copy / alert. Never download or vendor binaries.
 
 Target one-tool IA (later, after soak) still wants those sections inside v0.32. P0 ships the companion hub instead.
@@ -53,7 +53,7 @@ Target one-tool IA (later, after soak) still wants those sections inside v0.32. 
 1. **P1a own** — UI preset pack (UI Animator–class in/out/both + mirror). `core/uiPresets.js` + **Apply UI Preset**.
 2. Flowing / coloured text reveal.
 3. Caption keyword color + IN/OUT row.
-4. Cursor styles (arrow / hand / I-beam).
+4. **P1d Cursor styles** (pointer / hand / I-beam) — **shipped.** `createCursor({ style })` + SaaS Demo Tools Style dropdown. Native path descriptors. Default remains pointer. No PNG. No CursorKit.
 
 ### P2 — companion forever
 AEJuice, Motion Bro, Repeater, Animation Composer, PinRig, Liquid Glass refraction, external STT.
@@ -71,4 +71,4 @@ Solair AI script, Overlord Figma clone, Auto-Animate until soak passes.
 Research ≠ copy. Companions never in release zip. Build on v0.32.0-rc.
 
 ## Next
-P0 companion hub is in. **P1a own** is in. Remaining P1 PRs → soak #11 before v2. Do not fold the hub into the 297 KB panel until soak passes.
+P0 companion hub is in. **P1a own** is in. **P1d cursor styles shipped** (Hub SaaS Style dropdown). Remaining P1 PRs → soak #11 before v2. Do not fold the hub into the 297 KB panel until soak passes.
