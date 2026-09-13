@@ -1,6 +1,6 @@
 {
   "name": "evotechly-motion-os",
-  "version": "1.4.0",
+  "version": "2.0.0",
   "description": "Deterministic SaaS-style motion compiler for editors — Figma JSON → motion plan → After Effects",
   "main": "index.js",
   "license": "MIT",

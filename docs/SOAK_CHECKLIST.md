@@ -1,25 +1,21 @@
-# Soak checklist — v0.32 RC (zero code changes)
+# Soak checklist — Ultimate 2.0.0 (zero code changes)
 
 Editor-only. **Automation OFF.** Do not edit JSX, engines, or this repo during soak.
 
 Record **After Effects version + OS** on [issue #11](https://github.com/Mohamedbeghanem/evotechly-motion-os/issues/11) when you finish (or if anything fails).
 
-This is the **v0.32 RC** soak. It does **not** unlock `v2.0.0`. That still needs the 12-variant EvoCRM campaign in AE with zero code changes — see [V2_RELEASE_GATE.md](../V2_RELEASE_GATE.md).
+**v2.0.0 Ultimate is already tagged** with known limitations. This soak (and the 12-variant EvoCRM campaign) is for *editor confidence*. It is **not** a blocker to the 2.0.0 tag. AE visual soak remains **UNKNOWN** until an editor records results on issue #11. See [V2_RELEASE_GATE.md](../V2_RELEASE_GATE.md).
 
 Packaging: [RELEASE_ZIP_CHECKLIST.md](RELEASE_ZIP_CHECKLIST.md). One-page path: [QUICK_START.md](QUICK_START.md).
 
-## 1. Install (both panels + optional Seed)
+## 1. Install (all four JSX files)
 
-Quit After Effects. Copy into **Scripts/ScriptUI Panels**, then restart:
+Quit After Effects. Copy the three ScriptUI files into **Scripts/ScriptUI Panels**, then restart. Copy Seed into **Scripts** (keep a copy next to the Hub for Home → Seed):
 
 - [ ] `ae/Evotechly Motion OS.jsx` (~297 KB, v0.32 Reliability) — confirm the file is **not** a stub / `PLACEHOLDER_SEE_FILE`
-- [ ] `ae/SaaS Demo Tools.jsx` (~28 KB) — **Window → SaaS Demo Tools / Motion OS Hub**
-- [ ] `ae/Caption Style Tools.jsx` — **Window → Caption Style Tools** (P1c; optional for SaaS-only soak)
-
-Optional (Scripts folder, not ScriptUI Panels):
-
-- [ ] `ae/Seed Golden Project.jsx` — **File → Scripts → Run Script File…**  
-  Or skip the Scripts copy and use **Window → SaaS Demo Tools / Motion OS Hub → Home → Seed Golden Project** (seed JSX must sit next to the panel).
+- [ ] `ae/SaaS Demo Tools.jsx` — **Window → SaaS Demo Tools / Motion OS Hub**
+- [ ] `ae/Caption Style Tools.jsx` — **Window → Caption Style Tools** (P1c)
+- [ ] `ae/Seed Golden Project.jsx` — **File → Scripts → Run Script File…** or **Hub → Home → Seed Golden Project** (seed JSX must sit next to the panel)
 
 Do **not** install AEJuice, Motion Bro, Liquid Glass, UI Animator Pro, or Meow Captions for this soak. Companions stay optional and external — [EDITOR_FREE_KIT.md](EDITOR_FREE_KIT.md).
 
@@ -84,6 +80,6 @@ Open `REEL_9x16` (1080×1920).
 ## Out of scope for this soak
 
 - Turning Automation ON
-- Tagging `v2.0.0` or `v2.0.0-rc1`
+- Claiming AE visual / performance / compatibility soak **passed** (it is UNKNOWN until recorded on #11)
 - Installing or redistributing companion binaries
 - Editing `ae/Evotechly Motion OS.jsx` (297 KB body stays put)
