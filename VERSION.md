@@ -4,7 +4,15 @@ Panel build: **v0.32** (P0–P23) on main — `ae/Evotechly Motion OS.jsx` (~297
 
 ## P0 — unify shell (companion hub)
 
-Home / SaaS / Kit Hub live on **Window → SaaS Demo Tools / Motion OS Hub** (`ae/SaaS Demo Tools.jsx`). Seed on Home. SaaS engines: cursor (P1d styles), depth, stagger, **UI presets (P1a)**, carousel, glass, wipe, hover. Kit Hub = official URLs only (`core/kitHub.js`) — copy / alert, never download. Does **not** replace or stub v0.32. Main-panel tab fold deferred.
+Home / SaaS / Kit Hub live on **Window → SaaS Demo Tools / Motion OS Hub** (`ae/SaaS Demo Tools.jsx`). Seed on Home. SaaS engines: cursor (P1d styles), depth, stagger, **UI presets (P1a)**, carousel, glass, wipe, hover, **P1b flowing / coloured text**. Kit Hub = official URLs only (`core/kitHub.js`) — copy / alert, never download. Does **not** replace or stub v0.32. Main-panel tab fold deferred.
+
+## P1b — flowing / coloured text reveal
+
+Own Solair-class text reveal. Native AE text animators / fills only. No vendor code.
+
+- `core/textReveal.js` — `flowingText`, `colouredReveal`
+- Hub **SaaS** panel — Flowing Text + Coloured Reveal (captions-adjacent)
+- `tests/text-reveal.test.js`
 
 ## Kit matrix — P1 high-ROI gaps
 
@@ -13,8 +21,8 @@ From [docs/KIT_CAPABILITY_MATRIX.md](docs/KIT_CAPABILITY_MATRIX.md). P0 Hub is s
 | ID | Job | Status | Native | Apply in AE |
 |---|---|---|---|---|
 | P1a | UI Animator–class preset pack + mirror | **shipped on main** | `core/uiPresets.js` | Hub **Apply UI Preset** |
-| P1b | Flowing / coloured text reveal | open | — | — |
-| **P1c** | Caption keyword color + in/out preset row | **this PR** | `core/captionStyle.js` | **Window → Caption Style Tools** (separate companion — not a Hub tab). Captions tab still places live text / SRT. |
+| P1b | Flowing / coloured text reveal | **shipped (this PR)** | `core/textReveal.js` | Hub **Flowing Text** / **Coloured Reveal** |
+| P1c | Caption keyword color + in/out preset row | **shipped on main** | `core/captionStyle.js` | **Window → Caption Style Tools** (separate companion — not a Hub tab). Captions tab still places live text / SRT. |
 | P1d | Cursor styles (pointer / hand / I-beam) | **shipped on main** | `createCursor({ style })` | Hub SaaS **Style** dropdown |
 
 P1c owns the Meow keyword-color + Presetify in/out jobs **without their code**. Native text animators: `colorKeywords`, `captionInOut` (`fade` / `scale` / `slideUp` / `typewriter` / `blur`). No ElevenLabs. How-to: [docs/CAPTION_STYLE.md](docs/CAPTION_STYLE.md).
@@ -40,7 +48,9 @@ Shape-layer cursor styles on `createCursor`: `pointer` (default / arrow), `hand`
 Own SaaS Demo tools + Editor Free Kit docs. Not a Solair port. Companions stay external.
 
 - `core/saasDemo.js` — `createCursor`, `depthReveal`, `staggerReveal`, `carouselSetup`
+- `core/textReveal.js` — P1b `flowingText`, `colouredReveal` (native AE text animators / fills)
 - `ae/SaaS Demo Tools.jsx` — Window panel; does not replace v0.32
+- `tests/text-reveal.test.js` — P1b plan tests
 - `docs/SAAS_DEMO_KIT.md` + `docs/EDITOR_FREE_KIT.md`
 
 ## Phase 1a — UI Preset Pack (own)

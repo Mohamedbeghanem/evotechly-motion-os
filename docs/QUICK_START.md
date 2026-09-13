@@ -32,7 +32,7 @@ There is no checked-in `.aep`. After Effects is not available in CI. The seed sc
 
 Or **Window → SaaS Demo Tools / Motion OS Hub → Home → Seed Golden Project** (needs the seed JSX next to the panel).
 
-P0 unify shell is this companion hub — not a new tab on the 297 KB panel. **SaaS** keeps cursor, depth, stagger, carousel, glass, wipe, hover. **Kit Hub** lists companion names + official URLs (copy / alert). It never downloads or vendors binaries. Matrix: [KIT_CAPABILITY_MATRIX.md](KIT_CAPABILITY_MATRIX.md).
+P0 unify shell is this companion hub — not a new tab on the 297 KB panel. **SaaS** keeps cursor, depth, stagger, UI presets, carousel, glass, wipe, hover, plus P1b Flowing Text / Coloured Reveal. **Kit Hub** lists companion names + official URLs (copy / alert). It never downloads or vendors binaries. Matrix: [KIT_CAPABILITY_MATRIX.md](KIT_CAPABILITY_MATRIX.md).
 
 Creates (skips a name if it already exists — run twice is safe):
 
