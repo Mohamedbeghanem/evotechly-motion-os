@@ -95,6 +95,13 @@ const INSTALL_ORDER = [
   }
 ];
 
+const GOLDEN_SEED = {
+  script: "ae/Seed Golden Project.jsx",
+  comps: ["00_HOME", "ERP_DEMO", "TALKING_HEAD", "REEL_9x16"],
+  meta: "EVO_GOLDEN_META",
+  docs: "docs/QUICK_START.md"
+};
+
 const JOB_TABS = {
   saas: [
     "Window → SaaS Demo Tools (cursor, depth, stagger, carousel, glass, wipe, proximity)",
@@ -137,6 +144,7 @@ module.exports = {
   POLICY,
   INSTALL_ORDER,
   JOB_TABS,
+  GOLDEN_SEED,
   companionIds,
   companionsForJob,
   tabsForJob

@@ -1,6 +1,6 @@
 #target aftereffects
 /*
-  Evotechly SaaS Demo Tools — companion ScriptUI panel (Phase 1 + 2).
+  Evotechly SaaS Demo Tools — companion ScriptUI panel (Phase 1–3).
   Applies core/saasDemo.js + core/saasDemoFx.js numbers in After Effects.
   Native AE only. No Liquid Glass, Deep Glow, Saber, QCA, or TFM.
   Does not replace Evotechly Motion OS v0.32. Window → SaaS Demo Tools.
@@ -548,6 +548,17 @@
     alert("Proximity hover on " + sel.length + " layer(s).\nDriver: " + driver + " (Phase 1 Cursor + click if present).\nEVO_HOVER Radius / Scale Boost / Opacity Boost. Move the cursor near a card to scale + brighten.");
   }
 
+  function runSeedGolden() {
+    var here, seed;
+    try { here = new File($.fileName); } catch (e0) { here = null; }
+    seed = here && here.parent ? new File(here.parent.fsName + "/Seed Golden Project.jsx") : null;
+    if (seed && seed.exists) {
+      $.evalFile(seed);
+      return;
+    }
+    alert("Seed Golden Project.jsx was not found next to this panel.\nFile → Scripts → Run Script File… and pick ae/Seed Golden Project.jsx.\nCreates 00_HOME, ERP_DEMO, TALKING_HEAD, REEL_9x16 if missing. See docs/QUICK_START.md.");
+  }
+
   function buildUI(thisObj) {
     var win = (thisObj instanceof Panel) ? thisObj : new Window("palette", "SaaS Demo Tools", undefined, { resizeable: true });
     var g, durField, clickField, dirList, offsetField, easeList, axisList;
@@ -622,7 +633,10 @@
     hoverOpacityField.characters = 4;
     win.add("button", undefined, "Proximity Hover (selected)").onClick = function () { runHover(hoverRadiusField, hoverScaleField, hoverOpacityField); };
 
-    var foot = win.add("statictext", undefined, "Install: copy this file into Scripts/ScriptUI Panels. See docs/SAAS_DEMO_KIT.md. Companions stay external — docs/EDITOR_FREE_KIT.md.", { multiline: true });
+    win.add("statictext", undefined, "Golden project");
+    win.add("button", undefined, "Seed Golden Project").onClick = runSeedGolden;
+
+    var foot = win.add("statictext", undefined, "Install: copy this file into Scripts/ScriptUI Panels. See docs/SAAS_DEMO_KIT.md and docs/QUICK_START.md. Companions stay external — docs/EDITOR_FREE_KIT.md.", { multiline: true });
     foot.characters = 42;
 
     win.onResizing = win.onResize = function () { this.layout.resize(); };

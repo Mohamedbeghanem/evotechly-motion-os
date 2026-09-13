@@ -8,7 +8,7 @@ Official URLs change. Prefer the vendor’s current site over a mirrored zip.
 
 ## Policy
 
-- **Optional** — product demos ship with native Motion OS + [SaaS Demo Kit](SAAS_DEMO_KIT.md).
+- **Optional** — product demos ship with native Motion OS + [SaaS Demo Kit](SAAS_DEMO_KIT.md). Seed the four golden comps from [QUICK_START.md](QUICK_START.md) (`ae/Seed Golden Project.jsx`) — no `.aep` in the repo.
 - **Not required** — cursor, depth, stagger, carousel, glass panel, gradient wipe, proximity hover, captions, Keylight, and lockup all have native paths.
 - **Not redistributed** — never commit `.aex`, `.plugin`, encrypted JSX, AEJuice/Motion Bro packs, or third-party scripts.
 
@@ -68,6 +68,7 @@ Animation Composer / AEJuice / Motion Bro / Vignette Typer Lite / Meow Captions 
 ```
 ae/Evotechly Motion OS.jsx      →  Window → Evotechly Motion OS   (v0.32, ~297 KB)
 ae/SaaS Demo Tools.jsx          →  Window → SaaS Demo Tools
+ae/Seed Golden Project.jsx      →  File → Scripts → Run Script File…  (or SaaS Demo Tools → Seed Golden Project)
 ```
 
-Copy both into `Scripts/ScriptUI Panels`. See [ae/INSTALL-AE.md](../ae/INSTALL-AE.md).
+Copy the two panels into `Scripts/ScriptUI Panels`. Seed is a run-script, not a panel. One-page editor path: [QUICK_START.md](QUICK_START.md). See [ae/INSTALL-AE.md](../ae/INSTALL-AE.md).

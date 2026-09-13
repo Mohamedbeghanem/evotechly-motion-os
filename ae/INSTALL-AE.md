@@ -6,9 +6,13 @@ Two ScriptUI files. No Node. v0.32 panel + SaaS Demo companion.
 
 `ae/Evotechly Motion OS.jsx` — main panel (~297 KB, v0.32 Reliability)
 
-`ae/SaaS Demo Tools.jsx` — cursor + click, depth, stagger, carousel
+`ae/SaaS Demo Tools.jsx` — cursor + click, depth, stagger, carousel, glass, wipe, proximity, Seed Golden Project button
+
+`ae/Seed Golden Project.jsx` — File → Scripts → Run Script File… (not a Window panel)
 
 Caption pack (not required inside AE, sit next to the project): `assets/` + `examples/captions/`.
+
+Editor path: `docs/QUICK_START.md`.
 
 ## Install
 

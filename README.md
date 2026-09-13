@@ -4,7 +4,7 @@ Deterministic compiler for **SaaS-style motion**, plus a dockable After Effects 
 
 v0.7 Editor Kit: one panel for SaaS + reels + native polish + captions. See [ULTIMATE.md](ULTIMATE.md). Does not include Saber / QCA3 / Displacer.
 
-**Editors: install `ae/Evotechly Motion OS.jsx` and `ae/SaaS Demo Tools.jsx`, then read [EDITOR.md](EDITOR.md), [docs/SAAS_DEMO_KIT.md](docs/SAAS_DEMO_KIT.md), and [ae/INSTALL-AE.md](ae/INSTALL-AE.md).**
+**Editors: one-page path is [docs/QUICK_START.md](docs/QUICK_START.md). Install `ae/Evotechly Motion OS.jsx` and `ae/SaaS Demo Tools.jsx`, run `ae/Seed Golden Project.jsx`, then [EDITOR.md](EDITOR.md) / [docs/SAAS_DEMO_KIT.md](docs/SAAS_DEMO_KIT.md) / [ae/INSTALL-AE.md](ae/INSTALL-AE.md).**
 
 ## After Effects app
 
