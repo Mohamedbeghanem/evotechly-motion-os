@@ -13,19 +13,19 @@ Packaging: [RELEASE_ZIP_CHECKLIST.md](RELEASE_ZIP_CHECKLIST.md). One-page path: 
 Quit After Effects. Copy into **Scripts/ScriptUI Panels**, then restart:
 
 - [ ] `ae/Evotechly Motion OS.jsx` (~297 KB, v0.32 Reliability) — confirm the file is **not** a stub / `PLACEHOLDER_SEE_FILE`
-- [ ] `ae/SaaS Demo Tools.jsx` (~28 KB) — **Window → SaaS Demo Tools**
+- [ ] `ae/SaaS Demo Tools.jsx` (~28 KB) — **Window → SaaS Demo Tools / Motion OS Hub**
 
 Optional (Scripts folder, not ScriptUI Panels):
 
 - [ ] `ae/Seed Golden Project.jsx` — **File → Scripts → Run Script File…**  
-  Or skip the Scripts copy and use **Window → SaaS Demo Tools → Seed Golden Project** (seed JSX must sit next to the panel).
+  Or skip the Scripts copy and use **Window → SaaS Demo Tools / Motion OS Hub → Home → Seed Golden Project** (seed JSX must sit next to the panel).
 
 Do **not** install AEJuice, Motion Bro, Liquid Glass, UI Animator Pro, or Meow Captions for this soak. Companions stay optional and external — [EDITOR_FREE_KIT.md](EDITOR_FREE_KIT.md).
 
 ## 2. Seed Golden Project
 
 - [ ] **File → Scripts → Run Script File…** → `ae/Seed Golden Project.jsx`  
-  **or** **Window → SaaS Demo Tools → Seed Golden Project**
+  **or** **Window → SaaS Demo Tools / Motion OS Hub → Home → Seed Golden Project**
 - [ ] Project now has `00_HOME`, `ERP_DEMO`, `TALKING_HEAD`, `REEL_9x16`
 - [ ] Run Seed a second time — existing names are skipped (idempotent; no duplicates)
 

@@ -6,7 +6,7 @@ Two ScriptUI files. No Node. v0.32 panel + SaaS Demo companion.
 
 `ae/Evotechly Motion OS.jsx` — main panel (~297 KB, v0.32 Reliability)
 
-`ae/SaaS Demo Tools.jsx` — cursor + click, depth, stagger, carousel, glass, wipe, proximity, Seed Golden Project button
+`ae/SaaS Demo Tools.jsx` — **Window → SaaS Demo Tools / Motion OS Hub** (Home seed, SaaS engines, Kit Hub URLs)
 
 `ae/Seed Golden Project.jsx` — File → Scripts → Run Script File… (not a Window panel)
 
@@ -18,7 +18,7 @@ Editor path: `docs/QUICK_START.md`.
 
 1. Quit After Effects.
 2. Copy both JSX files into **Scripts/ScriptUI Panels**.
-3. Open AE → **Window → Evotechly Motion OS** and **Window → SaaS Demo Tools**.
+3. Open AE → **Window → Evotechly Motion OS** and **Window → SaaS Demo Tools** (Motion OS Hub).
 
 If it is missing from Window, the file is in `Scripts` instead of `Scripts/ScriptUI Panels`.
 

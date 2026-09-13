@@ -9,7 +9,7 @@ Quit After Effects. Copy these into **Scripts/ScriptUI Panels**, then restart:
 | # | File | Open from |
 |---|---|---|
 | 1 | `ae/Evotechly Motion OS.jsx` | **Window → Evotechly Motion OS** (v0.32 Reliability, ~297 KB — do not replace with a stub) |
-| 2 | `ae/SaaS Demo Tools.jsx` | **Window → SaaS Demo Tools** |
+| 2 | `ae/SaaS Demo Tools.jsx` | **Window → SaaS Demo Tools** / **Motion OS Hub** (palette title Motion OS Hub: Home + SaaS + Kit Hub) |
 
 Optional: copy `ae/Seed Golden Project.jsx` into **Scripts** (not ScriptUI Panels) so it appears under **File → Scripts**.
 
@@ -29,7 +29,9 @@ There is no checked-in `.aep`. After Effects is not available in CI. The seed sc
 
 **File → Scripts → Run Script File…** → `ae/Seed Golden Project.jsx`
 
-Or **Window → SaaS Demo Tools → Seed Golden Project** (needs the seed JSX next to the panel).
+Or **Window → SaaS Demo Tools / Motion OS Hub → Home → Seed Golden Project** (needs the seed JSX next to the panel).
+
+P0 unify shell is this companion hub — not a new tab on the 297 KB panel. **SaaS** keeps cursor, depth, stagger, carousel, glass, wipe, hover. **Kit Hub** lists companion names + official URLs (copy / alert). It never downloads or vendors binaries. Matrix: [KIT_CAPABILITY_MATRIX.md](KIT_CAPABILITY_MATRIX.md).
 
 Creates (skips a name if it already exists — run twice is safe):
 

@@ -104,7 +104,7 @@ const GOLDEN_SEED = {
 
 const JOB_TABS = {
   saas: [
-    "Window → SaaS Demo Tools (cursor, depth, stagger, carousel, glass, wipe, proximity)",
+    "Window → SaaS Demo Tools / Motion OS Hub (cursor, depth, stagger, carousel, glass, wipe, proximity)",
     "Motion (Style / Direction / Shot / Scan / Apply)",
     "Polish (ease, Add Cursor, squash)",
     "Interact (click / hover / drag when the v0.32 panel is installed)",

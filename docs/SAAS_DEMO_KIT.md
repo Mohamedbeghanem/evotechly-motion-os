@@ -31,7 +31,7 @@ Liquid Glass remains an **optional external pack for personal use only**. It is 
 Install **both** JSX files into `Scripts/ScriptUI Panels`, restart After Effects:
 
 1. `ae/Evotechly Motion OS.jsx` — v0.32 Reliability (do not replace with a stub).
-2. `ae/SaaS Demo Tools.jsx` — this kit. **Window → SaaS Demo Tools**.
+2. `ae/SaaS Demo Tools.jsx` — this kit. **Window → SaaS Demo Tools / Motion OS Hub** (Home + SaaS + Kit Hub). Does not replace v0.32.
 
 **Phase 3 — golden project seed.** There is no binary `.aep`. **File → Scripts → Run Script File…** → `ae/Seed Golden Project.jsx` (or the **Seed Golden Project** button on this panel). Creates `00_HOME`, `ERP_DEMO`, `TALKING_HEAD`, `REEL_9x16` if missing. Idempotent. Editor path: [QUICK_START.md](QUICK_START.md).
 
@@ -131,16 +131,18 @@ proximityHover({
 | `core/saasDemo.js` | Phase 1 plans + re-exports of Phase 2. Node-testable. |
 | `core/saasDemoFx.js` | Phase 2: `glassPanel`, `gradientWipeReveal`, `proximityHover`. |
 | `core/editorFreeKit.js` | Companion install order + which Motion OS tab to use. |
+| `core/kitHub.js` | P0 Kit Hub URL matrix (official sites only). |
 | `core/goldenProject.js` | Phase 3 seed names, sizes, layer roles, idempotency. |
-| `ae/SaaS Demo Tools.jsx` | ScriptUI that applies the same numbers in AE. **Seed Golden Project** button evals the sibling script. |
+| `ae/SaaS Demo Tools.jsx` | **Window → SaaS Demo Tools / Motion OS Hub.** Home (Seed) + SaaS engines + Kit Hub URLs. Does not replace v0.32. |
 | `ae/Seed Golden Project.jsx` | File → Run Script. Builds the four golden comps. No `.aep`. |
 | `tests/saas-demo.test.js` | Phase 1–2 helper tests. |
 | `tests/golden-project.test.js` | Phase 3 naming / idempotency / job map. |
+| `tests/kit-hub.test.js` | Kit Hub URL matrix + hub JSX contract. |
 
 JSX cannot `require()` Node modules. Constants in the companion match `core/saasDemo.js` / `core/saasDemoFx.js` (`0.55` move, `0.12` press, `0.88` / `0.94` click scales, `3` frame stagger, glass `42` / `18`, wipe softness `12`, hover `140` / `6` / `18`, `EVO_DEPTH` / `EVO_CAROUSEL` / `EVO_GLASS` / `EVO_HOVER`).
 
 ## Main panel (v0.32) — when to stay there
 
-Use **SaaS Demo Tools** for the seven engines above. Keep using Motion OS for Figma roles, Style / Direction / Shot, Polish ease, Person, Captions, Recipes, Interact, Assets.
+Use **Window → SaaS Demo Tools / Motion OS Hub** for the seven engines above. Keep using Motion OS for Figma roles, Style / Direction / Shot, Polish ease, Person, Captions, Recipes, Interact, Assets.
 
 Do not paste Solair, UI Animator Pro, AEJuice, Motion Bro, Liquid Glass, CursorKit, Deep Glow, Saber, QCA, or TFM into this repo.

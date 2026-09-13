@@ -1,7 +1,7 @@
 #target aftereffects
 /*
   Evotechly Motion OS — Seed Golden Project (Phase 3).
-  File → Scripts → Run Script File… (or SaaS Demo Tools → Seed Golden Project).
+  File → Scripts → Run Script File… (or Motion OS Hub / SaaS Demo Tools → Home → Seed Golden Project).
   Builds 00_HOME, ERP_DEMO, TALKING_HEAD, REEL_9x16. Idempotent: skip if name exists.
   Names match core/goldenProject.js. No .aep binary. Native AE only.
 */
