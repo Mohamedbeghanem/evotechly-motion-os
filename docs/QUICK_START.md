@@ -15,6 +15,8 @@ Optional: copy `ae/Seed Golden Project.jsx` into **Scripts** (not ScriptUI Panel
 
 Details: [ae/INSTALL-AE.md](../ae/INSTALL-AE.md). Caption pack (not required in AE): `assets/` + `examples/captions/`.
 
+**RC soak / zip:** [SOAK_CHECKLIST.md](SOAK_CHECKLIST.md) (zero code changes, Automation OFF) · [RELEASE_ZIP_CHECKLIST.md](RELEASE_ZIP_CHECKLIST.md) (full RC = all three JSX files).
+
 ## 2. Optional companions
 
 Do **not** need AEJuice, Motion Bro, Liquid Glass, UI Animator Pro, or Meow Captions to ship. Those stay on vendor sites and are never in this repo.

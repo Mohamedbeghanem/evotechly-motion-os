@@ -23,3 +23,5 @@ Own SaaS Demo tools + Editor Free Kit docs. Not a Solair port. Companions stay e
 - `docs/SAAS_DEMO_KIT.md` + `docs/EDITOR_FREE_KIT.md`
 
 Do not tag v2.0.0. AE soak is UNKNOWN. See V2_RELEASE_GATE.md.
+
+**v0.32.0-rc packaging:** full zip must include the main panel **and** `ae/SaaS Demo Tools.jsx` **and** `ae/Seed Golden Project.jsx` (on main from PRs #8–#10). Checklists: [docs/SOAK_CHECKLIST.md](docs/SOAK_CHECKLIST.md), [docs/RELEASE_ZIP_CHECKLIST.md](docs/RELEASE_ZIP_CHECKLIST.md).
