@@ -6,6 +6,19 @@ Panel build: **v0.32** (P0–P23) on main — `ae/Evotechly Motion OS.jsx` (~297
 
 Home / SaaS / Kit Hub live on **Window → SaaS Demo Tools / Motion OS Hub** (`ae/SaaS Demo Tools.jsx`). Seed on Home. SaaS engines: cursor (P1d styles), depth, stagger, **UI presets (P1a)**, carousel, glass, wipe, hover. Kit Hub = official URLs only (`core/kitHub.js`) — copy / alert, never download. Does **not** replace or stub v0.32. Main-panel tab fold deferred.
 
+## Kit matrix — P1 high-ROI gaps
+
+From [docs/KIT_CAPABILITY_MATRIX.md](docs/KIT_CAPABILITY_MATRIX.md). P0 Hub is shipped above. Phase 1–3 SaaS Demo / seed stay shipped below.
+
+| ID | Job | Status | Native | Apply in AE |
+|---|---|---|---|---|
+| P1a | UI Animator–class preset pack + mirror | **shipped on main** | `core/uiPresets.js` | Hub **Apply UI Preset** |
+| P1b | Flowing / coloured text reveal | open | — | — |
+| **P1c** | Caption keyword color + in/out preset row | **this PR** | `core/captionStyle.js` | **Window → Caption Style Tools** (separate companion — not a Hub tab). Captions tab still places live text / SRT. |
+| P1d | Cursor styles (pointer / hand / I-beam) | **shipped on main** | `createCursor({ style })` | Hub SaaS **Style** dropdown |
+
+P1c owns the Meow keyword-color + Presetify in/out jobs **without their code**. Native text animators: `colorKeywords`, `captionInOut` (`fade` / `scale` / `slideUp` / `typewriter` / `blur`). No ElevenLabs. How-to: [docs/CAPTION_STYLE.md](docs/CAPTION_STYLE.md).
+
 ## Phase 3 — editor-ready golden project seed
 
 No `.aep` binary (AE cannot run in CI). `ae/Seed Golden Project.jsx` builds `00_HOME`, `ERP_DEMO`, `TALKING_HEAD`, `REEL_9x16` when the editor runs it. Idempotent. Shy `EVO_GOLDEN_META` on Home. One-page path: `docs/QUICK_START.md`. Helpers: `core/goldenProject.js`. SaaS Demo Tools has a Seed button. Does not replace v0.32.
@@ -44,4 +57,4 @@ Do not tag v2.0.0. AE soak is UNKNOWN. See V2_RELEASE_GATE.md.
 
 Kit capability research matrix landed (research-before-build).
 
-**v0.32.0-rc packaging:** full zip must include the main panel **and** `ae/SaaS Demo Tools.jsx` **and** `ae/Seed Golden Project.jsx` (on main from PRs #8–#10). Checklists: [docs/SOAK_CHECKLIST.md](docs/SOAK_CHECKLIST.md), [docs/RELEASE_ZIP_CHECKLIST.md](docs/RELEASE_ZIP_CHECKLIST.md).
+**v0.32.0-rc packaging:** full zip must include the main panel **and** `ae/SaaS Demo Tools.jsx` (Motion OS Hub) **and** `ae/Seed Golden Project.jsx` **and** `ae/Caption Style Tools.jsx` (P1c). Checklists: [docs/SOAK_CHECKLIST.md](docs/SOAK_CHECKLIST.md), [docs/RELEASE_ZIP_CHECKLIST.md](docs/RELEASE_ZIP_CHECKLIST.md).

@@ -10,7 +10,7 @@
   "scripts": {
     "start": "node index.js",
     "compile": "node index.js",
-    "test": "node --test tests/engine.test.js tests/saas-demo.test.js tests/golden-project.test.js tests/kit-hub.test.js tests/ui-presets.test.js",
+    "test": "node --test tests/engine.test.js tests/saas-demo.test.js tests/golden-project.test.js tests/kit-hub.test.js tests/ui-presets.test.js tests/caption-style.test.js",
     "example": "node index.js examples/saas-hero.json --style stripe"
   },
   "bin": {

@@ -4,7 +4,7 @@ One kit. Install Motion OS only. Art from Figma. Motion from Evotechly.
 
 ## Install
 
-Quit AE. Copy `ae/Evotechly Motion OS.jsx` and `ae/SaaS Demo Tools.jsx` into **Scripts/ScriptUI Panels**. Window → Evotechly Motion OS (header **v0.32 Reliability**) and **Window → SaaS Demo Tools / Motion OS Hub**. Seed comps: Hub **Home → Seed Golden Project**, or **File → Scripts → Run Script File…** → `ae/Seed Golden Project.jsx`. One-page path: [docs/QUICK_START.md](docs/QUICK_START.md). Caption JSON + sample SRT live in `assets/` and `examples/captions/`. SaaS tools: [docs/SAAS_DEMO_KIT.md](docs/SAAS_DEMO_KIT.md). Optional free companions: [docs/EDITOR_FREE_KIT.md](docs/EDITOR_FREE_KIT.md) (Kit Hub URLs only — never bundled).
+Quit AE. Copy `ae/Evotechly Motion OS.jsx`, `ae/SaaS Demo Tools.jsx`, and `ae/Caption Style Tools.jsx` into **Scripts/ScriptUI Panels**. Window → Evotechly Motion OS (header **v0.32 Reliability**), **Window → SaaS Demo Tools / Motion OS Hub**, and **Window → Caption Style Tools**. Seed comps: Hub **Home → Seed Golden Project**, or **File → Scripts → Run Script File…** → `ae/Seed Golden Project.jsx`. One-page path: [docs/QUICK_START.md](docs/QUICK_START.md). Caption JSON + sample SRT live in `assets/` and `examples/captions/`. SaaS / Hub: [docs/SAAS_DEMO_KIT.md](docs/SAAS_DEMO_KIT.md). Caption keyword color + in/out: [docs/CAPTION_STYLE.md](docs/CAPTION_STYLE.md). Optional free companions: [docs/EDITOR_FREE_KIT.md](docs/EDITOR_FREE_KIT.md) (Kit Hub URLs only — never bundled).
 
 ## Tabs
 
@@ -16,6 +16,7 @@ Quit AE. Copy `ae/Evotechly Motion OS.jsx` and `ae/SaaS Demo Tools.jsx` into **S
 | Captions | Templates, Import SRT, 9:16 safe, KPI count-up |
 | Recipes | Founder GS / Roto, ERP demo, 15s hook reminders, Feature card |
 | *(companion)* | **Window → SaaS Demo Tools / Motion OS Hub** — Home (Seed), SaaS (cursor, depth, stagger, carousel, glass, wipe, hover), Kit Hub (official URLs) |
+| *(companion)* | **Window → Caption Style Tools** — P1c keyword color + fade/scale/slideUp/typewriter/blur (separate from Hub) |
 
 ## Names
 
@@ -38,7 +39,7 @@ Live AE text only. Do not bake PNG.
 - Import SRT is basic SubRip (index + timecode + text). No ASS.
 - Set Paragraph direction in AE for Arabic. Fonts: Noto Naskh Arabic / Cairo / IBM Plex Sans Arabic if the machine has them. No font files in the repo.
 
-After placing captions: Shot = Captions, Style = Evotechly or Calm, Scan, Apply.
+After placing captions: Shot = Captions, Style = Evotechly or Calm, Scan, Apply. Keyword color + in/out: **Window → Caption Style Tools** (does not edit the 297 KB panel).
 
 ## Polish
 

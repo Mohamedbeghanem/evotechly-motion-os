@@ -56,14 +56,14 @@ const INSTALL_ORDER = [
     name: "Meow Captions",
     url: "https://sinopskyd.itch.io/meow-captions",
     job: "reel",
-    note: "Optional caption coloring. Captions tab + SRT remain native."
+    note: "Optional caption coloring. Captions tab + Caption Style Tools (keyword color) are native."
   },
   {
     id: "presetify",
     name: "Presetify",
     url: "https://kuldeepmp4.gumroad.com/l/Presetify",
     job: "reel",
-    note: "Optional text presets. Type / Captions tabs stay first."
+    note: "Optional text presets. Caption Style Tools in/out + Polish Typewriter stay first."
   },
   {
     id: "vignetteTyperLite",
@@ -113,12 +113,14 @@ const JOB_TABS = {
   talkingHead: [
     "Person (Cutout Prep / Keylight / Light wrap / Talking-head stack)",
     "Captions (AR+EN, SRT, lower-third)",
+    "Window → Caption Style Tools (keyword color, fade/scale/slideUp/typewriter/blur)",
     "Motion (Scan / Apply after names exist)",
     "Polish only for ease — Wet / glow off"
   ],
   reel: [
     "Motion (Hook / Kinetic type / UI punch-in / Logo sting / Captions)",
     "Captions (hook, kinetic, AR+EN)",
+    "Window → Caption Style Tools (keyword color + in/out)",
     "Polish (Wet look on hooks & logo sting only)",
     "Recipes (15s hook reminders)"
   ]

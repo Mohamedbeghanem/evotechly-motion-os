@@ -14,6 +14,7 @@ Quit After Effects. Copy into **Scripts/ScriptUI Panels**, then restart:
 
 - [ ] `ae/Evotechly Motion OS.jsx` (~297 KB, v0.32 Reliability) — confirm the file is **not** a stub / `PLACEHOLDER_SEE_FILE`
 - [ ] `ae/SaaS Demo Tools.jsx` (~28 KB) — **Window → SaaS Demo Tools / Motion OS Hub**
+- [ ] `ae/Caption Style Tools.jsx` — **Window → Caption Style Tools** (P1c; optional for SaaS-only soak)
 
 Optional (Scripts folder, not ScriptUI Panels):
 
@@ -57,6 +58,7 @@ Open `TALKING_HEAD`. Footage or the seed solid is fine.
 
 - [ ] **Person** — Cutout Prep (or Keylight recipe) on `CUTOUT` / `VIDEO_PLACEHOLDER`
 - [ ] **Captions** — mid-stack captions readable (`Caption` / AR / EN). Audio not destroyed
+- [ ] **Window → Caption Style Tools** (optional P1c) — keyword color + one in/out preset on a caption
 - [ ] **Polish** — ease only. Wet / Glow / Saber / QCA **off**
 
 ## 5. REEL_9x16 (SAFE + hook)

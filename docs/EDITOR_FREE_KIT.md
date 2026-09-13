@@ -9,7 +9,7 @@ Official URLs change. Prefer the vendor’s current site over a mirrored zip.
 ## Policy
 
 - **Optional** — product demos ship with native Motion OS + [SaaS Demo Kit](SAAS_DEMO_KIT.md). Seed the four golden comps from [QUICK_START.md](QUICK_START.md) (`ae/Seed Golden Project.jsx`) — no `.aep` in the repo.
-- **Not required** — cursor, depth, stagger, UI presets, carousel, glass panel, gradient wipe, proximity hover, captions, Keylight, and lockup all have native paths.
+- **Not required** — cursor, depth, stagger, UI presets, carousel, glass panel, gradient wipe, proximity hover, captions, keyword color, caption in/out, Keylight, and lockup all have native paths.
 - **Not redistributed** — never commit `.aex`, `.plugin`, encrypted JSX, AEJuice/Motion Bro packs, or third-party scripts.
 - **Research matrix** — own vs companion vs skip, and the one-tool wrap plan: [KIT_CAPABILITY_MATRIX.md](KIT_CAPABILITY_MATRIX.md).
 
@@ -25,8 +25,8 @@ Quit After Effects before installing native plugins. ScriptUI panels go in `Scri
 | 4 | **Motion Bro (free)** | [motionbro.com](https://motionbro.com) | Host for some free packs. Off talking-head. |
 | 5 | **Animation Composer (free)** | [mrhorse.com/animation-composer](https://www.mrhorse.com/animation-composer/) | Preset browser. Hooks only. |
 | 6 | **Crate Light Wrap** | [productioncrate.com — Light Wrap](https://www.productioncrate.com/plugins/crates-light-wrap) | Optional wrap. Prefer **Person → Light wrap** first. |
-| 7 | **Meow Captions** | [sinopskyd.itch.io/meow-captions](https://sinopskyd.itch.io/meow-captions) | Optional keyword color. Prefer **Captions** tab + SRT. |
-| 8 | **Presetify** | [kuldeepmp4.gumroad.com/l/Presetify](https://kuldeepmp4.gumroad.com/l/Presetify) | Optional text presets. Prefer Captions / Type / Polish Typewriter. |
+| 7 | **Meow Captions** | [sinopskyd.itch.io/meow-captions](https://sinopskyd.itch.io/meow-captions) | Optional keyword color. Prefer **Captions** tab + **Window → Caption Style Tools**. |
+| 8 | **Presetify** | [kuldeepmp4.gumroad.com/l/Presetify](https://kuldeepmp4.gumroad.com/l/Presetify) | Optional text presets. Prefer Caption Style Tools in/out + Polish Typewriter. |
 | 9 | **Vignette Typer Lite** | [vignettestudio.gumroad.com/l/vignette-typer-lite](https://vignettestudio.gumroad.com/l/vignette-typer-lite) | Optional type-on. Prefer Polish **Typewriter**. |
 | 10 | **Repeater** | Native shape Repeater, or [aaeplugins.com/plugins/repeater](https://aaeplugins.com/plugins/repeater/) | Optional. Not needed for SaaS Demo carousel. |
 | 11 | **PaulPack** | [paulplane.gumroad.com/l/paulpackv1](https://paulplane.gumroad.com/l/paulpackv1) | Optional ornaments. |
@@ -49,7 +49,7 @@ Skip AEJuice / Motion Bro / Liquid Glass until the native pass is done.
 ### Talking-head
 
 1. **Person** — Cutout Prep or Keylight recipe, Light wrap, Talking-head stack.
-2. **Captions** — AR+EN, SRT, lower-third.
+2. **Captions** — AR+EN, SRT, lower-third. **Window → Caption Style Tools** — keyword color + fade/scale/slideUp/typewriter/blur.
 3. **Motion** — Scan / Apply after layers are named.
 4. **Polish** — ease only. Wet / Glow / Saber / QCA **off**.
 
@@ -58,7 +58,7 @@ Crate Light Wrap is optional after the native wrap recipe.
 ### Reel / hook
 
 1. **Motion** — Hook, Kinetic type, UI punch-in, Logo sting, Captions.
-2. **Captions** — hook / kinetic / AR+EN.
+2. **Captions** — hook / kinetic / AR+EN. Then **Caption Style Tools** for keyword color + in/out.
 3. **Polish** — Wet look on hooks and logo sting only.
 4. **Recipes** — 15s hook reminders.
 
@@ -69,7 +69,8 @@ Animation Composer / AEJuice / Motion Bro / Vignette Typer Lite / Meow Captions 
 ```
 ae/Evotechly Motion OS.jsx      →  Window → Evotechly Motion OS   (v0.32, ~297 KB)
 ae/SaaS Demo Tools.jsx          →  Window → SaaS Demo Tools / Motion OS Hub
+ae/Caption Style Tools.jsx      →  Window → Caption Style Tools   (P1c keyword color + in/out)
 ae/Seed Golden Project.jsx      →  File → Scripts → Run Script File…  (or Hub Home → Seed Golden Project)
 ```
 
-Copy the two panels into `Scripts/ScriptUI Panels`. Seed is a run-script, not a panel. One-page editor path: [QUICK_START.md](QUICK_START.md). See [ae/INSTALL-AE.md](../ae/INSTALL-AE.md).
+Copy the three panels into `Scripts/ScriptUI Panels`. Seed is a run-script, not a panel. One-page editor path: [QUICK_START.md](QUICK_START.md). Caption style: [CAPTION_STYLE.md](CAPTION_STYLE.md). See [ae/INSTALL-AE.md](../ae/INSTALL-AE.md).
