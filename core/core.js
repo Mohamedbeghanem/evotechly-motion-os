@@ -89,10 +89,11 @@ function supports(engine, cap) {
 
 function health(reg, g, live) {
   const broken = brokenRefs(g, live);
+  const dup = 0;
   let status = "READY";
   if (broken.length) status = "READY WITH WARNINGS";
   if (!reg || !reg.byId) status = "RECOVERY REQUIRED";
-  return { status: status, engines: 21, broken: broken.length, duplicates: 0 };
+  return { status: status, engines: 21, broken: broken.length, duplicates: dup };
 }
 
 function migratePreview(fromSchema, toSchema, count) {

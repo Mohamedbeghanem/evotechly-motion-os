@@ -27,11 +27,42 @@ function resolveContext(input) {
   return Object.assign({ ambiguous: false }, hits[0]);
 }
 
-function nextAction(state) {
-  if (state && state.missingAssets && state.missingAssets.length) {
-    return { engine: "p15", action: "OPEN ASSET" };
+function blockers(state) {
+  const s = state || {};
+  const out = [];
+  if (s.missingAssets && s.missingAssets.length) {
+    out.push({ engine: "p15", severity: "BLOCKER", message: "Missing " + s.missingAssets[0], action: "OPEN ASSET" });
   }
-  return { engine: "p19", action: "IDLE" };
+  if (s.reviewBlocking) out.push({ engine: "p16", severity: "BLOCKER", message: "Open blocking review", action: "OPEN REVIEW" });
+  if (s.qaBlocked) out.push({ engine: "p12", severity: "BLOCKER", message: "QA blocked", action: "RUN PREFLIGHT" });
+  if (s.brandHard) out.push({ engine: "p11", severity: "WARNING", message: "Brand policy warning", action: "CHECK BRAND" });
+  return out;
 }
 
-module.exports = { ENGINES, resolveContext, nextAction };
+function nextAction(state) {
+  const b = blockers(state);
+  if (b.length) return b[0];
+  if (state && state.stage === "READY TO EDIT" && !state.editId) {
+    return { engine: "p8", severity: "NEXT", message: "Create master edit", action: "CREATE WITH P8" };
+  }
+  if (state && state.stage === "EDITING") {
+    return { engine: "p8", severity: "NEXT", message: "Continue edit", action: "CONTINUE EDIT" };
+  }
+  return { engine: "p19", severity: "NEXT", message: "No required action", action: "IDLE" };
+}
+
+function commandSearch(q, registry) {
+  const n = String(q || "").toLowerCase();
+  return (registry || []).filter(function (c) {
+    return (c.label + " " + (c.keywords || "")).toLowerCase().indexOf(n) !== -1;
+  });
+}
+
+function capability(engineId, name, installed) {
+  const e = (installed || ENGINES).filter(function (x) { return x.id === engineId; })[0];
+  if (!e) return { ok: false, reason: "UNAVAILABLE" };
+  if (e.api !== "1.0") return { ok: false, reason: "VERSION MISMATCH" };
+  return { ok: true, reason: name };
+}
+
+module.exports = { ENGINES, resolveContext, blockers, nextAction, commandSearch, capability };

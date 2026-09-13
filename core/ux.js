@@ -1,17 +1,17 @@
 "use strict";
 
 const TERMS = {
-  P2: "Interaction",
-  P3: "Frame",
-  P6: "Text",
-  P8: "Edit",
-  P12: "Check",
-  P13: "Director",
-  P14: "Variants",
-  P15: "Assets",
-  P16: "Review",
-  P17: "Produce",
-  P18: "Learn"
+  "P2": "Interaction",
+  "P3": "Frame",
+  "P6": "Text",
+  "P8": "Edit",
+  "P12": "Check",
+  "P13": "Director",
+  "P14": "Variants",
+  "P15": "Assets",
+  "P16": "Review",
+  "P17": "Produce",
+  "P18": "Learn"
 };
 
 const QUICK_ACTIONS = {
@@ -40,7 +40,7 @@ function classify(sel) {
 function nextIssue(issues) {
   const list = issues || [];
   const block = list.filter(function (i) { return i.severity === "BLOCKING"; });
-  return block[0] || list[0] || null;
+  return (block[0] || list[0] || null);
 }
 
 module.exports = { TERMS, QUICK_ACTIONS, label, actionsFor, classify, nextIssue };

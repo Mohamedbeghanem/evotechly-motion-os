@@ -65,6 +65,19 @@ function match(rules, event, ctx) {
   });
 }
 
+function plan(ruleObj, event, ctx, profile) {
+  const actions = (ruleObj.actions || []).map(function (cmd) {
+    const s = safetyOf(cmd);
+    return {
+      cmd: cmd,
+      safety: s,
+      auto: canAuto(cmd, ruleObj.mode, profile || "BALANCED"),
+      rejected: s === "DESTRUCTIVE"
+    };
+  });
+  return { rule: ruleObj.id, actions: actions, blocked: actions.some(function (a) { return a.rejected; }) };
+}
+
 function detectCycle(rules) {
   const graph = {};
   (rules || []).forEach(function (r) {
@@ -86,4 +99,31 @@ function chainStop(depth, max) {
   return depth >= (max || 5);
 }
 
-module.exports = { TRIGGERS, SAFETY, safetyOf, canAuto, rule, condOk, match, detectCycle, chainStop };
+function alreadySatisfied(cmd, ctx) {
+  if (cmd === "refresh.readiness" && ctx && ctx.readinessFresh) return true;
+  if (cmd === "qa.preflight" && ctx && ctx.qa === "READY") return true;
+  return false;
+}
+
+const TEMPLATES = [
+  { name: "Refresh readiness", trigger: "ASSET_READY", actions: ["refresh.readiness"], mode: "AUTO" },
+  { name: "Mark variants outdated", trigger: "EDIT_UPDATED", actions: ["variant.markUpdate"], mode: "AUTO" },
+  { name: "QA after variant", trigger: "VARIANT_UPDATED", actions: ["qa.preflight"], mode: "AUTO" },
+  { name: "Suggest review", trigger: "QA_STATUS_CHANGED", actions: ["review.suggest"], mode: "SUGGEST" },
+  { name: "Refresh delivery", trigger: "REVIEW_APPROVED", actions: ["refresh.readiness"], mode: "AUTO" }
+];
+
+module.exports = {
+  TRIGGERS,
+  SAFETY,
+  safetyOf,
+  canAuto,
+  rule,
+  condOk,
+  match,
+  plan,
+  detectCycle,
+  chainStop,
+  alreadySatisfied,
+  TEMPLATES
+};
