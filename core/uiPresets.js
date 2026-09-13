@@ -8,12 +8,7 @@
 
 const { EASE, easePair } = require("./polish");
 const { normalizeDirection } = require("./direction");
-const {
-  round4,
-  clamp,
-  framesToSeconds,
-  normalizeLayers
-} = require("./saasDemo");
+const { round4, clamp, framesToSeconds } = require("./saasDemo");
 
 const UI_PRESET_IDS = [
   "fade-up",
@@ -47,6 +42,27 @@ const UI_PRESETS = {
   "slide-up": { id: "slide-up", opacityFrom: 0, x: 0, y: 24, scaleFrom: 100 },
   pop: { id: "pop", opacityFrom: 0, x: 0, y: 0, scaleFrom: 90 }
 };
+
+function layerName(layer, index) {
+  if (layer == null) return "layer-" + index;
+  if (typeof layer === "string") return layer;
+  return layer.name || layer.layer || layer.id || ("layer-" + index);
+}
+
+function normalizeLayers(list) {
+  if (!list) return [];
+  if (!Array.isArray(list)) return [];
+  return list.map(function (layer, i) {
+    if (layer == null) return { name: "layer-" + i };
+    if (typeof layer === "string") return { name: layer };
+    const copy = {};
+    Object.keys(layer).forEach(function (k) {
+      copy[k] = layer[k];
+    });
+    copy.name = layerName(layer, i);
+    return copy;
+  });
+}
 
 function clonePose(src) {
   src = src || {};
