@@ -91,13 +91,13 @@ const INSTALL_ORDER = [
     name: "Liquid Glass (personal)",
     url: "https://bentomotion.gumroad.com/l/glass-ae",
     job: "saas",
-    note: "Optional glass pack (often needs Motion Bro). Product UI stays Apple-clean by default."
+    note: "Optional personal-use glass pack only (often needs Motion Bro). Not redistributed. Native glassPanel in SaaS Demo Tools is the product path."
   }
 ];
 
 const JOB_TABS = {
   saas: [
-    "Window → SaaS Demo Tools (cursor, depth, stagger, carousel)",
+    "Window → SaaS Demo Tools (cursor, depth, stagger, carousel, glass, wipe, proximity)",
     "Motion (Style / Direction / Shot / Scan / Apply)",
     "Polish (ease, Add Cursor, squash)",
     "Interact (click / hover / drag when the v0.32 panel is installed)",

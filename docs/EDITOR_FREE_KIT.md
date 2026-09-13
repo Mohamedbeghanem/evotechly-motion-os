@@ -9,7 +9,7 @@ Official URLs change. Prefer the vendor’s current site over a mirrored zip.
 ## Policy
 
 - **Optional** — product demos ship with native Motion OS + [SaaS Demo Kit](SAAS_DEMO_KIT.md).
-- **Not required** — cursor, depth, stagger, carousel, captions, Keylight, and lockup all have native paths.
+- **Not required** — cursor, depth, stagger, carousel, glass panel, gradient wipe, proximity hover, captions, Keylight, and lockup all have native paths.
 - **Not redistributed** — never commit `.aex`, `.plugin`, encrypted JSX, AEJuice/Motion Bro packs, or third-party scripts.
 
 ## Install order
@@ -29,7 +29,7 @@ Quit After Effects before installing native plugins. ScriptUI panels go in `Scri
 | 9 | **Vignette Typer Lite** | [vignettestudio.gumroad.com/l/vignette-typer-lite](https://vignettestudio.gumroad.com/l/vignette-typer-lite) | Optional type-on. Prefer Polish **Typewriter**. |
 | 10 | **Repeater** | Native shape Repeater, or [aaeplugins.com/plugins/repeater](https://aaeplugins.com/plugins/repeater/) | Optional. Not needed for SaaS Demo carousel. |
 | 11 | **PaulPack** | [paulplane.gumroad.com/l/paulpackv1](https://paulplane.gumroad.com/l/paulpackv1) | Optional ornaments. |
-| 12 | **Liquid Glass (personal)** | Vendor personal/free listing (e.g. [Bento Motion glass pack](https://bentomotion.gumroad.com/l/glass-ae)); some packs need Motion Bro | Optional glass. Product UI stays Apple-clean. Depth reveal is native. |
+| 12 | **Liquid Glass (personal)** | Vendor personal/free listing (e.g. [Bento Motion glass pack](https://bentomotion.gumroad.com/l/glass-ae)); some packs need Motion Bro | Optional **personal-use only**. Never redistributed. Native **Glass Panel** in SaaS Demo Tools is the product path. |
 
 Already documented elsewhere (hooks only, never bundled): Saber, QCA3, Displacer Pro, FX Console — see [EDITOR.md](../EDITOR.md).
 
@@ -37,7 +37,7 @@ Already documented elsewhere (hooks only, never bundled): Saber, QCA3, Displacer
 
 ### SaaS product demo
 
-1. **Window → SaaS Demo Tools** — cursor + click, depth, stagger, carousel.
+1. **Window → SaaS Demo Tools** — cursor + click, depth, stagger, carousel, glass panel, gradient wipe, proximity hover.
 2. **Motion** — Style / Direction / Shot / Scan / Apply (Figma names: `Title`, `Card 1`, `CTA`, `Screenshot`, `Cursor`).
 3. **Polish** — Apple Ease, Add Cursor (static pointer), click squash.
 4. **Interact** — click / hover / drag sequences (v0.32 panel).

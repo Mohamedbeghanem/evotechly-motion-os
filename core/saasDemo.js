@@ -1,13 +1,15 @@
 "use strict";
 
 /**
- * SaaS Demo Kit — Evotechly-owned timing and plans.
+ * SaaS Demo Kit — Evotechly-owned timing and plans (Phase 1 + Phase 2 re-exports).
  * Numbers only. The companion JSX applies these in After Effects.
  * Native AE only. No Deep Glow, no PNG cursor, no vendor code.
+ * Phase 2 (glass / wipe / proximity) lives in ./saasDemoFx.js.
  */
 
 const { EASE, easePair } = require("./polish");
 const { normalizeDirection } = require("./direction");
+const FX = require("./saasDemoFx");
 
 const CURSOR = {
   name: "Cursor",
@@ -392,6 +394,9 @@ module.exports = {
   DEPTH,
   STAGGER,
   CAROUSEL,
+  GLASS: FX.GLASS,
+  WIPE: FX.WIPE,
+  HOVER: FX.HOVER,
   EASE,
   COMPANIONS_POLICY,
   round4,
@@ -412,5 +417,16 @@ module.exports = {
   staggerReveal,
   carouselOffset,
   carouselPosition,
-  carouselSetup
+  carouselSetup,
+  easeInfluences: FX.easeInfluences,
+  glassPanel: FX.glassPanel,
+  wipeMode: FX.wipeMode,
+  normalizeWipeDirection: FX.normalizeWipeDirection,
+  wipeCompletionAt: FX.wipeCompletionAt,
+  wipeCompletionKeys: FX.wipeCompletionKeys,
+  gradientWipeReveal: FX.gradientWipeReveal,
+  proximityFactor: FX.proximityFactor,
+  hoverScaleAt: FX.hoverScaleAt,
+  hoverOpacityAt: FX.hoverOpacityAt,
+  proximityHover: FX.proximityHover
 };

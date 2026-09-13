@@ -139,6 +139,120 @@ test("math helpers stay deterministic", function () {
   assert.equal(S.framesToSeconds(15, 30), 0.5);
 });
 
+test("glassPanel is deterministic native frost with EVO_GLASS", function () {
+  const a = S.glassPanel({ layer: "Card 1", opacity: 42, blur: 18 });
+  const b = S.glassPanel({ layer: "Card 1", opacity: 42, blur: 18 });
+  assert.deepEqual(a, b);
+  assert.equal(a.kind, "glassPanel");
+  assert.equal(a.controller.name, "EVO_GLASS");
+  assert.equal(a.layer.name, "Card 1");
+  assert.equal(a.layer.opacity, 42);
+  assert.equal(a.layer.blur, 18);
+  assert.ok(a.effects.indexOf("ADBE Fast Box Blur") !== -1);
+  assert.ok(a.effects.indexOf("ADBE Tint") !== -1);
+  assert.equal(a.fallbackBlur, "ADBE Gaussian Blur 2");
+  assert.ok(a.expression.blur.indexOf("EVO_GLASS") !== -1);
+  assert.ok(a.expression.opacity.indexOf("Opacity") !== -1);
+  assert.ok(a.note.indexOf("Liquid Glass") !== -1);
+  assert.ok(JSON.stringify(a).indexOf(".mbr") === -1);
+  assert.ok(JSON.stringify(a).indexOf("Deep Glow") === -1);
+  const many = S.glassPanel({ layers: layers, blur: 99 });
+  assert.equal(many.layers.length, 3);
+  assert.equal(many.controller.sliders[1].value, 80);
+  assert.equal(S.glassPanel({}).layer.name, "Glass Panel");
+});
+
+test("gradientWipeReveal keys match Phase 1 ease and directions", function () {
+  const left = S.gradientWipeReveal({
+    layer: "Screenshot",
+    duration: 0.55,
+    direction: "left",
+    ease: "apple"
+  });
+  const again = S.gradientWipeReveal({
+    layer: "Screenshot",
+    duration: 0.55,
+    direction: "left",
+    ease: "apple"
+  });
+  assert.deepEqual(left, again);
+  assert.equal(left.kind, "gradientWipeReveal");
+  assert.equal(left.effect, "ADBE Gradient Wipe");
+  assert.equal(left.fallback, "shapeMatte");
+  assert.equal(left.side, "left");
+  assert.equal(left.mode, "in");
+  assert.equal(left.layer.completionKeys[0].completion, 100);
+  assert.equal(left.layer.completionKeys[1].completion, 0);
+  assert.equal(left.layer.completionKeys[1].t, 0.55);
+  assert.equal(left.easeInfluences.influenceIn, 80);
+  assert.equal(S.gradientWipeReveal({ layer: "A", ease: "soft" }).easeInfluences.influenceIn, 40);
+  assert.equal(S.gradientWipeReveal({ layer: "A", ease: "linear" }).easeInfluences.influenceIn, 16);
+  assert.equal(S.wipeCompletionAt(0, 1, "left"), 100);
+  assert.equal(S.wipeCompletionAt(1, 1, "left"), 0);
+  assert.equal(S.wipeCompletionAt(0.5, 1, "left"), 50);
+  assert.equal(S.wipeCompletionAt(0, 1, "out"), 0);
+  assert.equal(S.wipeCompletionAt(1, 1, "out"), 100);
+  assert.equal(S.wipeCompletionAt(0.55 + S.WIPE.hold, 0.55, "both"), 0);
+  assert.equal(S.normalizeWipeDirection("RIGHT"), "right");
+  assert.equal(S.normalizeWipeDirection("in"), "left");
+  assert.equal(S.normalizeWipeDirection("out"), "out");
+  const both = S.gradientWipeReveal({ layer: "Card 1", direction: "both", duration: 0.4 });
+  assert.equal(both.layer.completionKeys.length, 4);
+  assert.equal(both.layer.completionKeys[3].completion, 100);
+  const up = S.gradientWipeReveal({ layers: layers, direction: "up" });
+  assert.equal(up.side, "up");
+  assert.equal(up.layers.length, 3);
+  assert.ok(JSON.stringify(left).indexOf("Saber") === -1);
+});
+
+test("proximityHover expressions pair with Phase 1 Cursor", function () {
+  const a = S.proximityHover({
+    layers: layers,
+    radius: 140,
+    scaleBoost: 6,
+    opacityBoost: 18
+  });
+  const b = S.proximityHover({
+    layers: layers,
+    radius: 140,
+    scaleBoost: 6,
+    opacityBoost: 18
+  });
+  assert.deepEqual(a, b);
+  assert.equal(a.kind, "proximityHover");
+  assert.equal(a.driver, "Cursor");
+  assert.equal(a.controller.name, "EVO_HOVER");
+  assert.equal(a.radius, 140);
+  assert.equal(a.scaleBoost, 6);
+  assert.ok(a.expression.scale.indexOf("Cursor") !== -1);
+  assert.ok(a.expression.scale.indexOf("EVO_HOVER") !== -1);
+  assert.ok(a.expression.opacity.indexOf("Opacity Boost") !== -1);
+  assert.ok(a.note.indexOf("Cursor") !== -1);
+  assert.equal(S.proximityFactor(0, 140), 1);
+  assert.equal(S.proximityFactor(140, 140), 0);
+  assert.equal(S.proximityFactor(70, 140), 0.5);
+  assert.equal(S.hoverScaleAt(0, 140, 6, 100), 106);
+  assert.equal(S.hoverScaleAt(140, 140, 6, 100), 100);
+  assert.equal(S.hoverOpacityAt(0, 140, 18, 82), 100);
+  assert.equal(a.layers[0].scaleAtCenter, 106);
+  const custom = S.proximityHover({ layers: ["CTA"], driver: "Pointer", radius: 0 });
+  assert.equal(custom.driver, "Pointer");
+  assert.equal(custom.radius, 1);
+});
+
+test("Phase 1 APIs stay exported next to Phase 2", function () {
+  assert.equal(typeof S.createCursor, "function");
+  assert.equal(typeof S.depthReveal, "function");
+  assert.equal(typeof S.staggerReveal, "function");
+  assert.equal(typeof S.carouselSetup, "function");
+  assert.equal(typeof S.glassPanel, "function");
+  assert.equal(typeof S.gradientWipeReveal, "function");
+  assert.equal(typeof S.proximityHover, "function");
+  assert.equal(S.CURSOR.name, "Cursor");
+  assert.equal(S.GLASS.controller, "EVO_GLASS");
+  assert.equal(S.HOVER.driver, "Cursor");
+});
+
 test("Editor Free Kit companions are optional and ordered", function () {
   assert.ok(F.POLICY.indexOf("not required") !== -1 || F.POLICY.indexOf("Not required") !== -1);
   assert.ok(F.POLICY.indexOf("not redistribute") !== -1 || F.POLICY.indexOf("does not redistribute") !== -1);
@@ -158,6 +272,8 @@ test("Editor Free Kit companions are optional and ordered", function () {
   ]);
   assert.ok(F.companionsForJob("talkingHead").some(function (c) { return c.id === "crateLightWrap"; }));
   assert.ok(F.tabsForJob("saas")[0].indexOf("SaaS Demo Tools") !== -1);
+  assert.ok(F.tabsForJob("saas")[0].indexOf("glass") !== -1);
+  assert.ok(F.INSTALL_ORDER.filter(function (c) { return c.id === "liquidGlassPersonal"; })[0].note.indexOf("personal") !== -1);
   assert.ok(F.tabsForJob("talkingHead").some(function (t) { return t.indexOf("Person") === 0; }));
   assert.ok(S.COMPANIONS_POLICY.indexOf("Never redistributed") !== -1);
 });
