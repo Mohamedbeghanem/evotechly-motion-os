@@ -15,7 +15,7 @@ Quit AE. Copy `ae/Evotechly Motion OS.jsx` and `ae/SaaS Demo Tools.jsx` into **S
 | Person | Cutout Prep, Keylight recipe, Light wrap, Talking-head stack |
 | Captions | Templates, Import SRT, 9:16 safe, KPI count-up |
 | Recipes | Founder GS / Roto, ERP demo, 15s hook reminders, Feature card |
-| *(companion)* | **Window → SaaS Demo Tools** — cursor + click, depth reveal, stagger, carousel |
+| *(companion)* | **Window → SaaS Demo Tools** — cursor + click, depth, stagger, carousel, glass, wipe, hover, Seed Golden Project |
 
 ## Names
 
