@@ -3,7 +3,8 @@
 /**
  * SaaS Demo Kit — Evotechly-owned timing and plans (Phase 1 + Phase 2 re-exports).
  * Numbers only. The companion JSX applies these in After Effects.
- * Native AE only. No Deep Glow, no PNG cursor, no vendor code.
+ * Native AE only. No Deep Glow, no PNG cursor, no CursorKit, no vendor code.
+ * P1d: CURSOR.shape.style is pointer | hand | ibeam. Default pointer.
  * Phase 2 (glass / wipe / proximity) lives in ./saasDemoFx.js.
  */
 
@@ -11,23 +12,85 @@ const { EASE, easePair } = require("./polish");
 const { normalizeDirection } = require("./direction");
 const FX = require("./saasDemoFx");
 
+const CURSOR_STYLE_NAMES = ["pointer", "hand", "ibeam"];
+
+const POINTER_VERTS = [
+  [0, 0],
+  [0, 24],
+  [7, 18],
+  [11, 28],
+  [14, 26],
+  [10, 17],
+  [20, 17]
+];
+
+const HAND_VERTS = [
+  [8, 0],
+  [12, 0],
+  [12, 13],
+  [15, 11],
+  [16, 16],
+  [19, 13],
+  [20, 18],
+  [23, 16],
+  [24, 22],
+  [21, 30],
+  [5, 32],
+  [2, 26],
+  [0, 20],
+  [0, 16],
+  [6, 15],
+  [8, 13]
+];
+
+const IBEAM_VERTS = [
+  [0, 0],
+  [10, 0],
+  [10, 3],
+  [6, 3],
+  [6, 21],
+  [10, 21],
+  [10, 24],
+  [0, 24],
+  [0, 21],
+  [4, 21],
+  [4, 3],
+  [0, 3]
+];
+
+function pathData(vertices, closed) {
+  if (!vertices || !vertices.length) return "";
+  const parts = ["M" + vertices[0][0] + "," + vertices[0][1]];
+  for (let i = 1; i < vertices.length; i++) {
+    parts.push("L" + vertices[i][0] + "," + vertices[i][1]);
+  }
+  if (closed !== false) parts.push("Z");
+  return parts.join("");
+}
+
+function makeCursorShape(style, size, vertices) {
+  return {
+    style: style,
+    kind: style,
+    size: size,
+    color: [1, 1, 1],
+    closed: true,
+    vertices: vertices,
+    path: pathData(vertices, true)
+  };
+}
+
+const CURSOR_STYLES = {
+  pointer: makeCursorShape("pointer", [18, 24], POINTER_VERTS),
+  hand: makeCursorShape("hand", [24, 32], HAND_VERTS),
+  ibeam: makeCursorShape("ibeam", [10, 24], IBEAM_VERTS)
+};
+
 const CURSOR = {
   name: "Cursor",
   type: "shape",
-  shape: {
-    kind: "pointer",
-    size: [18, 24],
-    color: [1, 1, 1],
-    vertices: [
-      [0, 0],
-      [0, 24],
-      [7, 18],
-      [11, 28],
-      [14, 26],
-      [10, 17],
-      [20, 17]
-    ]
-  },
+  styles: CURSOR_STYLES,
+  shape: CURSOR_STYLES.pointer,
   duration: 0.55,
   press: 0.12,
   dipRatio: 0.45,
@@ -125,6 +188,33 @@ function normalizeAxis(axis) {
   return String(axis || "x").toLowerCase() === "y" ? "y" : "x";
 }
 
+function normalizeCursorStyle(style) {
+  const raw = String(style == null ? "pointer" : style).toLowerCase().replace(/[\s_-]/g, "");
+  if (raw === "hand") return "hand";
+  if (raw === "ibeam" || raw === "i" || raw === "text") return "ibeam";
+  if (raw === "pointer" || raw === "arrow") return "pointer";
+  return "pointer";
+}
+
+function cloneCursorShape(shape) {
+  return {
+    style: shape.style,
+    kind: shape.kind,
+    size: shape.size.slice(),
+    color: shape.color.slice(),
+    closed: !!shape.closed,
+    vertices: shape.vertices.map(function (v) {
+      return [v[0], v[1]];
+    }),
+    path: shape.path
+  };
+}
+
+function cursorShape(style) {
+  const id = normalizeCursorStyle(style);
+  return cloneCursorShape(CURSOR_STYLES[id] || CURSOR_STYLES.pointer);
+}
+
 function cursorPosAt(startPos, endPos, t, duration) {
   const start = normPos(startPos, [0, 0]);
   const end = normPos(endPos, [0, 0]);
@@ -169,13 +259,16 @@ function createCursor(opts) {
   const clickAt = round4(clamp(opts.clickAt == null ? duration : opts.clickAt, 0, duration));
   const press = CURSOR.press;
   const targetName = opts.targetLayer != null ? layerName(opts.targetLayer, 0) : null;
+  const style = normalizeCursorStyle(opts.style);
+  const shape = cursorShape(style);
 
   const plan = {
     kind: "cursor",
     cursor: {
       name: CURSOR.name,
       type: CURSOR.type,
-      shape: CURSOR.shape,
+      style: style,
+      shape: shape,
       startPos: startPos,
       endPos: endPos,
       duration: duration,
@@ -391,6 +484,8 @@ function carouselSetup(opts) {
 
 module.exports = {
   CURSOR,
+  CURSOR_STYLES,
+  CURSOR_STYLE_NAMES,
   DEPTH,
   STAGGER,
   CAROUSEL,
@@ -406,6 +501,9 @@ module.exports = {
   framesToSeconds,
   normalizeEase,
   normalizeAxis,
+  normalizeCursorStyle,
+  pathData,
+  cursorShape,
   cursorPosAt,
   clickScaleAt,
   createCursor,

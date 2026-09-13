@@ -43,7 +43,11 @@
   var HOVER_RADIUS = 140;
   var HOVER_SCALE = 6;
   var HOVER_OPACITY = 18;
-  var VERTS = [[0, 0], [0, 24], [7, 18], [11, 28], [14, 26], [10, 17], [20, 17]];
+  var CURSOR_SHAPES = {
+    pointer: { style: "pointer", verts: [[0, 0], [0, 24], [7, 18], [11, 28], [14, 26], [10, 17], [20, 17]] },
+    hand: { style: "hand", verts: [[8, 0], [12, 0], [12, 13], [15, 11], [16, 16], [19, 13], [20, 18], [23, 16], [24, 22], [21, 30], [5, 32], [2, 26], [0, 20], [0, 16], [6, 15], [8, 13]] },
+    ibeam: { style: "ibeam", verts: [[0, 0], [10, 0], [10, 3], [6, 3], [6, 21], [10, 21], [10, 24], [0, 24], [0, 21], [4, 21], [4, 3], [0, 3]] }
+  };
   var KIT_HUB = [
     { name: "UI Animator Pro", url: "https://whatstudio.gumroad.com/" },
     { name: "PinRig", url: "https://whatstudio.gumroad.com/" },
@@ -181,19 +185,49 @@
     sc.setValueAtTime(t1, v);
     applyEase(sc, "apple");
   }
-  function addPointer(comp) {
-    var shape = comp.layers.addShape();
-    var group, path, fill, shp;
-    shape.name = CURSOR_NAME;
-    group = shape.property("ADBE Root Vectors Group").addProperty("ADBE Vector Group");
-    group.name = "pointer";
-    path = group.property("ADBE Vectors Group").addProperty("ADBE Vector Shape - Group");
+  function cursorStyleFromList(list) {
+    var t = list && list.selection ? String(list.selection.text).toLowerCase() : "pointer";
+    if (t === "hand") return "hand";
+    if (t === "i-beam" || t === "ibeam") return "ibeam";
+    return "pointer";
+  }
+  function zeros2(n) {
+    var a = [], i;
+    for (i = 0; i < n; i++) a.push([0, 0]);
+    return a;
+  }
+  function applyCursorPath(group, verts) {
+    var path, shp, i, item, found = null;
+    for (i = 1; i <= group.property("ADBE Vectors Group").numProperties; i++) {
+      item = group.property("ADBE Vectors Group").property(i);
+      if (item && item.matchName === "ADBE Vector Shape - Group") { found = item; break; }
+    }
+    path = found || group.property("ADBE Vectors Group").addProperty("ADBE Vector Shape - Group");
     shp = new Shape();
-    shp.vertices = VERTS;
-    shp.inTangents = [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]];
-    shp.outTangents = [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]];
+    shp.vertices = verts;
+    shp.inTangents = zeros2(verts.length);
+    shp.outTangents = zeros2(verts.length);
     shp.closed = true;
     path.property("ADBE Vector Shape").setValue(shp);
+  }
+  function applyCursorStyle(layer, style) {
+    var spec = CURSOR_SHAPES[style] || CURSOR_SHAPES.pointer;
+    var group;
+    try {
+      group = layer.property("ADBE Root Vectors Group").property(1);
+      if (!group) return;
+      group.name = spec.style;
+      applyCursorPath(group, spec.verts);
+    } catch (e) {}
+  }
+  function addCursor(comp, style) {
+    var spec = CURSOR_SHAPES[style] || CURSOR_SHAPES.pointer;
+    var shape = comp.layers.addShape();
+    var group, fill;
+    shape.name = CURSOR_NAME;
+    group = shape.property("ADBE Root Vectors Group").addProperty("ADBE Vector Group");
+    group.name = spec.style;
+    applyCursorPath(group, spec.verts);
     fill = group.property("ADBE Vectors Group").addProperty("ADBE Vector Graphic - Fill");
     fill.property("ADBE Vector Fill Color").setValue([1, 1, 1]);
     return shape;
@@ -204,19 +238,22 @@
     return n;
   }
 
-  function runCursor(durField, clickField) {
+  function runCursor(durField, clickField, styleList) {
     var comp = requireComp(); if (!comp) return;
-    var sel = selectedLayers(comp), i, target = null, cursor, start, end, dur, clickAt, pos;
+    var sel = selectedLayers(comp), i, target = null, cursor, start, end, dur, clickAt, pos, style;
     for (i = 0; i < sel.length; i++) {
       if (String(sel[i].name).toLowerCase() !== CURSOR_NAME.toLowerCase()) { target = sel[i]; break; }
     }
+    style = cursorStyleFromList(styleList);
     dur = clamp(parseNum(durField, DEFAULT_DUR), 0.05, 30);
     clickAt = clamp(parseNum(clickField, dur), 0, dur);
     cursor = findLayer(comp, CURSOR_NAME);
     app.beginUndoGroup("Evotechly Cursor + click");
     if (!cursor) {
-      cursor = addPointer(comp);
+      cursor = addCursor(comp, style);
       cursor.transform.position.setValue([comp.width * 0.62, comp.height * 0.58]);
+    } else {
+      applyCursorStyle(cursor, style);
     }
     start = cursor.transform.position.value;
     end = target ? layerCenter(target) : [comp.width * 0.5, comp.height * 0.5];
@@ -228,7 +265,7 @@
     setScaleKeys(cursor, comp.time + clickAt, PRESS, CURSOR_DIP);
     if (target) setScaleKeys(target, comp.time + clickAt, PRESS, TARGET_DIP);
     app.endUndoGroup();
-    alert("Cursor + click\nMove " + dur + "s, click at " + clickAt + "s" + (target ? " on " + target.name : "") + ".\nShape layer (not PNG). Scale-down on the clicked layer when one is selected.");
+    alert("Cursor + click (" + style + ")\nMove " + dur + "s, click at " + clickAt + "s" + (target ? " on " + target.name : "") + ".\nNative shape (not PNG, no CursorKit). Scale-down on the clicked layer when one is selected.");
   }
 
   function runDepth() {
@@ -710,7 +747,7 @@
 
   function buildUI(thisObj) {
     var win = (thisObj instanceof Panel) ? thisObj : new Window("palette", "Motion OS Hub", undefined, { resizeable: true });
-    var g, durField, clickField, dirList, offsetField, easeList, axisList;
+    var g, durField, clickField, styleList, dirList, offsetField, easeList, axisList;
     var presetList, uiDirList, uiDurField, uiStaggerField, uiEaseList, mirrorBox;
     var wipeDirList, wipeDurField, wipeEaseList, hoverRadiusField, hoverScaleField, hoverOpacityField;
     var homeP, saasP, kitP, kitNote, kitList, intro, foot;
@@ -735,13 +772,17 @@
 
     saasP.add("statictext", undefined, "Cursor + click");
     g = saasP.add("group");
+    g.add("statictext", undefined, "Style");
+    styleList = g.add("dropdownlist", undefined, ["Pointer", "Hand", "I-beam"]);
+    styleList.selection = 0;
+    g = saasP.add("group");
     g.add("statictext", undefined, "Duration");
     durField = g.add("edittext", undefined, "0.55");
     durField.characters = 6;
     g.add("statictext", undefined, "Click at");
     clickField = g.add("edittext", undefined, "0.55");
     clickField.characters = 6;
-    saasP.add("button", undefined, "Cursor + click").onClick = function () { runCursor(durField, clickField); };
+    saasP.add("button", undefined, "Cursor + click").onClick = function () { runCursor(durField, clickField, styleList); };
 
     saasP.add("statictext", undefined, "Depth reveal");
     saasP.add("button", undefined, "Depth reveal (selected)").onClick = runDepth;
