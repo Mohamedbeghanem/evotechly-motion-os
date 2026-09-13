@@ -1,6 +1,6 @@
 # SaaS Demo Kit — Phase 2 (+ Phase 3 seed)
 
-Evotechly-owned tools so a product demo can do **cursor + click**, **depth reveal**, **stagger**, **carousel**, **glass panel**, **gradient wipe**, and **proximity hover** without Solair SaaS Kit and without paid plugins.
+Evotechly-owned tools so a product demo can do **cursor + click**, **depth reveal**, **stagger**, **UI presets**, **carousel**, **glass panel**, **gradient wipe**, and **proximity hover** without Solair SaaS Kit and without paid plugins.
 
 Nothing here is copied from Solair. Companions stay on vendor sites. This repo never vendors their scripts, `.mbr` packs, or binaries.
 
@@ -16,6 +16,7 @@ Liquid Glass remains an **optional external pack for personal use only**. It is 
 | Linear wipe / reveal | Native Gradient Wipe, or shape matte + soft edge. Apple / Soft / Linear ease | Saber / QCA. Not required. |
 | Proximity hover | `EVO_HOVER` + expressions; driver is Phase 1 `Cursor` | — |
 | Multi-layer in / out / both | `staggerReveal` — frame offset + apple/soft/linear ease | UI Animator Pro, Animation Composer. Not required. |
+| Named UI presets (cards) | `applyUiPreset` — fade-up / fade-scale / slides / pop, in/out/both, optional mirror | UI Animator Pro. Not required. P1a **own**. |
 | Slides / carousel | `EVO_CAROUSEL` Index + Gap, expressions on selected slides | Motion Bro packs, PaulPack ornaments. Not required. |
 | SaaS hero timing | Main panel **Motion** tab — Scan / Apply, Figma→roles | — |
 | Polish / click squash | Main panel **Polish** | — |
@@ -71,6 +72,31 @@ createCursor({
 3. **Stagger reveal (selected)**. Opacity + Y travel (`16px`, `0.42s`) with the same offset on every layer.
 
 Both = in, short hold (`0.2s`), then out.
+
+### UI presets — `applyUiPreset` (P1a, own)
+
+Named in / out / both plans for selected cards. Same job as a UI Animator Pro preset browser — Evotechly numbers only.
+
+1. Select card layers (first selected = first in the stagger).
+2. Preset **fade-up** / **fade-scale** / **slide-left** / **slide-right** / **slide-up** / **pop**.
+3. Dir **In / Out / Both**, Duration (default `0.50`), Frames (default `3`), Ease **Apple / Soft / Linear**.
+4. Optional **Mirror** — layers left of the comp center invert X slide direction (toward center).
+5. **Apply UI Preset**.
+
+`pop` scales `90 → 100`. Both = in, hold `0.2s`, then the reverse out.
+
+```js
+const { applyUiPreset } = require("../core/uiPresets");
+applyUiPreset({
+  layers: [{ name: "Card 1", x: 200 }, { name: "Card 2", x: 1600 }],
+  presetId: "fade-up",
+  direction: "both",
+  duration: 0.5,
+  staggerFrames: 3,
+  ease: "Apple",
+  mirror: true
+});
+```
 
 ### Carousel — `carouselSetup`
 
@@ -130,19 +156,21 @@ proximityHover({
 |---|---|
 | `core/saasDemo.js` | Phase 1 plans + re-exports of Phase 2. Node-testable. |
 | `core/saasDemoFx.js` | Phase 2: `glassPanel`, `gradientWipeReveal`, `proximityHover`. |
+| `core/uiPresets.js` | P1a named UI presets (in / out / both + mirror). |
 | `core/editorFreeKit.js` | Companion install order + which Motion OS tab to use. |
 | `core/kitHub.js` | P0 Kit Hub URL matrix (official sites only). |
 | `core/goldenProject.js` | Phase 3 seed names, sizes, layer roles, idempotency. |
 | `ae/SaaS Demo Tools.jsx` | **Window → SaaS Demo Tools / Motion OS Hub.** Home (Seed) + SaaS engines + Kit Hub URLs. Does not replace v0.32. |
 | `ae/Seed Golden Project.jsx` | File → Run Script. Builds the four golden comps. No `.aep`. |
 | `tests/saas-demo.test.js` | Phase 1–2 helper tests. |
+| `tests/ui-presets.test.js` | P1a preset timing / math. |
 | `tests/golden-project.test.js` | Phase 3 naming / idempotency / job map. |
 | `tests/kit-hub.test.js` | Kit Hub URL matrix + hub JSX contract. |
 
-JSX cannot `require()` Node modules. Constants in the companion match `core/saasDemo.js` / `core/saasDemoFx.js` (`0.55` move, `0.12` press, `0.88` / `0.94` click scales, `3` frame stagger, glass `42` / `18`, wipe softness `12`, hover `140` / `6` / `18`, `EVO_DEPTH` / `EVO_CAROUSEL` / `EVO_GLASS` / `EVO_HOVER`).
+JSX cannot `require()` Node modules. Constants in the companion match `core/saasDemo.js` / `core/saasDemoFx.js` / `core/uiPresets.js` (`0.55` move, `0.12` press, `0.88` / `0.94` click scales, `3` frame stagger, `0.50` UI preset duration, pop `90→100`, glass `42` / `18`, wipe softness `12`, hover `140` / `6` / `18`, `EVO_DEPTH` / `EVO_CAROUSEL` / `EVO_GLASS` / `EVO_HOVER`).
 
 ## Main panel (v0.32) — when to stay there
 
-Use **Window → SaaS Demo Tools / Motion OS Hub** for the seven engines above. Keep using Motion OS for Figma roles, Style / Direction / Shot, Polish ease, Person, Captions, Recipes, Interact, Assets.
+Use **Window → SaaS Demo Tools / Motion OS Hub** for the engines above (including **Apply UI Preset**). Keep using Motion OS for Figma roles, Style / Direction / Shot, Polish ease, Person, Captions, Recipes, Interact, Assets.
 
 Do not paste Solair, UI Animator Pro, AEJuice, Motion Bro, Liquid Glass, CursorKit, Deep Glow, Saber, QCA, or TFM into this repo.

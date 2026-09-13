@@ -9,7 +9,7 @@ Official URLs change. Prefer the vendor’s current site over a mirrored zip.
 ## Policy
 
 - **Optional** — product demos ship with native Motion OS + [SaaS Demo Kit](SAAS_DEMO_KIT.md). Seed the four golden comps from [QUICK_START.md](QUICK_START.md) (`ae/Seed Golden Project.jsx`) — no `.aep` in the repo.
-- **Not required** — cursor, depth, stagger, carousel, glass panel, gradient wipe, proximity hover, captions, Keylight, and lockup all have native paths.
+- **Not required** — cursor, depth, stagger, UI presets, carousel, glass panel, gradient wipe, proximity hover, captions, Keylight, and lockup all have native paths.
 - **Not redistributed** — never commit `.aex`, `.plugin`, encrypted JSX, AEJuice/Motion Bro packs, or third-party scripts.
 - **Research matrix** — own vs companion vs skip, and the one-tool wrap plan: [KIT_CAPABILITY_MATRIX.md](KIT_CAPABILITY_MATRIX.md).
 
@@ -19,7 +19,7 @@ Quit After Effects before installing native plugins. ScriptUI panels go in `Scri
 
 | # | Companion | Official starting point | After it is installed… |
 |---|---|---|---|
-| 1 | **UI Animator Pro** | [whatstudio.gumroad.com](https://whatstudio.gumroad.com/) | Optional extra UI presets. Prefer **Window → SaaS Demo Tools / Motion OS Hub** stagger / cursor first. |
+| 1 | **UI Animator Pro** | [whatstudio.gumroad.com](https://whatstudio.gumroad.com/) | Optional extra UI presets. Prefer **Window → SaaS Demo Tools / Motion OS Hub** **Apply UI Preset** / stagger / cursor first. |
 | 2 | **PinRig** | [whatstudio.gumroad.com](https://whatstudio.gumroad.com/) | Optional logo pins. Prefer Motion OS **Logo lockup** shot. |
 | 3 | **AEJuice (free)** | [aejuice.com](https://aejuice.com) | Pack browser only. Do not copy packs into this repo. |
 | 4 | **Motion Bro (free)** | [motionbro.com](https://motionbro.com) | Host for some free packs. Off talking-head. |
@@ -38,7 +38,7 @@ Already documented elsewhere (hooks only, never bundled): Saber, QCA3, Displacer
 
 ### SaaS product demo
 
-1. **Window → SaaS Demo Tools / Motion OS Hub** — cursor + click, depth, stagger, carousel, glass panel, gradient wipe, proximity hover. Kit Hub = official URLs only (copy / alert; never download).
+1. **Window → SaaS Demo Tools / Motion OS Hub** — cursor + click, depth, stagger, UI presets, carousel, glass panel, gradient wipe, proximity hover. Kit Hub = official URLs only (copy / alert; never download).
 2. **Motion** — Style / Direction / Shot / Scan / Apply (Figma names: `Title`, `Card 1`, `CTA`, `Screenshot`, `Cursor`).
 3. **Polish** — Apple Ease, Add Cursor (static pointer), click squash.
 4. **Interact** — click / hover / drag sequences (v0.32 panel).

@@ -25,6 +25,7 @@ const SAAS_ACTIONS = [
   { id: "cursor", name: "Cursor + click" },
   { id: "depth", name: "Depth reveal" },
   { id: "stagger", name: "Stagger reveal" },
+  { id: "uiPreset", name: "Apply UI Preset" },
   { id: "carousel", name: "Carousel setup" },
   { id: "glass", name: "Glass Panel" },
   { id: "wipe", name: "Gradient Wipe" },

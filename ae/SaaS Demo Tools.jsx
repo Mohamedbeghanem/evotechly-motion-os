@@ -3,7 +3,7 @@
   Evotechly Motion OS Hub — companion ScriptUI panel (P0 unify shell).
   Palette title: Motion OS Hub. Window → SaaS Demo Tools (same file).
   Home (Seed) + SaaS engines + Kit Hub official URLs.
-  Applies core/saasDemo.js + core/saasDemoFx.js numbers in After Effects.
+  Applies core/saasDemo.js + core/saasDemoFx.js + core/uiPresets.js numbers in After Effects.
   Native AE only. No Liquid Glass, Deep Glow, Saber, QCA, or TFM.
   Kit Hub never downloads or vendors binaries — copy/alert official URLs only.
   Does not replace Evotechly Motion OS v0.32.
@@ -25,6 +25,17 @@
   var STAGGER_TRAVEL = 16;
   var STAGGER_HOLD = 0.2;
   var DEFAULT_DUR = 0.55;
+  var UI_PRESET_DUR = 0.5;
+  var UI_PRESET_HOLD = 0.2;
+  var UI_PRESET_IDS = ["fade-up", "fade-scale", "slide-left", "slide-right", "slide-up", "pop"];
+  var UI_PRESETS = {
+    "fade-up": { x: 0, y: 16, scaleFrom: 100 },
+    "fade-scale": { x: 0, y: 0, scaleFrom: 92 },
+    "slide-left": { x: 24, y: 0, scaleFrom: 100 },
+    "slide-right": { x: -24, y: 0, scaleFrom: 100 },
+    "slide-up": { x: 0, y: 24, scaleFrom: 100 },
+    pop: { x: 0, y: 0, scaleFrom: 90 }
+  };
   var GLASS_OPACITY = 42;
   var GLASS_BLUR = 18;
   var WIPE_SOFT = 12;
@@ -336,6 +347,81 @@
     alert("Carousel on " + sel.length + " slide(s), axis " + axis + ".\nScrub EVO_CAROUSEL → Index. Key that slider to change slides.");
   }
 
+  function uiPresetSpec(id) {
+    return UI_PRESETS[id] || UI_PRESETS["fade-up"];
+  }
+
+  function keyVec(prop, t, rest, dx, dy) {
+    var v = [rest[0] + dx, rest[1] + dy];
+    if (rest.length > 2) v.push(rest[2]);
+    prop.setValueAtTime(t, v);
+  }
+
+  function keyScale(prop, t, rest, ratio) {
+    var v = [rest[0] * ratio, (rest.length > 1 ? rest[1] : rest[0]) * ratio];
+    if (rest.length > 2) v.push(rest[2]);
+    prop.setValueAtTime(t, v);
+  }
+
+  function runUiPreset(presetList, dirList, durField, staggerField, easeList, mirrorBox) {
+    var comp = requireComp(); if (!comp) return;
+    var sel = selectedLayers(comp), i, layer, pos, op, sc, rest, restS, t0, delay, dur, dir, ease, frames, fps, spec, mx, my, ratio, hold, mirrored, tIn, tOut;
+    if (!sel.length) { alert("Select layers (cards) to apply a UI preset."); return; }
+    spec = uiPresetSpec(presetList.selection ? String(presetList.selection.text) : "fade-up");
+    dir = dirList.selection ? dirList.selection.text.toLowerCase() : "in";
+    ease = easeList.selection ? easeList.selection.text.toLowerCase() : "apple";
+    dur = clamp(parseNum(durField, UI_PRESET_DUR), 0.05, 30);
+    frames = Math.round(clamp(parseNum(staggerField, 3), 0, 120));
+    fps = comp.frameRate || 30;
+    hold = UI_PRESET_HOLD;
+    t0 = comp.time;
+    app.beginUndoGroup("Evotechly Apply UI Preset");
+    for (i = 0; i < sel.length; i++) {
+      layer = sel[i];
+      delay = (i * frames) / fps;
+      pos = layer.property("ADBE Transform Group").property("ADBE Position");
+      op = layer.property("ADBE Transform Group").property("ADBE Opacity");
+      sc = layer.property("ADBE Transform Group").property("ADBE Scale");
+      rest = pos.value;
+      restS = sc.value;
+      mx = spec.x;
+      my = spec.y;
+      ratio = spec.scaleFrom / 100;
+      mirrored = !!(mirrorBox && mirrorBox.value && rest[0] < comp.width * 0.5);
+      if (mirrored) mx = -mx;
+      tIn = t0 + delay;
+      if (dir === "out") {
+        op.setValueAtTime(tIn, 100);
+        op.setValueAtTime(tIn + dur, 0);
+        keyVec(pos, tIn, rest, 0, 0);
+        keyVec(pos, tIn + dur, rest, mx, my);
+        keyScale(sc, tIn, restS, 1);
+        keyScale(sc, tIn + dur, restS, ratio);
+      } else {
+        op.setValueAtTime(tIn, 0);
+        op.setValueAtTime(tIn + dur, 100);
+        keyVec(pos, tIn, rest, mx, my);
+        keyVec(pos, tIn + dur, rest, 0, 0);
+        keyScale(sc, tIn, restS, ratio);
+        keyScale(sc, tIn + dur, restS, 1);
+        if (dir === "both") {
+          tOut = tIn + dur + hold;
+          op.setValueAtTime(tOut, 100);
+          op.setValueAtTime(tOut + dur, 0);
+          keyVec(pos, tOut, rest, 0, 0);
+          keyVec(pos, tOut + dur, rest, mx, my);
+          keyScale(sc, tOut, restS, 1);
+          keyScale(sc, tOut + dur, restS, ratio);
+        }
+      }
+      applyEase(op, ease);
+      applyEase(pos, ease);
+      applyEase(sc, ease);
+    }
+    app.endUndoGroup();
+    alert("UI preset " + (presetList.selection ? presetList.selection.text : "fade-up") + " · " + dir + " on " + sel.length + " layer(s).\nStagger " + frames + " frames · " + ease + " ease" + (mirrorBox && mirrorBox.value ? " · mirror on" : "") + ".");
+  }
+
   function ensureGuideNull(comp, name) {
     var layer = findLayer(comp, name);
     if (!layer) {
@@ -625,6 +711,7 @@
   function buildUI(thisObj) {
     var win = (thisObj instanceof Panel) ? thisObj : new Window("palette", "Motion OS Hub", undefined, { resizeable: true });
     var g, durField, clickField, dirList, offsetField, easeList, axisList;
+    var presetList, uiDirList, uiDurField, uiStaggerField, uiEaseList, mirrorBox;
     var wipeDirList, wipeDurField, wipeEaseList, hoverRadiusField, hoverScaleField, hoverOpacityField;
     var homeP, saasP, kitP, kitNote, kitList, intro, foot;
     win.orientation = "column";
@@ -671,6 +758,30 @@
     easeList = g.add("dropdownlist", undefined, ["Apple", "Soft", "Linear"]);
     easeList.selection = 0;
     saasP.add("button", undefined, "Stagger reveal (selected)").onClick = function () { runStagger(dirList, offsetField, easeList); };
+
+    saasP.add("statictext", undefined, "UI presets (own)");
+    g = saasP.add("group");
+    g.add("statictext", undefined, "Preset");
+    presetList = g.add("dropdownlist", undefined, UI_PRESET_IDS);
+    presetList.selection = 0;
+    g.add("statictext", undefined, "Dir");
+    uiDirList = g.add("dropdownlist", undefined, ["In", "Out", "Both"]);
+    uiDirList.selection = 0;
+    g.add("statictext", undefined, "Ease");
+    uiEaseList = g.add("dropdownlist", undefined, ["Apple", "Soft", "Linear"]);
+    uiEaseList.selection = 0;
+    g = saasP.add("group");
+    g.add("statictext", undefined, "Duration");
+    uiDurField = g.add("edittext", undefined, "0.50");
+    uiDurField.characters = 5;
+    g.add("statictext", undefined, "Frames");
+    uiStaggerField = g.add("edittext", undefined, "3");
+    uiStaggerField.characters = 4;
+    mirrorBox = g.add("checkbox", undefined, "Mirror");
+    mirrorBox.value = false;
+    saasP.add("button", undefined, "Apply UI Preset").onClick = function () {
+      runUiPreset(presetList, uiDirList, uiDurField, uiStaggerField, uiEaseList, mirrorBox);
+    };
 
     saasP.add("statictext", undefined, "Carousel");
     g = saasP.add("group");
