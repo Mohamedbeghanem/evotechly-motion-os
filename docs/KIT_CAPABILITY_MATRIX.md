@@ -1,6 +1,7 @@
 # Kit capability matrix — research before one-tool wrap
 
 **Date:** 2026-09-13  
+**Product:** Evotechly Motion OS **Ultimate 2.0.0** — **P0 + P1 (P1a–P1d) shipped on 2.0.0.**  
 **Goal:** Extract capabilities from free kits already identified → classify **own / companion / skip** → wrap into **one** Evotechly Motion OS tool on top of v0.32 + SaaS Demo + Seed.  
 **Hard rule:** never vendor third-party JSX / .aex / .mbr / packs into the repo. Reimplement native, or deep-link companion install URLs.
 
@@ -41,7 +42,7 @@
 
 ## Capability backlog for ONE tool
 
-### P0 — unify shell — **done** (companion hub)
+### P0 — unify shell — **shipped on 2.0.0** (companion hub)
 
 Main-panel Home / SaaS / Kit Hub tabs were **deferred**. Do not rewrite or stub the 297 KB v0.32 panel.
 
@@ -52,11 +53,11 @@ Main-panel Home / SaaS / Kit Hub tabs were **deferred**. Do not rewrite or stub 
 
 Target one-tool IA (later, after soak) still wants those sections inside v0.32. P0 ships the companion hub instead.
 
-### P1 — reimplement high-ROI gaps
-1. **P1a own** — UI preset pack (UI Animator–class in/out/both + mirror). `core/uiPresets.js` + Hub **Apply UI Preset**.
-2. Flowing / coloured text reveal. **P1b — done** (`core/textReveal.js` + Hub SaaS buttons).
-3. Caption keyword color + IN/OUT row. **P1c — shipped.** `core/captionStyle.js` + `ae/Caption Style Tools.jsx`. Apply after Captions tab (templates / SRT). Separate companion — not a Hub tab. Does not edit the 297 KB panel.
-4. **P1d Cursor styles** (pointer / hand / I-beam) — **shipped.** `createCursor({ style })` + SaaS Demo Tools Style dropdown. Native path descriptors. Default remains pointer. No PNG. No CursorKit.
+### P1 — reimplement high-ROI gaps — **shipped on 2.0.0**
+1. **P1a own — shipped on 2.0.0** — UI preset pack (UI Animator–class in/out/both + mirror). `core/uiPresets.js` + Hub **Apply UI Preset**.
+2. Flowing / coloured text reveal. **P1b — shipped on 2.0.0** (`core/textReveal.js` + Hub SaaS buttons).
+3. Caption keyword color + IN/OUT row. **P1c — shipped on 2.0.0.** `core/captionStyle.js` + `ae/Caption Style Tools.jsx`. Apply after Captions tab (templates / SRT). Separate companion — not a Hub tab. Does not edit the 297 KB panel.
+4. **P1d Cursor styles** (pointer / hand / I-beam) — **shipped on 2.0.0.** `createCursor({ style })` + SaaS Demo Tools Style dropdown. Native path descriptors. Default remains pointer. No PNG. No CursorKit.
 
 ### P2 — companion forever
 AEJuice, Motion Bro, Repeater, Animation Composer, PinRig, Liquid Glass refraction, external STT.
@@ -66,20 +67,20 @@ Solair AI script, Overlord Figma clone, Auto-Animate until soak passes.
 
 ## One-tool IA
 
-**P0 shipped:** v0.32 tabs unchanged + **Window → Motion OS Hub / SaaS Demo Tools** (Home | SaaS | Kit Hub).
+**P0 shipped on 2.0.0:** v0.32 tabs unchanged + **Window → Motion OS Hub / SaaS Demo Tools** (Home | SaaS | Kit Hub).
 
-**P1a shipped:** Hub **Apply UI Preset** (`core/uiPresets.js`).
+**P1a shipped on 2.0.0:** Hub **Apply UI Preset** (`core/uiPresets.js`).
 
-**P1b shipped:** Hub SaaS **Flowing Text** / **Coloured Reveal** (`core/textReveal.js`).
+**P1b shipped on 2.0.0:** Hub SaaS **Flowing Text** / **Coloured Reveal** (`core/textReveal.js`).
 
-**P1c shipped:** **Window → Caption Style Tools** — separate companion (keyword color + in/out). Not a Hub tab. Do not fold into the 297 KB panel.
+**P1c shipped on 2.0.0:** **Window → Caption Style Tools** — separate companion (keyword color + in/out). Not a Hub tab. Do not fold into the 297 KB panel.
 
-**P1d shipped:** Hub SaaS **Style** dropdown — pointer / hand / I-beam.
+**P1d shipped on 2.0.0:** Hub SaaS **Style** dropdown — pointer / hand / I-beam.
 
 **Later (do not stub v0.32 to get here):** Home | Motion | SaaS | Polish | Person | Captions | Recipes | Assets | Kit Hub
 
 ## Legal
-Research ≠ copy. Companions never in release zip. Build on v0.32.0-rc.
+Research ≠ copy. Companions never in release zip. Shipped as **Ultimate 2.0.0** (v0.32 panel + Hub + Seed + Caption Style). Do not vendor third-party plugins.
 
 ## Next
-P0 companion hub is in. **P1a own** is in. **P1b flowing / coloured text** is in. **P1c caption style shipped** (`core/captionStyle.js` + Caption Style Tools — separate companion). **P1d cursor styles shipped** (Hub SaaS Style dropdown). Next: soak #11 before v2. Do not fold the hub or Caption Style into the 297 KB panel until soak passes.
+**P0 + P1 shipped on 2.0.0.** P0 companion hub, **P1a** UI presets, **P1b** flowing / coloured text, **P1c** Caption Style Tools, **P1d** cursor styles. AE soak is still UNKNOWN — [issue #11](https://github.com/Mohamedbeghanem/evotechly-motion-os/issues/11) remains the tracker (confidence, not a 2.0.0 tag blocker). Do not fold the hub or Caption Style into the 297 KB panel.

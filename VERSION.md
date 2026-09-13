@@ -1,6 +1,21 @@
-# Evotechly Motion OS
+# Evotechly Motion OS — Ultimate 2.0.0
 
-Panel build: **v0.32** (P0–P23) on main — `ae/Evotechly Motion OS.jsx` (~297 KB Reliability).
+**Product tag:** Ultimate **v2.0.0** on current `main`.
+
+## Shipped on 2.0.0
+
+| Piece | File / surface |
+|---|---|
+| v0.32 panel (P0–P23 Reliability) | `ae/Evotechly Motion OS.jsx` (~297 KB — do not stub) |
+| Motion OS Hub (SaaS Demo Tools) | `ae/SaaS Demo Tools.jsx` — Home / SaaS / Kit Hub |
+| Seed Golden Project | `ae/Seed Golden Project.jsx` |
+| Caption Style Tools | `ae/Caption Style Tools.jsx` (P1c; separate companion) |
+| P1a UI presets | `core/uiPresets.js` + Hub **Apply UI Preset** |
+| P1b flowing / coloured text | `core/textReveal.js` + Hub **Flowing Text** / **Coloured Reveal** |
+| P1c caption keyword color + in/out | `core/captionStyle.js` + Caption Style Tools |
+| P1d cursor styles | `createCursor({ style })` — pointer / hand / ibeam |
+
+**AE soak is UNKNOWN.** Node tests pass. Visual / performance / compatibility soak in After Effects has not been run. [Issue #11](https://github.com/Mohamedbeghanem/evotechly-motion-os/issues/11) remains the soak tracker. Editors should still run [docs/SOAK_CHECKLIST.md](docs/SOAK_CHECKLIST.md) and the 12-variant EvoCRM campaign for *confidence* — that is not a blocker to this 2.0.0 tag (user override). See [V2_RELEASE_GATE.md](V2_RELEASE_GATE.md).
 
 ## P0 — unify shell (companion hub)
 
@@ -14,16 +29,16 @@ Own Solair-class text reveal. Native AE text animators / fills only. No vendor c
 - Hub **SaaS** panel — Flowing Text + Coloured Reveal (captions-adjacent)
 - `tests/text-reveal.test.js`
 
-## Kit matrix — P1 high-ROI gaps
+## Kit matrix — P1 high-ROI gaps (shipped on 2.0.0)
 
-From [docs/KIT_CAPABILITY_MATRIX.md](docs/KIT_CAPABILITY_MATRIX.md). P0 Hub is shipped above. Phase 1–3 SaaS Demo / seed stay shipped below.
+From [docs/KIT_CAPABILITY_MATRIX.md](docs/KIT_CAPABILITY_MATRIX.md). P0 Hub + P1a–P1d are shipped on Ultimate 2.0.0. Phase 1–3 SaaS Demo / seed stay shipped below.
 
 | ID | Job | Status | Native | Apply in AE |
 |---|---|---|---|---|
-| P1a | UI Animator–class preset pack + mirror | **shipped on main** | `core/uiPresets.js` | Hub **Apply UI Preset** |
-| P1b | Flowing / coloured text reveal | **shipped (this PR)** | `core/textReveal.js` | Hub **Flowing Text** / **Coloured Reveal** |
-| P1c | Caption keyword color + in/out preset row | **shipped on main** | `core/captionStyle.js` | **Window → Caption Style Tools** (separate companion — not a Hub tab). Captions tab still places live text / SRT. |
-| P1d | Cursor styles (pointer / hand / I-beam) | **shipped on main** | `createCursor({ style })` | Hub SaaS **Style** dropdown |
+| P1a | UI Animator–class preset pack + mirror | **shipped on 2.0.0** | `core/uiPresets.js` | Hub **Apply UI Preset** |
+| P1b | Flowing / coloured text reveal | **shipped on 2.0.0** | `core/textReveal.js` | Hub **Flowing Text** / **Coloured Reveal** |
+| P1c | Caption keyword color + in/out preset row | **shipped on 2.0.0** | `core/captionStyle.js` | **Window → Caption Style Tools** (separate companion — not a Hub tab). Captions tab still places live text / SRT. |
+| P1d | Cursor styles (pointer / hand / I-beam) | **shipped on 2.0.0** | `createCursor({ style })` | Hub SaaS **Style** dropdown |
 
 P1c owns the Meow keyword-color + Presetify in/out jobs **without their code**. Native text animators: `colorKeywords`, `captionInOut` (`fade` / `scale` / `slideUp` / `typewriter` / `blur`). No ElevenLabs. How-to: [docs/CAPTION_STYLE.md](docs/CAPTION_STYLE.md).
 
@@ -63,8 +78,6 @@ Native UI Animator Pro–class presets (in / out / both + optional mirror). Capa
 - `tests/ui-presets.test.js` — timing / math
 - `docs/KIT_CAPABILITY_MATRIX.md` — P1a **own**
 
-Do not tag v2.0.0. AE soak is UNKNOWN. See V2_RELEASE_GATE.md.
-
 Kit capability research matrix landed (research-before-build).
 
-**v0.32.0-rc packaging:** full zip must include the main panel **and** `ae/SaaS Demo Tools.jsx` (Motion OS Hub) **and** `ae/Seed Golden Project.jsx` **and** `ae/Caption Style Tools.jsx` (P1c). Checklists: [docs/SOAK_CHECKLIST.md](docs/SOAK_CHECKLIST.md), [docs/RELEASE_ZIP_CHECKLIST.md](docs/RELEASE_ZIP_CHECKLIST.md).
+**v2.0.0 Ultimate packaging:** full zip must include the main panel **and** `ae/SaaS Demo Tools.jsx` (Motion OS Hub) **and** `ae/Seed Golden Project.jsx` **and** `ae/Caption Style Tools.jsx` (P1c). Checklists: [docs/SOAK_CHECKLIST.md](docs/SOAK_CHECKLIST.md), [docs/RELEASE_ZIP_CHECKLIST.md](docs/RELEASE_ZIP_CHECKLIST.md).

@@ -1,10 +1,12 @@
-# Evotechly Motion OS
+# Evotechly Motion OS — Ultimate 2.0.0
 
 Deterministic compiler for **SaaS-style motion**, plus a dockable After Effects panel.
 
+**Ultimate 2.0.0** ships the v0.32 Reliability panel plus Motion OS Hub, Seed Golden Project, and Caption Style Tools (P0 + P1a–P1d). AE visual soak is still UNKNOWN — [issue #11](https://github.com/Mohamedbeghanem/evotechly-motion-os/issues/11). See [VERSION.md](VERSION.md) and [V2_RELEASE_GATE.md](V2_RELEASE_GATE.md).
+
 v0.7 Editor Kit: one panel for SaaS + reels + native polish + captions. See [ULTIMATE.md](ULTIMATE.md). Does not include Saber / QCA3 / Displacer.
 
-**Editors: one-page path is [docs/QUICK_START.md](docs/QUICK_START.md). Install `ae/Evotechly Motion OS.jsx`, `ae/SaaS Demo Tools.jsx`, and `ae/Caption Style Tools.jsx`, run `ae/Seed Golden Project.jsx`, then [EDITOR.md](EDITOR.md) / [docs/SAAS_DEMO_KIT.md](docs/SAAS_DEMO_KIT.md) / [docs/CAPTION_STYLE.md](docs/CAPTION_STYLE.md) / [ae/INSTALL-AE.md](ae/INSTALL-AE.md).**
+**Editors: one-page path is [docs/QUICK_START.md](docs/QUICK_START.md). Install all four: `ae/Evotechly Motion OS.jsx`, `ae/SaaS Demo Tools.jsx` (Hub), `ae/Seed Golden Project.jsx`, and `ae/Caption Style Tools.jsx`. Then [EDITOR.md](EDITOR.md) / [docs/SAAS_DEMO_KIT.md](docs/SAAS_DEMO_KIT.md) / [docs/CAPTION_STYLE.md](docs/CAPTION_STYLE.md) / [ae/INSTALL-AE.md](ae/INSTALL-AE.md).**
 
 ## After Effects app
 

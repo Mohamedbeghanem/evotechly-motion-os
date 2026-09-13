@@ -1,22 +1,25 @@
-# Quick start — editor path (Phase 3)
+# Quick start — Evotechly Motion OS Ultimate 2.0
 
 One page. No third-party plugin binaries. Art from Figma; motion from Evotechly.
 
+**Install all four JSX files.** Ultimate 2.0.0 is the v0.32 Reliability panel plus Motion OS Hub, Seed, and Caption Style Tools.
+
 ## 1. Install order (required)
 
-Quit After Effects. Copy these into **Scripts/ScriptUI Panels**, then restart:
+Quit After Effects. Copy these into **Scripts/ScriptUI Panels**, then restart. Seed also belongs in **Scripts** (or sit next to the Hub so Home → Seed can find it).
 
 | # | File | Open from |
 |---|---|---|
 | 1 | `ae/Evotechly Motion OS.jsx` | **Window → Evotechly Motion OS** (v0.32 Reliability, ~297 KB — do not replace with a stub) |
 | 2 | `ae/SaaS Demo Tools.jsx` | **Window → SaaS Demo Tools** / **Motion OS Hub** (palette title Motion OS Hub: Home + SaaS + Kit Hub) |
 | 3 | `ae/Caption Style Tools.jsx` | **Window → Caption Style Tools** (P1c keyword color + in/out; separate from Hub) |
+| 4 | `ae/Seed Golden Project.jsx` | **File → Scripts → Run Script File…** or **Hub → Home → Seed Golden Project** |
 
-Optional: copy `ae/Seed Golden Project.jsx` into **Scripts** (not ScriptUI Panels) so it appears under **File → Scripts**.
+Copy Seed into **Scripts** (not ScriptUI Panels) so it appears under **File → Scripts**. Keep a copy next to the Hub panel if you seed from Home.
 
 Details: [ae/INSTALL-AE.md](../ae/INSTALL-AE.md). Caption pack (not required in AE): `assets/` + `examples/captions/`.
 
-**RC soak / zip:** [SOAK_CHECKLIST.md](SOAK_CHECKLIST.md) (zero code changes, Automation OFF) · [RELEASE_ZIP_CHECKLIST.md](RELEASE_ZIP_CHECKLIST.md) (full RC = panel + Hub + Seed + Caption Style).
+**Zip / confidence soak:** [RELEASE_ZIP_CHECKLIST.md](RELEASE_ZIP_CHECKLIST.md) (tag `v2.0.0` = all four JSX + docs) · [SOAK_CHECKLIST.md](SOAK_CHECKLIST.md) (recommended for editor confidence; AE soak is still UNKNOWN — [issue #11](https://github.com/Mohamedbeghanem/evotechly-motion-os/issues/11)).
 
 ## 2. Optional companions
 
