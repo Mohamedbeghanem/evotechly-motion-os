@@ -74,7 +74,7 @@ Out of scope now: Claude/API wiring, CEP/Premiere, baked frames, beat-sync, Moch
 
 ## Phase 1–3 SaaS Demo (own code)
 
-Companion **Window → SaaS Demo Tools** (`ae/SaaS Demo Tools.jsx`) plus `core/saasDemo.js` / `core/saasDemoFx.js`: cursor + click (P1d styles: pointer / hand / ibeam), depth reveal, stagger, carousel, native glass panel, gradient wipe, proximity hover. Phase 3: `ae/Seed Golden Project.jsx` builds `00_HOME` / `ERP_DEMO` / `TALKING_HEAD` / `REEL_9x16` (no `.aep`). Does not replace the v0.32 panel. Liquid Glass is optional personal-use only and is not shipped. Docs: `docs/QUICK_START.md`, `docs/SAAS_DEMO_KIT.md`, `docs/EDITOR_FREE_KIT.md`.
+Companion **Window → SaaS Demo Tools / Motion OS Hub** (`ae/SaaS Demo Tools.jsx`) plus `core/saasDemo.js` / `core/saasDemoFx.js`: P0 Home / SaaS / Kit Hub; cursor + click (P1d styles: pointer / hand / ibeam), depth, stagger, P1a UI presets, carousel, glass, wipe, hover. Phase 3: `ae/Seed Golden Project.jsx` builds `00_HOME` / `ERP_DEMO` / `TALKING_HEAD` / `REEL_9x16` (no `.aep`). **P1c** Caption Style (`ae/Caption Style Tools.jsx` + `core/captionStyle.js`) is a **separate** companion: keyword color + fade/scale/slideUp/typewriter/blur. Does not replace the v0.32 panel. Liquid Glass is optional personal-use only and is not shipped. Docs: `docs/QUICK_START.md`, `docs/SAAS_DEMO_KIT.md`, `docs/CAPTION_STYLE.md`, `docs/EDITOR_FREE_KIT.md`.
 
 ## No third-party binary
 

@@ -2,19 +2,20 @@
 
 Build the editor handoff zip from **`main`**. Tag name is **`v0.32.0-rc`**, not `v2.0.0` and not `v2.0.0-rc1`.
 
-**Do not omit SaaS Demo Tools or Seed Golden Project.** Both are on `main` (PRs [#8](https://github.com/Mohamedbeghanem/evotechly-motion-os/pull/8), [#9](https://github.com/Mohamedbeghanem/evotechly-motion-os/pull/9), [#10](https://github.com/Mohamedbeghanem/evotechly-motion-os/pull/10)). An earlier workspace zip left them out — that was a pack error, not a repo gap. A zip with only the 297 KB panel is **not** a full RC.
+**Do not omit SaaS Demo Tools / Motion OS Hub, Seed Golden Project, or Caption Style Tools.** Hub + Seed are on `main` (PRs [#8](https://github.com/Mohamedbeghanem/evotechly-motion-os/pull/8)–[#16](https://github.com/Mohamedbeghanem/evotechly-motion-os/pull/16)). Caption Style is P1c (separate companion). An earlier workspace zip left companions out — that was a pack error, not a repo gap. A zip with only the 297 KB panel is **not** a full RC.
 
 Soak after unpack: [SOAK_CHECKLIST.md](SOAK_CHECKLIST.md). Gate: [V2_RELEASE_GATE.md](../V2_RELEASE_GATE.md).
 
-## Required — three JSX files
+## Required — JSX files
 
 | File | Role | Approx. size |
 |---|---|---|
 | `ae/Evotechly Motion OS.jsx` | Window → Evotechly Motion OS (v0.32 Reliability). Confirm **not** a stub / `PLACEHOLDER_SEE_FILE`. | ~297 KB |
 | `ae/SaaS Demo Tools.jsx` | Window → SaaS Demo Tools / Motion OS Hub (Home seed, SaaS engines, Kit Hub URLs). | ~28 KB |
 | `ae/Seed Golden Project.jsx` | File → Scripts → Run Script File… (or SaaS Demo → Seed). Builds the four golden comps. | ~8 KB |
+| `ae/Caption Style Tools.jsx` | Window → Caption Style Tools (P1c keyword color + in/out). Native text animators. | ~12 KB |
 
-All three must be in the zip. The main panel does **not** replace the other two.
+The main panel does **not** replace the companions. A zip with only the 297 KB panel is **not** a full RC.
 
 ## Required — docs
 
@@ -25,6 +26,8 @@ All three must be in the zip. The main panel does **not** replace the other two.
 | `docs/RELEASE_ZIP_CHECKLIST.md` | This list — packer + editor can verify the zip |
 | `docs/EDITOR_FREE_KIT.md` | Optional companions note — URLs only; **no** vendor binaries |
 | `docs/SAAS_DEMO_KIT.md` | Native SaaS Demo engines vs companions |
+| `docs/CAPTION_STYLE.md` | P1c keyword color + in/out |
+| `docs/KIT_CAPABILITY_MATRIX.md` | Own vs companion vs skip |
 | `V2_RELEASE_GATE.md` | Why this is RC-not-v2 |
 | `VERSION.md` | Panel / phase notes |
 | `ae/INSTALL-PANEL-v032.md` | Panel install (v0.32 + companions) |
@@ -44,7 +47,7 @@ All three must be in the zip. The main panel does **not** replace the other two.
 ## Packer checks before you ship
 
 - [ ] Zip built from current `main` (includes PRs #8–#10), not an old workspace folder
-- [ ] All **three** JSX files present and openable
+- [ ] All **four** JSX files present and openable (panel + SaaS Demo + Seed + Caption Style)
 - [ ] Main panel is ~297 KB (Reliability), not a 51 KB leftover
 - [ ] SaaS Demo Tools and Seed are **in the zip** (do not “leave companions for later”)
 - [ ] Required docs above are present

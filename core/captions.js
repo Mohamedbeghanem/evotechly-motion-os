@@ -4,6 +4,7 @@
  * Reel caption templates + a basic SRT parser.
  * Panel recreates these as AE text layers (no baked bitmaps).
  * Arabic stays live text so AE can shape RTL.
+ * P1c style helpers (`colorKeywords`, `captionInOut`) re-exported from captionStyle.js.
  */
 
 const SAFE = {
@@ -116,6 +117,8 @@ function safeMargins(frame) {
   return SAFE[frame] || SAFE.reel916;
 }
 
+const captionStyle = require("./captionStyle");
+
 module.exports = {
   SAFE,
   TEMPLATES,
@@ -124,5 +127,7 @@ module.exports = {
   parseSrt,
   srtTimeToSeconds,
   getTemplate,
-  safeMargins
+  safeMargins,
+  colorKeywords: captionStyle.colorKeywords,
+  captionInOut: captionStyle.captionInOut
 };

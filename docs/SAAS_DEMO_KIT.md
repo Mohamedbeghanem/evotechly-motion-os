@@ -23,16 +23,18 @@ Liquid Glass remains an **optional external pack for personal use only**. It is 
 | Click / hover / drag sequences | Main panel **Interact** (v0.32) | — |
 | Talking-head | Main panel **Person** | Crate Light Wrap (optional) |
 | Captions AR+EN | Main panel **Captions** | Meow Captions, Vignette Typer Lite (optional) |
+| Keyword color + caption in/out | **Window → Caption Style Tools** (`colorKeywords`, `captionInOut`) | Meow / Presetify (optional). See [CAPTION_STYLE.md](CAPTION_STYLE.md). |
 | Lockup pins | Main panel Logo lockup shot | PinRig (optional) |
 
 **Rule:** native AE only in our code. Reminder + official URLs for free companions. See [EDITOR_FREE_KIT.md](EDITOR_FREE_KIT.md).
 
 ## How to run each tool
 
-Install **both** JSX files into `Scripts/ScriptUI Panels`, restart After Effects:
+Install into `Scripts/ScriptUI Panels`, restart After Effects:
 
 1. `ae/Evotechly Motion OS.jsx` — v0.32 Reliability (do not replace with a stub).
 2. `ae/SaaS Demo Tools.jsx` — this kit. **Window → SaaS Demo Tools / Motion OS Hub** (Home + SaaS + Kit Hub). Does not replace v0.32.
+3. `ae/Caption Style Tools.jsx` — P1c keyword color + in/out. Separate companion. See [CAPTION_STYLE.md](CAPTION_STYLE.md).
 
 **Phase 3 — golden project seed.** There is no binary `.aep`. **File → Scripts → Run Script File…** → `ae/Seed Golden Project.jsx` (or the **Seed Golden Project** button on this panel). Creates `00_HOME`, `ERP_DEMO`, `TALKING_HEAD`, `REEL_9x16` if missing. Idempotent. Editor path: [QUICK_START.md](QUICK_START.md).
 

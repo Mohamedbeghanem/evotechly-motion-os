@@ -24,7 +24,7 @@ Do not edit the panel while recording.
 ## Launch smoke (~10 min)
 
 1. Window title is v0.7 Editor Kit. Stripe Hero Scan Apply still works.
-2. Captions tab → Hook caption → Apply. Shot = Captions → Scan → Apply. No paid plugin.
+2. Captions tab → Hook caption → Apply. Shot = Captions → Scan → Apply. Caption Style Tools → keyword color + fade in. No paid plugin.
 3. Import `examples/captions/demo-en.srt` (or type two lines). Safe guides appear as EVO_SKIP.
 4. Person tab → Cutout Prep or Keylight on a plate. Talking-head stack reminder.
 5. Recipes → ERP demo (cursor) + Feature card. KPI count-up on the metric.
