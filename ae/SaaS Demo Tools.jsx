@@ -1,9 +1,12 @@
 #target aftereffects
 /*
-  Evotechly SaaS Demo Tools — companion ScriptUI panel (Phase 1–3).
+  Evotechly Motion OS Hub — companion ScriptUI panel (P0 unify shell).
+  Palette title: Motion OS Hub. Window → SaaS Demo Tools (same file).
+  Home (Seed) + SaaS engines + Kit Hub official URLs.
   Applies core/saasDemo.js + core/saasDemoFx.js numbers in After Effects.
   Native AE only. No Liquid Glass, Deep Glow, Saber, QCA, or TFM.
-  Does not replace Evotechly Motion OS v0.32. Window → SaaS Demo Tools.
+  Kit Hub never downloads or vendors binaries — copy/alert official URLs only.
+  Does not replace Evotechly Motion OS v0.32.
 */
 (function (thisObj) {
   var CURSOR_NAME = "Cursor";
@@ -30,6 +33,34 @@
   var HOVER_SCALE = 6;
   var HOVER_OPACITY = 18;
   var VERTS = [[0, 0], [0, 24], [7, 18], [11, 28], [14, 26], [10, 17], [20, 17]];
+  var KIT_HUB = [
+    { name: "UI Animator Pro", url: "https://whatstudio.gumroad.com/" },
+    { name: "PinRig", url: "https://whatstudio.gumroad.com/" },
+    { name: "AEJuice (free)", url: "https://aejuice.com" },
+    { name: "Motion Bro (free)", url: "https://motionbro.com" },
+    { name: "Animation Composer (free)", url: "https://www.mrhorse.com/animation-composer/" },
+    { name: "Crate Light Wrap", url: "https://www.productioncrate.com/plugins/crates-light-wrap" },
+    { name: "Meow Captions", url: "https://sinopskyd.itch.io/meow-captions" },
+    { name: "Presetify", url: "https://kuldeepmp4.gumroad.com/l/Presetify" },
+    { name: "Vignette Typer Lite", url: "https://vignettestudio.gumroad.com/l/vignette-typer-lite" },
+    { name: "Repeater", url: "https://aaeplugins.com/plugins/repeater/" },
+    { name: "PaulPack", url: "https://paulplane.gumroad.com/l/paulpackv1" },
+    { name: "Liquid Glass (personal)", url: "https://bentomotion.gumroad.com/l/glass-ae" }
+  ];
+  var KIT_HUB_NAMES = [
+    "UI Animator Pro",
+    "PinRig",
+    "AEJuice (free)",
+    "Motion Bro (free)",
+    "Animation Composer (free)",
+    "Crate Light Wrap",
+    "Meow Captions",
+    "Presetify",
+    "Vignette Typer Lite",
+    "Repeater",
+    "PaulPack",
+    "Liquid Glass (personal)"
+  ];
 
   function clamp(n, lo, hi) {
     n = Number(n);
@@ -559,33 +590,77 @@
     alert("Seed Golden Project.jsx was not found next to this panel.\nFile → Scripts → Run Script File… and pick ae/Seed Golden Project.jsx.\nCreates 00_HOME, ERP_DEMO, TALKING_HEAD, REEL_9x16 if missing. See docs/QUICK_START.md.");
   }
 
+  function copyOfficialUrl(url) {
+    var os, safe, cmd;
+    safe = String(url || "").replace(/[^a-zA-Z0-9:\/._\-?=&%]/g, "");
+    if (safe.indexOf("https://") !== 0) return false;
+    try {
+      os = String($.os || "");
+      if (os.indexOf("Windows") !== -1) {
+        cmd = 'cmd.exe /c echo ' + safe + " | clip";
+      } else {
+        cmd = "printf %s '" + safe + "' | pbcopy";
+      }
+      system.callSystem(cmd);
+      return true;
+    } catch (e0) {
+      return false;
+    }
+  }
+
+  function showCompanionUrl(entry) {
+    var copied;
+    if (!entry || !entry.url) {
+      alert("Select a companion in Kit Hub.");
+      return;
+    }
+    copied = copyOfficialUrl(entry.url);
+    alert(
+      entry.name + "\n" + entry.url +
+      "\n\nOfficial site only. Evotechly never downloads or vendors this companion." +
+      (copied ? "\n\nURL copied to the clipboard." : "\n\nSelect the URL above and copy it.")
+    );
+  }
+
   function buildUI(thisObj) {
-    var win = (thisObj instanceof Panel) ? thisObj : new Window("palette", "SaaS Demo Tools", undefined, { resizeable: true });
+    var win = (thisObj instanceof Panel) ? thisObj : new Window("palette", "Motion OS Hub", undefined, { resizeable: true });
     var g, durField, clickField, dirList, offsetField, easeList, axisList;
     var wipeDirList, wipeDurField, wipeEaseList, hoverRadiusField, hoverScaleField, hoverOpacityField;
+    var homeP, saasP, kitP, kitNote, kitList, intro, foot;
     win.orientation = "column";
     win.alignChildren = ["fill", "top"];
     win.spacing = 8;
     win.margins = 10;
-    win.add("statictext", undefined, "EVOTECHLY  ·  SaaS Demo Tools");
-    var intro = win.add("statictext", undefined, "Own engines. Native AE. Companion to Motion OS v0.32 — does not replace it.", { multiline: true });
+    win.add("statictext", undefined, "EVOTECHLY  ·  Motion OS Hub");
+    intro = win.add("statictext", undefined, "Home + SaaS + Kit Hub. Companion to Motion OS v0.32 — does not replace it. Window → SaaS Demo Tools.", { multiline: true });
     intro.characters = 42;
 
-    win.add("statictext", undefined, "Cursor + click");
-    g = win.add("group");
+    homeP = win.add("panel", undefined, "Home");
+    homeP.orientation = "column";
+    homeP.alignChildren = ["fill", "top"];
+    homeP.margins = 8;
+    homeP.add("button", undefined, "Seed Golden Project").onClick = runSeedGolden;
+
+    saasP = win.add("panel", undefined, "SaaS");
+    saasP.orientation = "column";
+    saasP.alignChildren = ["fill", "top"];
+    saasP.margins = 8;
+
+    saasP.add("statictext", undefined, "Cursor + click");
+    g = saasP.add("group");
     g.add("statictext", undefined, "Duration");
     durField = g.add("edittext", undefined, "0.55");
     durField.characters = 6;
     g.add("statictext", undefined, "Click at");
     clickField = g.add("edittext", undefined, "0.55");
     clickField.characters = 6;
-    win.add("button", undefined, "Cursor + click").onClick = function () { runCursor(durField, clickField); };
+    saasP.add("button", undefined, "Cursor + click").onClick = function () { runCursor(durField, clickField); };
 
-    win.add("statictext", undefined, "Depth reveal");
-    win.add("button", undefined, "Depth reveal (selected)").onClick = runDepth;
+    saasP.add("statictext", undefined, "Depth reveal");
+    saasP.add("button", undefined, "Depth reveal (selected)").onClick = runDepth;
 
-    win.add("statictext", undefined, "Stagger reveal");
-    g = win.add("group");
+    saasP.add("statictext", undefined, "Stagger reveal");
+    g = saasP.add("group");
     g.add("statictext", undefined, "Dir");
     dirList = g.add("dropdownlist", undefined, ["In", "Out", "Both"]);
     dirList.selection = 0;
@@ -595,20 +670,20 @@
     g.add("statictext", undefined, "Ease");
     easeList = g.add("dropdownlist", undefined, ["Apple", "Soft", "Linear"]);
     easeList.selection = 0;
-    win.add("button", undefined, "Stagger reveal (selected)").onClick = function () { runStagger(dirList, offsetField, easeList); };
+    saasP.add("button", undefined, "Stagger reveal (selected)").onClick = function () { runStagger(dirList, offsetField, easeList); };
 
-    win.add("statictext", undefined, "Carousel");
-    g = win.add("group");
+    saasP.add("statictext", undefined, "Carousel");
+    g = saasP.add("group");
     g.add("statictext", undefined, "Axis");
     axisList = g.add("dropdownlist", undefined, ["X", "Y"]);
     axisList.selection = 0;
-    win.add("button", undefined, "Carousel setup (selected)").onClick = function () { runCarousel(axisList); };
+    saasP.add("button", undefined, "Carousel setup (selected)").onClick = function () { runCarousel(axisList); };
 
-    win.add("statictext", undefined, "Glass panel");
-    win.add("button", undefined, "Glass Panel (selected)").onClick = runGlass;
+    saasP.add("statictext", undefined, "Glass panel");
+    saasP.add("button", undefined, "Glass Panel (selected)").onClick = runGlass;
 
-    win.add("statictext", undefined, "Gradient wipe");
-    g = win.add("group");
+    saasP.add("statictext", undefined, "Gradient wipe");
+    g = saasP.add("group");
     g.add("statictext", undefined, "Dir");
     wipeDirList = g.add("dropdownlist", undefined, ["Left", "Right", "Up", "Down", "In", "Out", "Both"]);
     wipeDirList.selection = 0;
@@ -618,10 +693,10 @@
     g.add("statictext", undefined, "Ease");
     wipeEaseList = g.add("dropdownlist", undefined, ["Apple", "Soft", "Linear"]);
     wipeEaseList.selection = 0;
-    win.add("button", undefined, "Gradient Wipe (selected)").onClick = function () { runWipe(wipeDirList, wipeDurField, wipeEaseList); };
+    saasP.add("button", undefined, "Gradient Wipe (selected)").onClick = function () { runWipe(wipeDirList, wipeDurField, wipeEaseList); };
 
-    win.add("statictext", undefined, "Proximity hover");
-    g = win.add("group");
+    saasP.add("statictext", undefined, "Proximity hover");
+    g = saasP.add("group");
     g.add("statictext", undefined, "Radius");
     hoverRadiusField = g.add("edittext", undefined, "140");
     hoverRadiusField.characters = 5;
@@ -631,12 +706,25 @@
     g.add("statictext", undefined, "Opac");
     hoverOpacityField = g.add("edittext", undefined, "18");
     hoverOpacityField.characters = 4;
-    win.add("button", undefined, "Proximity Hover (selected)").onClick = function () { runHover(hoverRadiusField, hoverScaleField, hoverOpacityField); };
+    saasP.add("button", undefined, "Proximity Hover (selected)").onClick = function () { runHover(hoverRadiusField, hoverScaleField, hoverOpacityField); };
 
-    win.add("statictext", undefined, "Golden project");
-    win.add("button", undefined, "Seed Golden Project").onClick = runSeedGolden;
+    kitP = win.add("panel", undefined, "Kit Hub");
+    kitP.orientation = "column";
+    kitP.alignChildren = ["fill", "top"];
+    kitP.margins = 8;
+    kitNote = kitP.add("statictext", undefined, "Companion names + official URLs only. Copy or alert. Never download or vendor binaries.", { multiline: true });
+    kitNote.characters = 40;
+    kitList = kitP.add("listbox", undefined, KIT_HUB_NAMES);
+    kitList.preferredSize = [300, 160];
+    kitList.onDoubleClick = function () {
+      if (kitList.selection) showCompanionUrl(KIT_HUB[kitList.selection.index]);
+    };
+    kitP.add("button", undefined, "Copy official URL").onClick = function () {
+      if (!kitList.selection) { alert("Select a companion in Kit Hub."); return; }
+      showCompanionUrl(KIT_HUB[kitList.selection.index]);
+    };
 
-    var foot = win.add("statictext", undefined, "Install: copy this file into Scripts/ScriptUI Panels. See docs/SAAS_DEMO_KIT.md and docs/QUICK_START.md. Companions stay external — docs/EDITOR_FREE_KIT.md.", { multiline: true });
+    foot = win.add("statictext", undefined, "Window → SaaS Demo Tools / Motion OS Hub. Install: Scripts/ScriptUI Panels. v0.32 stays Window → Evotechly Motion OS. Docs: QUICK_START.md · EDITOR_FREE_KIT.md · KIT_CAPABILITY_MATRIX.md.", { multiline: true });
     foot.characters = 42;
 
     win.onResizing = win.onResize = function () { this.layout.resize(); };

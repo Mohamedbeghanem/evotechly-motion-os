@@ -37,10 +37,16 @@
 
 ## Capability backlog for ONE tool
 
-### P0 — unify shell
-1. Fold SaaS Demo Tools into main panel as **SaaS** tab.
-2. **Kit Hub** section: companion URLs only.
-3. Seed on Home.
+### P0 — unify shell — **done** (companion hub)
+
+Main-panel Home / SaaS / Kit Hub tabs were **deferred**. Do not rewrite or stub the 297 KB v0.32 panel.
+
+1. **Window → SaaS Demo Tools / Motion OS Hub** — `ae/SaaS Demo Tools.jsx` (palette title **Motion OS Hub**).
+2. **Home** — Seed Golden Project (reuses `ae/Seed Golden Project.jsx`).
+3. **SaaS** — existing engines: cursor, depth, stagger, carousel, glass, wipe, hover.
+4. **Kit Hub** — companion names + official URLs only (`core/kitHub.js`). Copy / alert. Never download or vendor binaries.
+
+Target one-tool IA (later, after soak) still wants those sections inside v0.32. P0 ships the companion hub instead.
 
 ### P1 — reimplement high-ROI gaps
 1. UI preset pack (UI Animator–class in/out/both + mirror).
@@ -55,10 +61,13 @@ AEJuice, Motion Bro, Repeater, Animation Composer, PinRig, Liquid Glass refracti
 Solair AI script, Overlord Figma clone, Auto-Animate until soak passes.
 
 ## One-tool IA
-Home | Motion | SaaS | Polish | Person | Captions | Recipes | Assets | Kit Hub
+
+**P0 shipped:** v0.32 tabs unchanged + **Window → Motion OS Hub / SaaS Demo Tools** (Home | SaaS | Kit Hub).
+
+**Later (do not stub v0.32 to get here):** Home | Motion | SaaS | Polish | Person | Captions | Recipes | Assets | Kit Hub
 
 ## Legal
 Research ≠ copy. Companions never in release zip. Build on v0.32.0-rc.
 
 ## Next
-Research complete → P0 unify shell → P1 PRs → soak #11 before v2.
+P0 companion hub is in. P1 PRs → soak #11 before v2. Do not fold the hub into the 297 KB panel until soak passes.

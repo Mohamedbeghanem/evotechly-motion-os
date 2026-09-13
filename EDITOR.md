@@ -4,7 +4,7 @@ One kit. Install Motion OS only. Art from Figma. Motion from Evotechly.
 
 ## Install
 
-Quit AE. Copy `ae/Evotechly Motion OS.jsx` and `ae/SaaS Demo Tools.jsx` into **Scripts/ScriptUI Panels**. Window → Evotechly Motion OS (header **v0.32 Reliability**) and Window → SaaS Demo Tools. Seed comps: **File → Scripts → Run Script File…** → `ae/Seed Golden Project.jsx`. One-page path: [docs/QUICK_START.md](docs/QUICK_START.md). Caption JSON + sample SRT live in `assets/` and `examples/captions/`. SaaS tools: [docs/SAAS_DEMO_KIT.md](docs/SAAS_DEMO_KIT.md). Optional free companions: [docs/EDITOR_FREE_KIT.md](docs/EDITOR_FREE_KIT.md).
+Quit AE. Copy `ae/Evotechly Motion OS.jsx` and `ae/SaaS Demo Tools.jsx` into **Scripts/ScriptUI Panels**. Window → Evotechly Motion OS (header **v0.32 Reliability**) and **Window → SaaS Demo Tools / Motion OS Hub**. Seed comps: Hub **Home → Seed Golden Project**, or **File → Scripts → Run Script File…** → `ae/Seed Golden Project.jsx`. One-page path: [docs/QUICK_START.md](docs/QUICK_START.md). Caption JSON + sample SRT live in `assets/` and `examples/captions/`. SaaS tools: [docs/SAAS_DEMO_KIT.md](docs/SAAS_DEMO_KIT.md). Optional free companions: [docs/EDITOR_FREE_KIT.md](docs/EDITOR_FREE_KIT.md) (Kit Hub URLs only — never bundled).
 
 ## Tabs
 
@@ -15,7 +15,7 @@ Quit AE. Copy `ae/Evotechly Motion OS.jsx` and `ae/SaaS Demo Tools.jsx` into **S
 | Person | Cutout Prep, Keylight recipe, Light wrap, Talking-head stack |
 | Captions | Templates, Import SRT, 9:16 safe, KPI count-up |
 | Recipes | Founder GS / Roto, ERP demo, 15s hook reminders, Feature card |
-| *(companion)* | **Window → SaaS Demo Tools** — cursor + click, depth, stagger, carousel, glass, wipe, hover, Seed Golden Project |
+| *(companion)* | **Window → SaaS Demo Tools / Motion OS Hub** — Home (Seed), SaaS (cursor, depth, stagger, carousel, glass, wipe, hover), Kit Hub (official URLs) |
 
 ## Names
 

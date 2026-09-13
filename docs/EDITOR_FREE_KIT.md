@@ -19,7 +19,7 @@ Quit After Effects before installing native plugins. ScriptUI panels go in `Scri
 
 | # | Companion | Official starting point | After it is installed… |
 |---|---|---|---|
-| 1 | **UI Animator Pro** | [whatstudio.gumroad.com](https://whatstudio.gumroad.com/) | Optional extra UI presets. Prefer **Window → SaaS Demo Tools** stagger / cursor first. |
+| 1 | **UI Animator Pro** | [whatstudio.gumroad.com](https://whatstudio.gumroad.com/) | Optional extra UI presets. Prefer **Window → SaaS Demo Tools / Motion OS Hub** stagger / cursor first. |
 | 2 | **PinRig** | [whatstudio.gumroad.com](https://whatstudio.gumroad.com/) | Optional logo pins. Prefer Motion OS **Logo lockup** shot. |
 | 3 | **AEJuice (free)** | [aejuice.com](https://aejuice.com) | Pack browser only. Do not copy packs into this repo. |
 | 4 | **Motion Bro (free)** | [motionbro.com](https://motionbro.com) | Host for some free packs. Off talking-head. |
@@ -38,7 +38,7 @@ Already documented elsewhere (hooks only, never bundled): Saber, QCA3, Displacer
 
 ### SaaS product demo
 
-1. **Window → SaaS Demo Tools** — cursor + click, depth, stagger, carousel, glass panel, gradient wipe, proximity hover.
+1. **Window → SaaS Demo Tools / Motion OS Hub** — cursor + click, depth, stagger, carousel, glass panel, gradient wipe, proximity hover. Kit Hub = official URLs only (copy / alert; never download).
 2. **Motion** — Style / Direction / Shot / Scan / Apply (Figma names: `Title`, `Card 1`, `CTA`, `Screenshot`, `Cursor`).
 3. **Polish** — Apple Ease, Add Cursor (static pointer), click squash.
 4. **Interact** — click / hover / drag sequences (v0.32 panel).
@@ -68,8 +68,8 @@ Animation Composer / AEJuice / Motion Bro / Vignette Typer Lite / Meow Captions 
 
 ```
 ae/Evotechly Motion OS.jsx      →  Window → Evotechly Motion OS   (v0.32, ~297 KB)
-ae/SaaS Demo Tools.jsx          →  Window → SaaS Demo Tools
-ae/Seed Golden Project.jsx      →  File → Scripts → Run Script File…  (or SaaS Demo Tools → Seed Golden Project)
+ae/SaaS Demo Tools.jsx          →  Window → SaaS Demo Tools / Motion OS Hub
+ae/Seed Golden Project.jsx      →  File → Scripts → Run Script File…  (or Hub Home → Seed Golden Project)
 ```
 
 Copy the two panels into `Scripts/ScriptUI Panels`. Seed is a run-script, not a panel. One-page editor path: [QUICK_START.md](QUICK_START.md). See [ae/INSTALL-AE.md](../ae/INSTALL-AE.md).

@@ -11,7 +11,7 @@ Soak after unpack: [SOAK_CHECKLIST.md](SOAK_CHECKLIST.md). Gate: [V2_RELEASE_GAT
 | File | Role | Approx. size |
 |---|---|---|
 | `ae/Evotechly Motion OS.jsx` | Window → Evotechly Motion OS (v0.32 Reliability). Confirm **not** a stub / `PLACEHOLDER_SEE_FILE`. | ~297 KB |
-| `ae/SaaS Demo Tools.jsx` | Window → SaaS Demo Tools (cursor, stagger, glass, wipe, proximity, Seed button). | ~28 KB |
+| `ae/SaaS Demo Tools.jsx` | Window → SaaS Demo Tools / Motion OS Hub (Home seed, SaaS engines, Kit Hub URLs). | ~28 KB |
 | `ae/Seed Golden Project.jsx` | File → Scripts → Run Script File… (or SaaS Demo → Seed). Builds the four golden comps. | ~8 KB |
 
 All three must be in the zip. The main panel does **not** replace the other two.
