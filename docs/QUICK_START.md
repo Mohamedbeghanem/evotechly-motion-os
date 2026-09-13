@@ -21,7 +21,7 @@ Details: [ae/INSTALL-AE.md](../ae/INSTALL-AE.md). Caption pack (not required in 
 
 Do **not** need AEJuice, Motion Bro, Liquid Glass, UI Animator Pro, or Meow Captions to ship. Those stay on vendor sites and are never in this repo.
 
-Summary + official URLs: [EDITOR_FREE_KIT.md](EDITOR_FREE_KIT.md). Native engines: [SAAS_DEMO_KIT.md](SAAS_DEMO_KIT.md).
+Summary + official URLs: [EDITOR_FREE_KIT.md](EDITOR_FREE_KIT.md). Native engines: [SAAS_DEMO_KIT.md](SAAS_DEMO_KIT.md). Own vs companion vs skip: [KIT_CAPABILITY_MATRIX.md](KIT_CAPABILITY_MATRIX.md).
 
 ## 3. Seed the golden project
 

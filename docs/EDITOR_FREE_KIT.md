@@ -11,6 +11,7 @@ Official URLs change. Prefer the vendor’s current site over a mirrored zip.
 - **Optional** — product demos ship with native Motion OS + [SaaS Demo Kit](SAAS_DEMO_KIT.md). Seed the four golden comps from [QUICK_START.md](QUICK_START.md) (`ae/Seed Golden Project.jsx`) — no `.aep` in the repo.
 - **Not required** — cursor, depth, stagger, carousel, glass panel, gradient wipe, proximity hover, captions, Keylight, and lockup all have native paths.
 - **Not redistributed** — never commit `.aex`, `.plugin`, encrypted JSX, AEJuice/Motion Bro packs, or third-party scripts.
+- **Research matrix** — own vs companion vs skip, and the one-tool wrap plan: [KIT_CAPABILITY_MATRIX.md](KIT_CAPABILITY_MATRIX.md).
 
 ## Install order
 
