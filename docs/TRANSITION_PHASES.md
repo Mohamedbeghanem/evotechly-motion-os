@@ -1,6 +1,6 @@
 # Transition Kit — phase roadmap
 
-Status after this PR: **Phase 0–4, Phase 9, and Phase 12 are done.** Overlay-Modal is the EvoCRM dialog family (dim + scale/opacity present). Shared-Element is the full bounds-match family (not mesh). Later phases are catalogued, not implemented.
+Status after this PR: **Phase 0–4, Phase 9, Phase 10, and Phase 12 are done.** Page-Screen is the EvoCRM IA family (dashboard → page, forward/back, tab content). Overlay-Modal is the dialog family. Shared-Element is the full bounds-match family (not mesh). Later phases are catalogued, not implemented.
 
 | Phase | Job | Status |
 |---|---|---|
@@ -14,7 +14,7 @@ Status after this PR: **Phase 0–4, Phase 9, and Phase 12 are done.** Overlay-M
 | 7 | Blur-Focus family | planned |
 | 8 | Depth-Parallax family | planned |
 | **9** | Overlay-Modal family (modal / sheet / dim / popover / toast) | **done** |
-| 10 | Page-Screen family | planned |
+| **10** | Page-Screen family (page push / fade / screen swap / nav / tab) | **done** |
 | 11 | Wipe-Split family (soft mattes / native gradient wipe) | planned |
 | **12** | Shared-Element family (bounds match, not mesh) | **done** |
 | 13 | Stagger-Cascade family (reuse `staggerReveal` numbers where they fit) | planned |
@@ -79,6 +79,17 @@ Status after this PR: **Phase 0–4, Phase 9, and Phase 12 are done.** Overlay-M
 - JSX mirrors apply math in `ae/Evotechly Transitions.jsx` Transitions tab
 - Registry: native `sourceType` rows, `commercialUse: true`
 - Tests: deterministic plans, unique IDs, implemented flags, axis / scale math
+- Charts / device plates still deferred to P2b
+
+## Phase 10 — done
+
+- `core/transitions/pageScreen.js` — `EVT_PAGE_PUSH` / `PAGE_FADE` / `SCREEN_SWAP` / `NAV_FORWARD` / `NAV_BACK` / `TAB_CROSS`
+- Full-page push reuses UI Push math. Fade is opacity-only (Scale-Zoom mid opacities). Screen swap keeps app chrome (UI-Slide card-width). Nav forward/back are directional IA. Tab cross is a quiet content fade
+- EvoCRM paths: dashboard → page, stack forward/back, tab content
+- Catalog `implemented:true` + names on all 6 Page-Screen IDs (`phase: 10`)
+- JSX mirrors apply math in `ae/Evotechly Transitions.jsx` Transitions tab
+- Registry: native `sourceType` rows, `commercialUse: true`
+- Tests: deterministic plans, unique IDs, implemented flags, push / fade / chrome-stay math
 - Charts / device plates still deferred to P2b
 
 ## Phase 9 — done

@@ -1,5 +1,5 @@
 {
-  "version": "phase-9",
+  "version": "phase-10",
   "style": "premium-saas",
   "aspectRatios": [
     "16:9",
@@ -8,7 +8,7 @@
     "4:5"
   ],
   "generated": "transitions/Metadata/catalog.json",
-  "note": "Phase 9 implements the Overlay-Modal family (plus Phase 2–4 UI Push / UI-Slide / Scale-Zoom and Phase 12 Shared-Element). Other rows are metadata for later phases and AI pairing.",
+  "note": "Phase 10 implements the Page-Screen family (plus Phase 2–4 UI Push / UI-Slide / Scale-Zoom, Phase 9 Overlay-Modal, and Phase 12 Shared-Element). Other rows are metadata for later phases and AI pairing.",
   "transitions": [
     {
       "id": "EVT_UI_PUSH_LEFT",
@@ -1254,9 +1254,12 @@
         "1:1",
         "4:5"
       ],
-      "sfx": [],
+      "sfx": [
+        "ui-whoosh-soft"
+      ],
       "phase": 10,
-      "implemented": false
+      "implemented": true,
+      "name": "Page Push"
     },
     {
       "id": "EVT_PAGE_FADE",
@@ -1272,9 +1275,12 @@
         "1:1",
         "4:5"
       ],
-      "sfx": [],
+      "sfx": [
+        "ui-cross"
+      ],
       "phase": 10,
-      "implemented": false
+      "implemented": true,
+      "name": "Page Fade"
     },
     {
       "id": "EVT_SCREEN_SWAP",
@@ -1290,9 +1296,12 @@
         "1:1",
         "4:5"
       ],
-      "sfx": [],
+      "sfx": [
+        "ui-whoosh-soft"
+      ],
       "phase": 10,
-      "implemented": false
+      "implemented": true,
+      "name": "Screen Swap"
     },
     {
       "id": "EVT_NAV_FORWARD",
@@ -1308,9 +1317,12 @@
         "1:1",
         "4:5"
       ],
-      "sfx": [],
+      "sfx": [
+        "ui-whoosh-soft"
+      ],
       "phase": 10,
-      "implemented": false
+      "implemented": true,
+      "name": "Nav Forward"
     },
     {
       "id": "EVT_NAV_BACK",
@@ -1326,9 +1338,12 @@
         "1:1",
         "4:5"
       ],
-      "sfx": [],
+      "sfx": [
+        "ui-whoosh-soft"
+      ],
       "phase": 10,
-      "implemented": false
+      "implemented": true,
+      "name": "Nav Back"
     },
     {
       "id": "EVT_TAB_CROSS",
@@ -1344,9 +1359,12 @@
         "1:1",
         "4:5"
       ],
-      "sfx": [],
+      "sfx": [
+        "ui-cross"
+      ],
       "phase": 10,
-      "implemented": false
+      "implemented": true,
+      "name": "Tab Cross"
     },
     {
       "id": "EVT_WIPE_SOFT_L",

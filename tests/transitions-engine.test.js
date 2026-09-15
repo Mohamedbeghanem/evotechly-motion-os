@@ -155,6 +155,7 @@ test("every implemented ID produces a deterministic complete plan", function () 
   const scaleZoom = require("../core/transitions/scaleZoom");
   const sharedElement = require("../core/transitions/sharedElement");
   const overlayModal = require("../core/transitions/overlayModal");
+  const pageScreen = require("../core/transitions/pageScreen");
   const ids = engine.IMPLEMENTED_IDS.slice();
   assert.deepEqual(
     ids,
@@ -162,6 +163,7 @@ test("every implemented ID produces a deterministic complete plan", function () 
       .concat(scaleZoom.SCALE_ZOOM_IDS)
       .concat(sharedElement.SHARED_ELEMENT_IDS)
       .concat(overlayModal.OVERLAY_MODAL_IDS)
+      .concat(pageScreen.PAGE_SCREEN_IDS)
   );
   assert.deepEqual(ids, [
     "EVT_UI_PUSH_LEFT",
@@ -207,7 +209,13 @@ test("every implemented ID produces a deterministic complete plan", function () 
     "EVT_SHEET_DOWN",
     "EVT_OVERLAY_DIM",
     "EVT_POPOVER_IN",
-    "EVT_TOAST_IN"
+    "EVT_TOAST_IN",
+    "EVT_PAGE_PUSH",
+    "EVT_PAGE_FADE",
+    "EVT_SCREEN_SWAP",
+    "EVT_NAV_FORWARD",
+    "EVT_NAV_BACK",
+    "EVT_TAB_CROSS"
   ]);
   ids.forEach(function (id) {
     const opts = {
@@ -238,15 +246,17 @@ test("every implemented ID produces a deterministic complete plan", function () 
     assert.ok(a.anatomy.action);
     assert.ok(a.anatomy.crossover);
     assert.ok(a.anatomy.settle);
-    const name = overlayModal.isOverlayModalId(id)
-      ? overlayModal.displayName(id)
-      : sharedElement.isSharedElementId(id)
-        ? sharedElement.displayName(id)
-        : scaleZoom.isScaleZoomId(id)
-          ? scaleZoom.displayName(id)
-          : uiSlide.isUiSlideId(id)
-            ? uiSlide.displayName(id)
-            : uiPush.displayName(id);
+    const name = pageScreen.isPageScreenId(id)
+      ? pageScreen.displayName(id)
+      : overlayModal.isOverlayModalId(id)
+        ? overlayModal.displayName(id)
+        : sharedElement.isSharedElementId(id)
+          ? sharedElement.displayName(id)
+          : scaleZoom.isScaleZoomId(id)
+            ? scaleZoom.displayName(id)
+            : uiSlide.isUiSlideId(id)
+              ? uiSlide.displayName(id)
+              : uiPush.displayName(id);
     assert.equal(a.name, name);
     assert.ok(a.outgoing.keys.length >= 3, id + " outgoing keys");
     assert.ok(a.incoming.keys.length >= 3, id + " incoming keys");
@@ -765,6 +775,101 @@ test("Overlay-Modal family dims the plate and presents with scale/opacity", func
   assert.equal(overlayModal.MODAL_POP_START, 92);
 });
 
+test("Page-Screen family reuses UI Push, opacity fade, and chrome-stay slide", function () {
+  const pageScreen = require("../core/transitions/pageScreen");
+  const push = engine.applyTransitionPlan({ id: "EVT_UI_PUSH_LEFT", durationFrames: 16, fps: 30 });
+  const page = engine.applyTransitionPlan({ id: "EVT_PAGE_PUSH", durationFrames: 16, fps: 30 });
+  const pageAlias = engine.applyTransitionPlan({ id: "EVT_PAGE", durationFrames: 16, fps: 30 });
+  const fade = engine.applyTransitionPlan({ id: "EVT_PAGE_FADE", durationFrames: 16, fps: 30 });
+  const swap = engine.applyTransitionPlan({ id: "EVT_SCREEN_SWAP", durationFrames: 16, fps: 30 });
+  const card = engine.applyTransitionPlan({ id: "EVT_SLIDE_CARD_LEFT", durationFrames: 16, fps: 30 });
+  const forward = engine.applyTransitionPlan({ id: "EVT_NAV_FORWARD", durationFrames: 16, fps: 30 });
+  const back = engine.applyTransitionPlan({ id: "EVT_NAV_BACK", durationFrames: 16, fps: 30 });
+  const right = engine.applyTransitionPlan({ id: "EVT_UI_PUSH_RIGHT", durationFrames: 16, fps: 30 });
+  const tab = engine.applyTransitionPlan({ id: "EVT_TAB_CROSS", durationFrames: 16, fps: 30 });
+  const tabAlias = engine.applyTransitionPlan({ id: "EVT_TAB_FADE", durationFrames: 16, fps: 30 });
+
+  assert.equal(page.category, "Page-Screen");
+  assert.equal(page.name, "Page Push");
+  assert.equal(page.travel.page, true);
+  assert.equal(page.travel.fullPage, true);
+  assert.equal(page.direction, "left");
+  assert.equal(page.travel.distance, push.travel.distance);
+  assert.deepEqual(page.outgoing.keys, push.outgoing.keys);
+  assert.deepEqual(page.incoming.keys, push.incoming.keys);
+  assert.deepEqual(pageAlias.outgoing.keys, page.outgoing.keys);
+  assert.equal(pageAlias.id, "EVT_PAGE_PUSH");
+
+  assert.equal(fade.name, "Page Fade");
+  assert.equal(fade.travel.opacityOnly, true);
+  assert.equal(fade.travel.fade, true);
+  assert.equal(fade.travel.distance, 0);
+  fade.outgoing.keys.forEach(function (k) {
+    assert.equal(k.x, 0);
+    assert.equal(k.y, 0);
+    assert.equal(k.scale[0], 100);
+    assert.equal(k.blur, 0);
+  });
+  fade.incoming.keys.forEach(function (k) {
+    assert.equal(k.x, 0);
+    assert.equal(k.y, 0);
+    assert.equal(k.scale[0], 100);
+    assert.equal(k.blur, 0);
+  });
+  assert.equal(fade.outgoing.keys[0].opacity, 100);
+  assert.equal(fade.outgoing.keys[2].opacity, pageScreen.PAGE_FADE_OUT_MID);
+  assert.equal(fade.outgoing.keys[3].opacity, 0);
+  assert.equal(fade.incoming.keys[0].opacity, 0);
+  assert.equal(fade.incoming.keys[1].opacity, pageScreen.PAGE_FADE_IN_MID);
+  assert.equal(fade.incoming.keys[3].opacity, 100);
+
+  const fadeDefault = engine.applyTransitionPlan({ id: "EVT_PAGE_FADE", fps: 30 });
+  assert.equal(fadeDefault.group, "SMOOTH");
+
+  assert.equal(swap.name, "Screen Swap");
+  assert.equal(swap.travel.chromeStay, true);
+  assert.equal(swap.travel.screenSwap, true);
+  assert.equal(swap.travel.cardWidth, true);
+  assert.equal(swap.travel.distance, card.travel.distance);
+  assert.deepEqual(swap.outgoing.keys, card.outgoing.keys);
+  assert.deepEqual(swap.incoming.keys, card.incoming.keys);
+
+  assert.equal(forward.name, "Nav Forward");
+  assert.equal(forward.direction, "left");
+  assert.equal(forward.travel.nav, true);
+  assert.equal(forward.travel.forward, true);
+  assert.deepEqual(forward.outgoing.keys, push.outgoing.keys);
+  assert.equal(engine.applyTransitionPlan({ id: "EVT_FORWARD", durationFrames: 16, fps: 30 }).id, "EVT_NAV_FORWARD");
+
+  assert.equal(back.name, "Nav Back");
+  assert.equal(back.direction, "right");
+  assert.equal(back.travel.nav, true);
+  assert.equal(back.travel.back, true);
+  assert.deepEqual(back.outgoing.keys, right.outgoing.keys);
+  assert.deepEqual(back.incoming.keys, right.incoming.keys);
+  assert.equal(engine.applyTransitionPlan({ id: "EVT_BACK", durationFrames: 16, fps: 30 }).id, "EVT_NAV_BACK");
+
+  assert.equal(tab.name, "Tab Cross");
+  assert.equal(tab.travel.tab, true);
+  assert.equal(tab.travel.quiet, true);
+  assert.equal(tab.travel.opacityOnly, true);
+  assert.equal(tab.travel.distance, 0);
+  tab.outgoing.keys.forEach(function (k) {
+    assert.equal(k.x, 0);
+    assert.equal(k.scale[0], 100);
+    assert.equal(k.blur, 0);
+  });
+  assert.equal(tab.outgoing.keys[2].opacity, pageScreen.TAB_CROSS_OUT_MID);
+  assert.equal(tab.outgoing.keys[3].opacity, 0);
+  assert.equal(tab.incoming.keys[0].opacity, 0);
+  assert.equal(tab.incoming.keys[1].opacity, pageScreen.TAB_CROSS_IN_MID);
+  assert.equal(tab.incoming.keys[3].opacity, 100);
+  assert.deepEqual(tabAlias.outgoing.keys, tab.outgoing.keys);
+  assert.equal(tabAlias.id, "EVT_TAB_CROSS");
+  const tabDefault = engine.applyTransitionPlan({ id: "EVT_TAB_CROSS", fps: 30 });
+  assert.equal(tabDefault.group, "FAST");
+});
+
 test("unimplemented catalog IDs return a safe stub plan", function () {
   const plan = engine.applyTransitionPlan({ id: "EVT_MICRO_HOVER" });
   assert.equal(plan.implemented, false);
@@ -778,6 +883,7 @@ test("catalog has unique EVT_ IDs and implemented flags for shipped families", f
   const scaleZoom = require("../core/transitions/scaleZoom");
   const sharedElement = require("../core/transitions/sharedElement");
   const overlayModal = require("../core/transitions/overlayModal");
+  const pageScreen = require("../core/transitions/pageScreen");
   const list = registry.loadCatalog();
   assert.ok(list.length >= 90);
   assert.deepEqual(registry.uniqueIdErrors(), []);
@@ -790,7 +896,7 @@ test("catalog has unique EVT_ IDs and implemented flags for shipped families", f
     set[id] = true;
   });
   const implemented = registry.listImplemented();
-  assert.equal(implemented.length, 44);
+  assert.equal(implemented.length, 50);
   implemented.forEach(function (row) {
     assert.equal(row.implemented, true);
     assert.equal(row.style, "premium-saas");
@@ -806,6 +912,9 @@ test("catalog has unique EVT_ IDs and implemented flags for shipped families", f
     } else if (row.category === "Overlay-Modal") {
       assert.equal(row.phase, 9);
       assert.equal(row.name, overlayModal.displayName(row.id));
+    } else if (row.category === "Page-Screen") {
+      assert.equal(row.phase, 10);
+      assert.equal(row.name, pageScreen.displayName(row.id));
     } else {
       assert.equal(row.category, "UI-Push");
       assert.ok(uiPush.PHASE1_IDS.indexOf(row.id) !== -1 ? row.phase === 1 : row.phase === 2, row.id + " phase");
@@ -865,6 +974,17 @@ test("catalog has unique EVT_ IDs and implemented flags for shipped families", f
   assert.equal(registry.filterCatalog({ query: "modal in", category: "Overlay-Modal" })[0].id, "EVT_MODAL_IN");
   assert.equal(registry.filterCatalog({ query: "popover", category: "Overlay-Modal" })[0].id, "EVT_POPOVER_IN");
   assert.equal(registry.filterCatalog({ implemented: true, category: "Overlay-Modal" }).length, 7);
+  assert.equal(registry.getById("EVT_PAGE_PUSH").implemented, true);
+  assert.equal(registry.getById("EVT_PAGE_PUSH").name, "Page Push");
+  assert.equal(registry.getById("EVT_PAGE_FADE").name, "Page Fade");
+  assert.equal(registry.getById("EVT_SCREEN_SWAP").name, "Screen Swap");
+  assert.equal(registry.getById("EVT_NAV_FORWARD").name, "Nav Forward");
+  assert.equal(registry.getById("EVT_NAV_BACK").name, "Nav Back");
+  assert.equal(registry.getById("EVT_TAB_CROSS").name, "Tab Cross");
+  assert.equal(registry.listByCategory("Page-Screen").length, 6);
+  assert.equal(registry.filterCatalog({ query: "page push", category: "Page-Screen" })[0].id, "EVT_PAGE_PUSH");
+  assert.equal(registry.filterCatalog({ query: "nav back", category: "Page-Screen" })[0].id, "EVT_NAV_BACK");
+  assert.equal(registry.filterCatalog({ implemented: true, category: "Page-Screen" }).length, 6);
 });
 
 test("demo storyboard is a dashboard→card→analytics sequence", function () {
@@ -924,6 +1044,8 @@ test("JSX companion embeds UI Push IDs and mirrored constants", function () {
   assert.ok(jsx.indexOf("function planOverlayDim") !== -1);
   assert.ok(jsx.indexOf("function planPopoverIn") !== -1);
   assert.ok(jsx.indexOf("function planToastIn") !== -1);
+  assert.ok(jsx.indexOf("function planPageFade") !== -1);
+  assert.ok(jsx.indexOf("function planTabCross") !== -1);
   assert.ok(jsx.indexOf("function planSharedMorphJs") !== -1);
   assert.ok(jsx.indexOf("function planTargetZoomJs") !== -1);
   assert.ok(jsx.indexOf("Panel Push") !== -1);
@@ -947,6 +1069,12 @@ test("JSX companion embeds UI Push IDs and mirrored constants", function () {
   assert.ok(jsx.indexOf("Overlay Dim") !== -1);
   assert.ok(jsx.indexOf("Popover In") !== -1);
   assert.ok(jsx.indexOf("Toast In") !== -1);
+  assert.ok(jsx.indexOf("Page Push") !== -1);
+  assert.ok(jsx.indexOf("Page Fade") !== -1);
+  assert.ok(jsx.indexOf("Screen Swap") !== -1);
+  assert.ok(jsx.indexOf("Nav Forward") !== -1);
+  assert.ok(jsx.indexOf("Nav Back") !== -1);
+  assert.ok(jsx.indexOf("Tab Cross") !== -1);
   assert.ok(/#target aftereffects/.test(jsx));
   assert.ok(jsx.indexOf("does not replace") !== -1);
   registry.catalogIds().forEach(function (id) {

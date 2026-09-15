@@ -108,13 +108,13 @@ const transitions = [
   row("EVT_POPOVER_IN", "Overlay-Modal", "FAST", "subtle", true, "Popover from a target", 9, true, ["ui-soft-in"], "Popover In"),
   row("EVT_TOAST_IN", "Overlay-Modal", "FAST", "subtle", false, "Toast from edge, then settle", 9, true, ["ui-soft-in"], "Toast In"),
 
-  // 09 Page-Screen
-  row("EVT_PAGE_PUSH", "Page-Screen", "STANDARD", "standard", false, "Full-page push using UI Push math", 10, false, []),
-  row("EVT_PAGE_FADE", "Page-Screen", "SMOOTH", "subtle", false, "Full-page fade", 10, false, []),
-  row("EVT_SCREEN_SWAP", "Page-Screen", "STANDARD", "standard", false, "Replace screen, keep app chrome", 10, false, []),
-  row("EVT_NAV_FORWARD", "Page-Screen", "STANDARD", "standard", false, "Forward in an IA stack", 10, false, []),
-  row("EVT_NAV_BACK", "Page-Screen", "STANDARD", "standard", false, "Back in an IA stack", 10, false, []),
-  row("EVT_TAB_CROSS", "Page-Screen", "FAST", "subtle", false, "Tab content crossfade", 10, false, []),
+  // 09 Page-Screen — Phase 10
+  row("EVT_PAGE_PUSH", "Page-Screen", "STANDARD", "standard", false, "Full-page push using UI Push math", 10, true, ["ui-whoosh-soft"], "Page Push"),
+  row("EVT_PAGE_FADE", "Page-Screen", "SMOOTH", "subtle", false, "Full-page fade", 10, true, ["ui-cross"], "Page Fade"),
+  row("EVT_SCREEN_SWAP", "Page-Screen", "STANDARD", "standard", false, "Replace screen, keep app chrome", 10, true, ["ui-whoosh-soft"], "Screen Swap"),
+  row("EVT_NAV_FORWARD", "Page-Screen", "STANDARD", "standard", false, "Forward in an IA stack", 10, true, ["ui-whoosh-soft"], "Nav Forward"),
+  row("EVT_NAV_BACK", "Page-Screen", "STANDARD", "standard", false, "Back in an IA stack", 10, true, ["ui-whoosh-soft"], "Nav Back"),
+  row("EVT_TAB_CROSS", "Page-Screen", "FAST", "subtle", false, "Tab content crossfade", 10, true, ["ui-cross"], "Tab Cross"),
 
   // 10 Wipe-Split
   row("EVT_WIPE_SOFT_L", "Wipe-Split", "STANDARD", "subtle", false, "Soft left wipe — no hard bar", 11, false, []),
@@ -176,11 +176,11 @@ const transitions = [
 ];
 
 const out = {
-  version: "phase-9",
+  version: "phase-10",
   style: STYLE,
   aspectRatios: ASPECT,
   generated: "transitions/Metadata/catalog.json",
-  note: "Phase 9 implements the Overlay-Modal family (plus Phase 2–4 UI Push / UI-Slide / Scale-Zoom and Phase 12 Shared-Element). Other rows are metadata for later phases and AI pairing.",
+  note: "Phase 10 implements the Page-Screen family (plus Phase 2–4 UI Push / UI-Slide / Scale-Zoom, Phase 9 Overlay-Modal, and Phase 12 Shared-Element). Other rows are metadata for later phases and AI pairing.",
   transitions: transitions
 };
 

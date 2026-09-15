@@ -2,7 +2,7 @@
 
 Premium SaaS screen-to-screen motion. Apple / Linear / Stripe / Raycast taste. Not a glitch pack.
 
-**Phase 0–4, Phase 9, and Phase 12** ship this document, the folder scaffold, a Node-testable engine, catalog metadata, and a companion ScriptUI panel. The full UI Push family, the UI-Slide card family, the Scale-Zoom family, the Shared-Element family, and the **Overlay-Modal family** produce complete keyframe plans. Everything else is catalogued for later phases and AI pairing.
+**Phase 0–4, Phase 9–10, and Phase 12** ship this document, the folder scaffold, a Node-testable engine, catalog metadata, and a companion ScriptUI panel. The full UI Push family, the UI-Slide card family, the Scale-Zoom family, the Shared-Element family, the Overlay-Modal family, and the **Page-Screen family** produce complete keyframe plans. Everything else is catalogued for later phases and AI pairing.
 
 This kit does **not** replace the v0.32 Motion tab transitions (shot-level Clean Push / Whip / Zoom Match). Those stay in `ae/Evotechly Motion OS.jsx` (~297 KB — never stub). This kit is UI-to-UI: dashboard → card → analytics.
 
@@ -23,7 +23,7 @@ This kit does **not** replace the v0.32 Motion tab transitions (shot-level Clean
 
 **CI cannot open After Effects.** Plans are deterministic JSON. Visual taste is an editor soak, same as the rest of Motion OS.
 
-**ExtendScript cannot `require` Node.** `core/transitions/*.js` is the source of truth for numbers and tests. `ae/Evotechly Transitions.jsx` mirrors the UI Push, UI-Slide, Scale-Zoom, Shared-Element, and Overlay-Modal constants and apply math. If they drift, fix Node first, then the JSX.
+**ExtendScript cannot `require` Node.** `core/transitions/*.js` is the source of truth for numbers and tests. `ae/Evotechly Transitions.jsx` mirrors the UI Push, UI-Slide, Scale-Zoom, Shared-Element, Overlay-Modal, and Page-Screen constants and apply math. If they drift, fix Node first, then the JSX.
 
 **Progress slider** is reserved. Phase 1 keys are time-based. Driving the whole transition from `Progress` (0–100) is an Expressions-folder job in a later phase.
 
@@ -117,7 +117,7 @@ Folder names under `transitions/`. Letters are A=01 … P=16.
 | F / 06 | Blur-Focus | `06_Blur-Focus/` | 7 | catalog |
 | G / 07 | Depth-Parallax | `07_Depth-Parallax/` | 8 | catalog |
 | H / 08 | Overlay-Modal | `08_Overlay-Modal/` | 9 | **7 IDs implemented (Phase 9)** |
-| I / 09 | Page-Screen | `09_Page-Screen/` | 10 | catalog |
+| I / 09 | Page-Screen | `09_Page-Screen/` | 10 | **6 IDs implemented (Phase 10)** |
 | J / 10 | Wipe-Split | `10_Wipe-Split/` | 11 | catalog |
 | K / 11 | Shared-Element | `11_Shared-Element/` | 12 | **6 IDs implemented (Phase 12)** |
 | L / 12 | Stagger-Cascade | `12_Stagger-Cascade/` | 13 | catalog |
@@ -185,6 +185,19 @@ Dim plate + scale/opacity present. EvoCRM dialogs — not charts or devices.
 
 Plans: `core/transitions/overlayModal.js`. Sheet math: `uiSlide.planSheetUp`. Popover morph: `planBoundsMorph` in `target.js`.
 
+### Phase 10 implemented IDs (Page-Screen family)
+
+EvoCRM IA — dashboard → page, stack forward/back, tab content. Not charts or devices.
+
+- `EVT_PAGE_PUSH` — **Page Push**. Full-page push; reuses UI Push directional math. `EVT_PAGE` aliases this ID.
+- `EVT_PAGE_FADE` — **Page Fade**. Opacity-only (scale stays 100, no travel). Mid opacities match Scale-Zoom fade (42 / 72).
+- `EVT_SCREEN_SWAP` — **Screen Swap**. Replace screen, keep app chrome. Reuses UI-Slide card-width travel. `EVT_SCREEN` aliases this ID.
+- `EVT_NAV_FORWARD` — **Nav Forward**. Forward in an IA stack (left-axis UI Push). `EVT_FORWARD` aliases this ID.
+- `EVT_NAV_BACK` — **Nav Back**. Back in an IA stack (right-axis UI Push). `EVT_BACK` aliases this ID.
+- `EVT_TAB_CROSS` — **Tab Cross**. Quiet content fade (opacity-only, FAST). `EVT_TAB` / `EVT_TAB_FADE` alias this ID.
+
+Plans: `core/transitions/pageScreen.js`. Push math: `uiPush.planDirectionalPush`. Chrome-stay: `uiSlide.planCardSlide`.
+
 ### Phase 1–2 implemented IDs (UI Push family)
 
 - `EVT_UI_PUSH_LEFT` / `RIGHT` / `UP` / `DOWN` — **UI Push Left/Right/Up/Down**. Outgoing travels on axis; incoming enters from the opposite edge; anticipate opposite; settle overshoot capped.
@@ -238,6 +251,12 @@ Suggested prompt → ID mapping (later Phase 18):
 | “dim the page”, “scrim” | `EVT_OVERLAY_DIM` |
 | “popover”, “from this button” | `EVT_POPOVER_IN` |
 | “toast”, “snackbar” | `EVT_TOAST_IN` |
+| “next page”, “page push” | `EVT_PAGE_PUSH` |
+| “page fade”, “full-page dissolve” | `EVT_PAGE_FADE` |
+| “swap the screen”, “keep chrome” | `EVT_SCREEN_SWAP` |
+| “forward”, “deeper in the stack” | `EVT_NAV_FORWARD` |
+| “back”, “previous page” | `EVT_NAV_BACK` |
+| “tab change”, “tab content” | `EVT_TAB_CROSS` |
 | “quiet”, “calm”, “expensive” | `SMOOTH` + `premium-smooth` or `soft-ui` |
 | “snappy”, “product” | `FAST` + `fast-product` |
 | “glitch / RGB / explode / spin” | **Refuse.** No such IDs. |

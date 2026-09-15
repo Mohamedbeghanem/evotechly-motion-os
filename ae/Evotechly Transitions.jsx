@@ -1,10 +1,10 @@
 #target aftereffects
 /*
-  Evotechly Transitions — companion ScriptUI (Transition Kit Phase 9 Overlay-Modal + Phase 12 Shared-Element + SaaS Assets P1).
+  Evotechly Transitions — companion ScriptUI (Transition Kit Phase 10 Page-Screen + Phase 9 Overlay-Modal + Phase 12 Shared-Element + SaaS Assets P1).
   Window → Evotechly Transitions.
   Tabs: Transitions / Text / UI / Cursor.
   Numbers mirrored from core/transitions/*.js and core/assets/*.js — Node is source of truth.
-  ExtendScript cannot require Node. Apply UI Push + UI-Slide + Scale-Zoom + Shared-Element + Overlay-Modal and P1 native assets here.
+  ExtendScript cannot require Node. Apply UI Push + UI-Slide + Scale-Zoom + Shared-Element + Overlay-Modal + Page-Screen and P1 native assets here.
   Native AE only. No .ffx / .aep / vendor plugins.
   Does not replace Evotechly Motion OS v0.32 (~297 KB).
 */
@@ -62,7 +62,13 @@
     EVT_SHEET_DOWN: 1,
     EVT_OVERLAY_DIM: 1,
     EVT_POPOVER_IN: 1,
-    EVT_TOAST_IN: 1
+    EVT_TOAST_IN: 1,
+    EVT_PAGE_PUSH: 1,
+    EVT_PAGE_FADE: 1,
+    EVT_SCREEN_SWAP: 1,
+    EVT_NAV_FORWARD: 1,
+    EVT_NAV_BACK: 1,
+    EVT_TAB_CROSS: 1
   };
   /* influence pairs match core/transitions/easing.js + polish.js */
   var EASE = {
@@ -139,12 +145,12 @@
     { id: "EVT_OVERLAY_DIM", name: "Overlay Dim", category: "Overlay-Modal", duration: "FAST", intensity: "subtle", implemented: true, phase: 9, bestUse: "Dim plate only" },
     { id: "EVT_POPOVER_IN", name: "Popover In", category: "Overlay-Modal", duration: "FAST", intensity: "subtle", implemented: true, phase: 9, bestUse: "Popover from a target" },
     { id: "EVT_TOAST_IN", name: "Toast In", category: "Overlay-Modal", duration: "FAST", intensity: "subtle", implemented: true, phase: 9, bestUse: "Toast from edge, then settle" },
-    { id: "EVT_PAGE_PUSH", category: "Page-Screen", duration: "STANDARD", intensity: "standard", implemented: false, phase: 10, bestUse: "Full-page push using UI Push math" },
-    { id: "EVT_PAGE_FADE", category: "Page-Screen", duration: "SMOOTH", intensity: "subtle", implemented: false, phase: 10, bestUse: "Full-page fade" },
-    { id: "EVT_SCREEN_SWAP", category: "Page-Screen", duration: "STANDARD", intensity: "standard", implemented: false, phase: 10, bestUse: "Replace screen, keep app chrome" },
-    { id: "EVT_NAV_FORWARD", category: "Page-Screen", duration: "STANDARD", intensity: "standard", implemented: false, phase: 10, bestUse: "Forward in an IA stack" },
-    { id: "EVT_NAV_BACK", category: "Page-Screen", duration: "STANDARD", intensity: "standard", implemented: false, phase: 10, bestUse: "Back in an IA stack" },
-    { id: "EVT_TAB_CROSS", category: "Page-Screen", duration: "FAST", intensity: "subtle", implemented: false, phase: 10, bestUse: "Tab content crossfade" },
+    { id: "EVT_PAGE_PUSH", name: "Page Push", category: "Page-Screen", duration: "STANDARD", intensity: "standard", implemented: true, phase: 10, bestUse: "Full-page push using UI Push math" },
+    { id: "EVT_PAGE_FADE", name: "Page Fade", category: "Page-Screen", duration: "SMOOTH", intensity: "subtle", implemented: true, phase: 10, bestUse: "Full-page fade" },
+    { id: "EVT_SCREEN_SWAP", name: "Screen Swap", category: "Page-Screen", duration: "STANDARD", intensity: "standard", implemented: true, phase: 10, bestUse: "Replace screen, keep app chrome" },
+    { id: "EVT_NAV_FORWARD", name: "Nav Forward", category: "Page-Screen", duration: "STANDARD", intensity: "standard", implemented: true, phase: 10, bestUse: "Forward in an IA stack" },
+    { id: "EVT_NAV_BACK", name: "Nav Back", category: "Page-Screen", duration: "STANDARD", intensity: "standard", implemented: true, phase: 10, bestUse: "Back in an IA stack" },
+    { id: "EVT_TAB_CROSS", name: "Tab Cross", category: "Page-Screen", duration: "FAST", intensity: "subtle", implemented: true, phase: 10, bestUse: "Tab content crossfade" },
     { id: "EVT_WIPE_SOFT_L", category: "Wipe-Split", duration: "STANDARD", intensity: "subtle", implemented: false, phase: 11, bestUse: "Soft left wipe — no hard bar" },
     { id: "EVT_WIPE_SOFT_R", category: "Wipe-Split", duration: "STANDARD", intensity: "subtle", implemented: false, phase: 11, bestUse: "Soft right wipe" },
     { id: "EVT_SPLIT_H", category: "Wipe-Split", duration: "STANDARD", intensity: "standard", implemented: false, phase: 11, bestUse: "Horizontal split reveal" },
@@ -1703,6 +1709,42 @@
       phases: ph
     };
   }
+  function planPageFade(frames, fps) {
+    var ph = phaseFrames(frames, "soft");
+    return {
+      outgoing: [
+        key(ph.start, fps, 0, 0, 100, 100, 0, "anticipate"),
+        key(ph.anticipate, fps, 0, 0, 100, 100, 0, "action"),
+        key(ph.mid, fps, 0, 0, 100, 42, 0, "crossover"),
+        key(ph.end, fps, 0, 0, 100, 0, 0, "done")
+      ],
+      incoming: [
+        key(ph.start, fps, 0, 0, 100, 0, 0, "anticipate"),
+        key(ph.mid, fps, 0, 0, 100, 72, 0, "crossover"),
+        key(ph.settle, fps, 0, 0, 100, 100, 0, "settle"),
+        key(ph.end, fps, 0, 0, 100, 100, 0, "done")
+      ],
+      phases: ph
+    };
+  }
+  function planTabCross(frames, fps) {
+    var ph = phaseFrames(frames, "snap");
+    return {
+      outgoing: [
+        key(ph.start, fps, 0, 0, 100, 100, 0, "anticipate"),
+        key(ph.anticipate, fps, 0, 0, 100, 100, 0, "action"),
+        key(ph.mid, fps, 0, 0, 100, 58, 0, "crossover"),
+        key(ph.end, fps, 0, 0, 100, 0, 0, "done")
+      ],
+      incoming: [
+        key(ph.start, fps, 0, 0, 100, 0, 0, "anticipate"),
+        key(ph.mid, fps, 0, 0, 100, 70, 0, "crossover"),
+        key(ph.settle, fps, 0, 0, 100, 100, 0, "settle"),
+        key(ph.end, fps, 0, 0, 100, 100, 0, "done")
+      ],
+      phases: ph
+    };
+  }
   function planToastIn(dir, frames, fps, comp) {
     var ph = phaseFrames(frames, "snap");
     var distance = travelDistance(dir, comp, 100, 100) * 0.08;
@@ -1766,6 +1808,10 @@
     if (id === "EVT_OVERLAY_DIM") return planOverlayDim(frames, fps);
     if (id === "EVT_POPOVER_IN") return planPopoverIn(frames, fps, comp, target);
     if (id === "EVT_TOAST_IN") return planToastIn(dir, frames, fps, comp);
+    if (id === "EVT_PAGE_PUSH" || id === "EVT_NAV_FORWARD" || id === "EVT_NAV_BACK") return planDirectional(dir, frames, fps, comp);
+    if (id === "EVT_PAGE_FADE") return planPageFade(frames, fps);
+    if (id === "EVT_SCREEN_SWAP") return planCard(dir, frames, fps, comp);
+    if (id === "EVT_TAB_CROSS") return planTabCross(frames, fps);
     return planDirectional(dir, frames, fps, comp);
   }
   function defaultDirForId(id) {
@@ -1777,6 +1823,7 @@
     if (id === "EVT_SLIDE_PANEL_IN" || id === "EVT_SLIDE_PANEL_OUT") return "right";
     if (id === "EVT_SLIDE_SHEET_UP" || id === "EVT_SHEET_UP") return "up";
     if (id === "EVT_SHEET_DOWN" || id === "EVT_TOAST_IN") return "down";
+    if (id === "EVT_NAV_BACK") return "right";
     return "left";
   }
   function remapId(id, dir) {
@@ -1809,7 +1856,7 @@
     id = remapId(row.id, dir);
     row = findCatalog(id) || row;
     if (!row.implemented) {
-      alert(row.id + " is catalogued for Phase " + row.phase + ".\nPhase 9 applies Overlay-Modal (plus UI Push / UI-Slide / Scale-Zoom / Shared-Element).\nSee docs/TRANSITION_PHASES.md.");
+      alert(row.id + " is catalogued for Phase " + row.phase + ".\nPhase 10 applies Page-Screen (plus UI Push / UI-Slide / Scale-Zoom / Shared-Element / Overlay-Modal).\nSee docs/TRANSITION_PHASES.md.");
       return;
     }
     if (sel.length < 2) { alert("Select outgoing, then incoming (two layers)."); return; }
@@ -1869,7 +1916,7 @@
     win.spacing = 8;
     win.margins = 10;
     win.add("statictext", undefined, "EVOTECHLY  ·  Transitions");
-    intro = win.add("statictext", undefined, "Phase 4 Scale-Zoom + Shared Card + Phase 3 UI-Slide + Phase 2 UI Push + P1 native Text / UI / Cursor. Catalog is searchable. Companion to Motion OS — does not replace v0.32. Node is source of truth; this panel mirrors apply numbers.", { multiline: true });
+    intro = win.add("statictext", undefined, "Phase 10 Page-Screen + Phase 9 Overlay-Modal + Phase 12 Shared-Element + Phase 4 Scale-Zoom + Phase 3 UI-Slide + Phase 2 UI Push + P1 native Text / UI / Cursor. Catalog is searchable. Companion to Motion OS — does not replace v0.32. Node is source of truth; this panel mirrors apply numbers.", { multiline: true });
     intro.characters = 46;
 
     g = win.add("group");

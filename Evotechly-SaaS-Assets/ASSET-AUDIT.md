@@ -55,7 +55,7 @@ P1 KEEP ID rows (all **OWNED**, implemented):
 | Verdict | **KEEP** |
 | Score | **96** (20+25+15+15+10+10+1) — vendor risk n/a, tiny “we must not drift JSX” residual |
 | Downloaded? | N/A — already in repo (`core/transitions`, catalog, `ae/Evotechly Transitions.jsx`) |
-| Notes | `sourceType: native`, `commercialUse: true`. Full UI Push family (Phase 2) + UI-Slide card family (Phase 3) + Scale-Zoom (Phase 4) + Shared-Element (Phase 12) + **Overlay-Modal (Phase 9)**. Other families catalog-only. |
+| Notes | `sourceType: native`, `commercialUse: true`. Full UI Push family (Phase 2) + UI-Slide card family (Phase 3) + Scale-Zoom (Phase 4) + Shared-Element (Phase 12) + Overlay-Modal (Phase 9) + **Page-Screen (Phase 10)**. Other families catalog-only. |
 
 Phase 3 KEEP ID rows (all **OWNED**, implemented):
 
@@ -74,6 +74,10 @@ Phase 12 KEEP ID rows (all **OWNED**, implemented):
 Phase 9 KEEP ID rows (all **OWNED**, implemented):
 
 - Overlay: `EVT_MODAL_IN`, `EVT_MODAL_OUT`, `EVT_SHEET_UP`, `EVT_SHEET_DOWN`, `EVT_OVERLAY_DIM`, `EVT_POPOVER_IN`, `EVT_TOAST_IN`
+
+Phase 10 KEEP ID rows (all **OWNED**, implemented):
+
+- Page: `EVT_PAGE_PUSH`, `EVT_PAGE_FADE`, `EVT_SCREEN_SWAP`, `EVT_NAV_FORWARD`, `EVT_NAV_BACK`, `EVT_TAB_CROSS`
 
 ### Lucide curated SVGs
 
