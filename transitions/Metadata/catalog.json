@@ -1,5 +1,5 @@
 {
-  "version": "phase-6",
+  "version": "phase-17",
   "style": "premium-saas",
   "aspectRatios": [
     "16:9",
@@ -8,7 +8,7 @@
     "4:5"
   ],
   "generated": "transitions/Metadata/catalog.json",
-  "note": "Phase 6 implements the Mask-Reveal family (plus Phase 2–4 UI Push / UI-Slide / Scale-Zoom, Phase 9 Overlay-Modal, Phase 10 Page-Screen, Phase 12 Shared-Element, and Phase 13 Stagger-Cascade). Crossfade stays catalog-only. Other rows are metadata for later phases and AI pairing.",
+  "note": "Phase 17 implements the Micro family (plus Phase 2–4 UI Push / UI-Slide / Scale-Zoom, Phase 6 Mask-Reveal, Phase 9 Overlay-Modal, Phase 10 Page-Screen, Phase 12 Shared-Element, and Phase 13 Stagger-Cascade). Crossfade stays catalog-only. Other rows are metadata for later phases and AI pairing.",
   "transitions": [
     {
       "id": "EVT_UI_PUSH_LEFT",
@@ -2082,9 +2082,12 @@
         "1:1",
         "4:5"
       ],
-      "sfx": [],
+      "sfx": [
+        "ui-soft-in"
+      ],
       "phase": 17,
-      "implemented": false
+      "implemented": true,
+      "name": "Micro Hover"
     },
     {
       "id": "EVT_MICRO_PRESS",
@@ -2100,9 +2103,12 @@
         "1:1",
         "4:5"
       ],
-      "sfx": [],
+      "sfx": [
+        "ui-tick-soft"
+      ],
       "phase": 17,
-      "implemented": false
+      "implemented": true,
+      "name": "Micro Press"
     },
     {
       "id": "EVT_MICRO_TOGGLE",
@@ -2118,9 +2124,12 @@
         "1:1",
         "4:5"
       ],
-      "sfx": [],
+      "sfx": [
+        "ui-tick-soft"
+      ],
       "phase": 17,
-      "implemented": false
+      "implemented": true,
+      "name": "Micro Toggle"
     },
     {
       "id": "EVT_MICRO_CHECK",
@@ -2136,9 +2145,12 @@
         "1:1",
         "4:5"
       ],
-      "sfx": [],
+      "sfx": [
+        "ui-tick-soft"
+      ],
       "phase": 17,
-      "implemented": false
+      "implemented": true,
+      "name": "Micro Check"
     },
     {
       "id": "EVT_MICRO_BADGE",
@@ -2154,9 +2166,12 @@
         "1:1",
         "4:5"
       ],
-      "sfx": [],
+      "sfx": [
+        "ui-soft-in"
+      ],
       "phase": 17,
-      "implemented": false
+      "implemented": true,
+      "name": "Micro Badge"
     },
     {
       "id": "EVT_MICRO_COUNTER",
@@ -2172,9 +2187,12 @@
         "1:1",
         "4:5"
       ],
-      "sfx": [],
+      "sfx": [
+        "ui-tick-soft"
+      ],
       "phase": 17,
-      "implemented": false
+      "implemented": true,
+      "name": "Micro Counter"
     },
     {
       "id": "EVT_MICRO_FOCUS",
@@ -2190,9 +2208,12 @@
         "1:1",
         "4:5"
       ],
-      "sfx": [],
+      "sfx": [
+        "ui-soft-in"
+      ],
       "phase": 17,
-      "implemented": false
+      "implemented": true,
+      "name": "Micro Focus"
     },
     {
       "id": "EVT_MICRO_SNAP",
@@ -2208,9 +2229,12 @@
         "1:1",
         "4:5"
       ],
-      "sfx": [],
+      "sfx": [
+        "ui-tick-soft"
+      ],
       "phase": 17,
-      "implemented": false
+      "implemented": true,
+      "name": "Micro Snap"
     }
   ]
 }

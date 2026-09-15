@@ -2,7 +2,7 @@
 
 Premium SaaS screen-to-screen motion. Apple / Linear / Stripe / Raycast taste. Not a glitch pack.
 
-**Phase 0–4, Phase 6, Phase 9–10, and Phase 12–13** ship this document, the folder scaffold, a Node-testable engine, catalog metadata, and a companion ScriptUI panel. The full UI Push family, the UI-Slide card family, the Scale-Zoom family, the Shared-Element family, the Overlay-Modal family, the Page-Screen family, the Stagger-Cascade family, and the **Mask-Reveal family** produce complete keyframe plans. Everything else is catalogued for later phases and AI pairing. Charts / device plates are **P2b SaaS assets** (`core/assets/chartsDevices.js` + Charts tab), not a Transition Kit family. Crossfade stays catalog-only.
+**Phase 0–4, Phase 6, Phase 9–10, Phase 12–13, and Phase 17** ship this document, the folder scaffold, a Node-testable engine, catalog metadata, and a companion ScriptUI panel. The full UI Push family, the UI-Slide card family, the Scale-Zoom family, the Shared-Element family, the Overlay-Modal family, the Page-Screen family, the Stagger-Cascade family, the Mask-Reveal family, and the **Micro family** produce complete keyframe plans. Everything else is catalogued for later phases and AI pairing. Charts / device plates are **P2b SaaS assets** (`core/assets/chartsDevices.js` + Charts tab), not a Transition Kit family. Crossfade stays catalog-only.
 
 This kit does **not** replace the v0.32 Motion tab transitions (shot-level Clean Push / Whip / Zoom Match). Those stay in `ae/Evotechly Motion OS.jsx` (~297 KB — never stub). This kit is UI-to-UI: dashboard → card → analytics.
 
@@ -23,7 +23,7 @@ This kit does **not** replace the v0.32 Motion tab transitions (shot-level Clean
 
 **CI cannot open After Effects.** Plans are deterministic JSON. Visual taste is an editor soak, same as the rest of Motion OS.
 
-**ExtendScript cannot `require` Node.** `core/transitions/*.js` is the source of truth for numbers and tests. `ae/Evotechly Transitions.jsx` mirrors the UI Push, UI-Slide, Scale-Zoom, Shared-Element, Overlay-Modal, Page-Screen, Stagger-Cascade, and Mask-Reveal constants and apply math. If they drift, fix Node first, then the JSX.
+**ExtendScript cannot `require` Node.** `core/transitions/*.js` is the source of truth for numbers and tests. `ae/Evotechly Transitions.jsx` mirrors the UI Push, UI-Slide, Scale-Zoom, Shared-Element, Overlay-Modal, Page-Screen, Stagger-Cascade, Mask-Reveal, and Micro constants and apply math. If they drift, fix Node first, then the JSX.
 
 **Progress slider** is reserved. Phase 1 keys are time-based. Driving the whole transition from `Progress` (0–100) is an Expressions-folder job in a later phase.
 
@@ -124,7 +124,7 @@ Folder names under `transitions/`. Letters are A=01 … P=16.
 | M / 13 | Camera-Dolly | `13_Camera-Dolly/` | 14 | catalog |
 | N / 14 | Glass-Frost | `14_Glass-Frost/` | 15 | catalog |
 | O / 15 | Hero | `15_Hero/` | 16 | catalog + demo storyboard file |
-| P / 16 | Micro | `16_Micro/` | 17 | catalog |
+| P / 16 | Micro | `16_Micro/` | 17 | **8 IDs implemented (Phase 17)** |
 
 IDs live in `transitions/Metadata/catalog.json`. Each README stub lists the planned IDs for that family.
 
@@ -211,6 +211,21 @@ EvoCRM list / table rows — deal pipeline, contacts, activity. Reuses `saasDemo
 
 Plans: `core/transitions/staggerCascade.js`. JSX apply: select 2+ row layers (top of selection = first).
 
+### Phase 17 implemented IDs (Micro family)
+
+EvoCRM list / toolbar chrome. Soft, no bounce loop. Reuses P1 UI hover/click numbers only where they already match — does not duplicate `EVT_UI_*_HOVER` / `EVT_UI_*_CLICK`.
+
+- `EVT_MICRO_HOVER` — **Micro Hover**. Hover lift 1–2% (P1 button hover: 102 / −2 px). `EVT_HOVER` aliases this ID.
+- `EVT_MICRO_PRESS` — **Micro Press**. Click squash, then recover (P1 button click: 96 / 98). `EVT_PRESS` aliases this ID.
+- `EVT_MICRO_TOGGLE` — **Micro Toggle**. Toggle thumb settle (16 px). `EVT_TOGGLE` aliases this ID.
+- `EVT_MICRO_CHECK` — **Micro Check**. Checkbox / check settle (88→100). `EVT_CHECKBOX` aliases this ID.
+- `EVT_MICRO_BADGE` — **Micro Badge**. Badge pop, no bounce loop (P1 badge enter 90). `EVT_BADGE_POP` aliases this ID.
+- `EVT_MICRO_COUNTER` — **Micro Counter**. KPI digit change (8 px). `EVT_KPI_DIGIT` aliases this ID.
+- `EVT_MICRO_FOCUS` — **Micro Focus**. Focus ring / field focus (100→101). Not Blur-Focus. `EVT_FOCUS_RING` aliases this ID.
+- `EVT_MICRO_SNAP` — **Micro Snap**. Snap into grid / alignment (8 px). `EVT_GRID_SNAP` aliases this ID.
+
+Plans: `core/transitions/micro.js`. JSX apply: one chrome layer, or outgoing + incoming for Counter.
+
 ### Phase 6 implemented IDs (Mask-Reveal family)
 
 EvoCRM screenshot / card iris. Native AE masks only — expansion + feather, no plugins, no bounce.
@@ -294,6 +309,14 @@ Suggested prompt → ID mapping (later Phase 18):
 | “soft matte”, “feathered reveal” | `EVT_MASK_SOFT_EDGE` |
 | “expand the mask”, “from center” | `EVT_MASK_EXPAND` |
 | “wipe from the edge”, “soft wipe” | `EVT_REVEAL_WIPE_SOFT` |
+| “hover”, “toolbar hover”, “list hover” | `EVT_MICRO_HOVER` |
+| “press”, “click squash” | `EVT_MICRO_PRESS` |
+| “toggle”, “switch” | `EVT_MICRO_TOGGLE` |
+| “checkbox”, “check” | `EVT_MICRO_CHECK` |
+| “badge pop”, “notification badge” | `EVT_MICRO_BADGE` |
+| “KPI digit”, “counter tick” | `EVT_MICRO_COUNTER` |
+| “focus ring”, “field focus” | `EVT_MICRO_FOCUS` |
+| “snap to grid”, “align” | `EVT_MICRO_SNAP` |
 | “quiet”, “calm”, “expensive” | `SMOOTH` + `premium-smooth` or `soft-ui` |
 | “snappy”, “product” | `FAST` + `fast-product` |
 | “glitch / RGB / explode / spin” | **Refuse.** No such IDs. |
@@ -330,6 +353,7 @@ Catalog `sfx: []` (or a short list of hook ids) is metadata for a future sound p
 | `core/transitions/pageScreen.js` | Page-Screen IA push / fade / nav / tab |
 | `core/transitions/staggerCascade.js` | Stagger-Cascade list / card / wave |
 | `core/transitions/maskReveal.js` | Mask-Reveal iris / card crop / soft wipe |
+| `core/transitions/micro.js` | Micro chrome hover / press / toggle / check / badge / counter / focus / snap |
 | `core/transitions/registry.js` | Catalog load / filter |
 | `transitions/Metadata/catalog.json` | Every planned `EVT_*` |
 | `ae/Evotechly Transitions.jsx` | Companion panel |
@@ -343,7 +367,7 @@ Catalog `sfx: []` (or a short list of hook ids) is metadata for a future sound p
 
 Copy `ae/Evotechly Transitions.jsx` into **Scripts/ScriptUI Panels** next to Motion OS Hub. Restart AE. **Window → Evotechly Transitions**.
 
-1. Select outgoing, then incoming. For Stagger-Cascade, select 2+ row layers (top of selection = first).
+1. Select outgoing, then incoming. For Micro, select the chrome layer (Counter: old digit, then new). For Stagger-Cascade, select 2+ row layers (top of selection = first).
 2. Filter the catalog. Pick a duration group and a direction.
 3. **Apply** — implemented IDs write keys + control null + SFX markers. Others alert the phase they belong to.
 
@@ -358,7 +382,7 @@ Do not: RGB split, glitch, lens flares, explosions, 360 spins, bounce loops, com
 
 1. AE is not in CI. Green tests ≠ soaked comps.
 2. JSX is a mirror, not a `require`.
-3. UI Push (15) + UI-Slide (8) + Scale-Zoom (8) + Shared-Element (6) + Overlay-Modal (7) + Page-Screen (6) + Stagger-Cascade (6) + Mask-Reveal (6) implemented. Other catalog rows are metadata.
+3. UI Push (15) + UI-Slide (8) + Scale-Zoom (8) + Shared-Element (6) + Overlay-Modal (7) + Page-Screen (6) + Stagger-Cascade (6) + Mask-Reveal (6) + Micro (8) implemented. Other catalog rows are metadata.
 4. No `.ffx`, `.aep`, or vendored plugins.
 5. No SFX audio.
 6. Target zoom and popover bounds are math; JSX apply reads selected-layer bounds.

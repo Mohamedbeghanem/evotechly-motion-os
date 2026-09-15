@@ -43,4 +43,4 @@ Laptop / phone frames present with Scale-Zoom `POP_START` (90) or a quieter 92. 
 
 ## Not in P2b
 
-AEJuice, Motion Bro, Animation Composer, BentoMotion / Liquid Glass binaries. Mask-Reveal / Blur-Focus / Depth-Parallax / Wipe-Split / Camera-Dolly / Glass-Frost / Hero / Micro kit families. Crossfade.
+AEJuice, Motion Bro, Animation Composer, BentoMotion / Liquid Glass binaries. Blur-Focus / Depth-Parallax / Wipe-Split / Camera-Dolly / Glass-Frost / Hero kit families. Crossfade. Mask-Reveal and Micro are owned.

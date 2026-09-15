@@ -164,23 +164,23 @@ const transitions = [
   row("EVT_HERO_TITLE", "Hero", "SMOOTH", "subtle", false, "Title lockup into UI", 16, false, []),
   row("EVT_HERO_PRODUCT", "Hero", "HERO", "standard", false, "Device / dashboard hero", 16, false, []),
 
-  // 16 Micro
-  row("EVT_MICRO_HOVER", "Micro", "MICRO", "subtle", false, "Hover lift 1–2%", 17, false, []),
-  row("EVT_MICRO_PRESS", "Micro", "MICRO", "subtle", false, "Click squash, then recover", 17, false, []),
-  row("EVT_MICRO_TOGGLE", "Micro", "MICRO", "subtle", false, "Toggle thumb settle", 17, false, []),
-  row("EVT_MICRO_CHECK", "Micro", "MICRO", "subtle", false, "Checkbox / check settle", 17, false, []),
-  row("EVT_MICRO_BADGE", "Micro", "FAST", "subtle", false, "Badge pop, no bounce loop", 17, false, []),
-  row("EVT_MICRO_COUNTER", "Micro", "FAST", "subtle", false, "KPI digit change", 17, false, []),
-  row("EVT_MICRO_FOCUS", "Micro", "MICRO", "subtle", false, "Focus ring / field focus", 17, false, []),
-  row("EVT_MICRO_SNAP", "Micro", "MICRO", "standard", false, "Snap into grid / alignment", 17, false, [])
+  // 16 Micro — Phase 17
+  row("EVT_MICRO_HOVER", "Micro", "MICRO", "subtle", false, "Hover lift 1–2%", 17, true, ["ui-soft-in"], "Micro Hover"),
+  row("EVT_MICRO_PRESS", "Micro", "MICRO", "subtle", false, "Click squash, then recover", 17, true, ["ui-tick-soft"], "Micro Press"),
+  row("EVT_MICRO_TOGGLE", "Micro", "MICRO", "subtle", false, "Toggle thumb settle", 17, true, ["ui-tick-soft"], "Micro Toggle"),
+  row("EVT_MICRO_CHECK", "Micro", "MICRO", "subtle", false, "Checkbox / check settle", 17, true, ["ui-tick-soft"], "Micro Check"),
+  row("EVT_MICRO_BADGE", "Micro", "FAST", "subtle", false, "Badge pop, no bounce loop", 17, true, ["ui-soft-in"], "Micro Badge"),
+  row("EVT_MICRO_COUNTER", "Micro", "FAST", "subtle", false, "KPI digit change", 17, true, ["ui-tick-soft"], "Micro Counter"),
+  row("EVT_MICRO_FOCUS", "Micro", "MICRO", "subtle", false, "Focus ring / field focus", 17, true, ["ui-soft-in"], "Micro Focus"),
+  row("EVT_MICRO_SNAP", "Micro", "MICRO", "standard", false, "Snap into grid / alignment", 17, true, ["ui-tick-soft"], "Micro Snap")
 ];
 
 const out = {
-  version: "phase-6",
+  version: "phase-17",
   style: STYLE,
   aspectRatios: ASPECT,
   generated: "transitions/Metadata/catalog.json",
-  note: "Phase 6 implements the Mask-Reveal family (plus Phase 2–4 UI Push / UI-Slide / Scale-Zoom, Phase 9 Overlay-Modal, Phase 10 Page-Screen, Phase 12 Shared-Element, and Phase 13 Stagger-Cascade). Crossfade stays catalog-only. Other rows are metadata for later phases and AI pairing.",
+  note: "Phase 17 implements the Micro family (plus Phase 2–4 UI Push / UI-Slide / Scale-Zoom, Phase 6 Mask-Reveal, Phase 9 Overlay-Modal, Phase 10 Page-Screen, Phase 12 Shared-Element, and Phase 13 Stagger-Cascade). Crossfade stays catalog-only. Other rows are metadata for later phases and AI pairing.",
   transitions: transitions
 };
 
