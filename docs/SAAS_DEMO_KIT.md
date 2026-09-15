@@ -37,6 +37,7 @@ Install into `Scripts/ScriptUI Panels`, restart After Effects:
 1. `ae/Evotechly Motion OS.jsx` — v0.32 Reliability (do not replace with a stub).
 2. `ae/SaaS Demo Tools.jsx` — this kit. **Window → SaaS Demo Tools / Motion OS Hub** (Home + SaaS + Kit Hub). Does not replace v0.32.
 3. `ae/Caption Style Tools.jsx` — P1c keyword color + in/out. Separate companion. See [CAPTION_STYLE.md](CAPTION_STYLE.md).
+4. `ae/Evotechly Transitions.jsx` — **Window → Evotechly Transitions** (Transition Kit Phase 1). Separate companion. See [TRANSITION_KIT.md](TRANSITION_KIT.md).
 
 **Phase 3 — golden project seed.** There is no binary `.aep`. **File → Scripts → Run Script File…** → `ae/Seed Golden Project.jsx` (or the **Seed Golden Project** button on this panel). Creates `00_HOME`, `ERP_DEMO`, `TALKING_HEAD`, `REEL_9x16` if missing. Idempotent. Editor path: [QUICK_START.md](QUICK_START.md).
 

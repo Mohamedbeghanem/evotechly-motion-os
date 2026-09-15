@@ -1,14 +1,16 @@
 # Install Evotechly Motion OS Ultimate 2.0 in After Effects
 
-Four JSX files. No Node. Ultimate 2.0.0 = v0.32 panel + Motion OS Hub + Seed + Caption Style Tools.
+Four JSX files on Ultimate 2.0.0, plus the Transition Kit companion. No Node.
 
-## Files (install all four)
+## Files
 
 `ae/Evotechly Motion OS.jsx` — main panel (~297 KB, v0.32 Reliability). Do not replace with a stub.
 
 `ae/SaaS Demo Tools.jsx` — **Window → SaaS Demo Tools / Motion OS Hub** (Home seed, SaaS engines including UI presets + P1b text reveal, Kit Hub URLs)
 
 `ae/Caption Style Tools.jsx` — **Window → Caption Style Tools** (keyword color + fade/scale/slideUp/typewriter/blur — P1c)
+
+`ae/Evotechly Transitions.jsx` — **Window → Evotechly Transitions** (Transition Kit Phase 1). Install beside the Hub. See `docs/TRANSITION_KIT.md`.
 
 `ae/Seed Golden Project.jsx` — **File → Scripts → Run Script File…** (or Hub → Home → Seed). Required. Not a Window panel.
 
@@ -19,9 +21,9 @@ Editor path: `docs/QUICK_START.md`.
 ## Install
 
 1. Quit After Effects.
-2. Copy the three ScriptUI files into **Scripts/ScriptUI Panels**: `Evotechly Motion OS.jsx`, `SaaS Demo Tools.jsx`, `Caption Style Tools.jsx`.
+2. Copy the ScriptUI files into **Scripts/ScriptUI Panels**: `Evotechly Motion OS.jsx`, `SaaS Demo Tools.jsx`, `Caption Style Tools.jsx`, `Evotechly Transitions.jsx`.
 3. Copy `Seed Golden Project.jsx` into **Scripts** (and keep a copy next to the Hub if you seed from Home).
-4. Open AE → **Window → Evotechly Motion OS**, **Window → SaaS Demo Tools** (Motion OS Hub), and **Window → Caption Style Tools**.
+4. Open AE → **Window → Evotechly Motion OS**, **Window → SaaS Demo Tools** (Motion OS Hub), **Window → Caption Style Tools**, and **Window → Evotechly Transitions**.
 
 If a panel is missing from Window, the file is in `Scripts` instead of `Scripts/ScriptUI Panels`.
 

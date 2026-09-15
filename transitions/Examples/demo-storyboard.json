@@ -1,0 +1,80 @@
+{
+  "id": "saas-demo-tour",
+  "title": "Dashboard → card → analytics",
+  "style": "premium-saas",
+  "fps": 30,
+  "aspect": "16:9",
+  "alts": ["9:16", "1:1", "4:5"],
+  "phase": 16,
+  "note": "Machine-readable demo sequence. Apply is Phase 16. Phase 1 stores the beats only. No .aep.",
+  "control": "EVOTECHLY_TRANSITION_CONTROL",
+  "beats": [
+    {
+      "index": 0,
+      "atFrame": 0,
+      "from": "Dashboard",
+      "to": "CardDetail",
+      "id": "EVT_UI_PUSH_LEFT",
+      "group": "STANDARD",
+      "ease": "premium-smooth",
+      "direction": "left",
+      "intent": "Open a customer card from the dashboard grid"
+    },
+    {
+      "index": 1,
+      "atFrame": 45,
+      "from": "CardDetail",
+      "to": "Analytics",
+      "id": "EVT_UI_PUSH_DEPTH",
+      "group": "SMOOTH",
+      "ease": "apple-smooth",
+      "direction": "left",
+      "intent": "Lift into the analytics surface without a hard slide"
+    },
+    {
+      "index": 2,
+      "atFrame": 90,
+      "from": "Analytics",
+      "to": "ChartFocus",
+      "id": "EVT_ZOOM_TARGET",
+      "group": "SMOOTH",
+      "ease": "premium-smooth",
+      "targetRequired": true,
+      "target": "RevenueChart",
+      "intent": "Frame the revenue chart — target zoom (Phase 4+)"
+    },
+    {
+      "index": 3,
+      "atFrame": 135,
+      "from": "ChartFocus",
+      "to": "SettingsSheet",
+      "id": "EVT_SHEET_UP",
+      "group": "STANDARD",
+      "ease": "soft-ui",
+      "direction": "up",
+      "intent": "Present a settings sheet over analytics"
+    },
+    {
+      "index": 4,
+      "atFrame": 175,
+      "from": "SettingsSheet",
+      "to": "Analytics",
+      "id": "EVT_SHEET_DOWN",
+      "group": "FAST",
+      "ease": "fast-product",
+      "direction": "down",
+      "intent": "Dismiss the sheet"
+    },
+    {
+      "index": 5,
+      "atFrame": 200,
+      "from": "Analytics",
+      "to": "Dashboard",
+      "id": "EVT_UI_PUSH_RIGHT",
+      "group": "STANDARD",
+      "ease": "premium-smooth",
+      "direction": "right",
+      "intent": "Back to the dashboard"
+    }
+  ]
+}
