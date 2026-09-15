@@ -2,19 +2,19 @@
 
 **Product tag:** Ultimate **v2.0.0** on current `main`.
 
-## Transition Kit — Phase 0–2
+## Transition Kit — Phase 0–3
 
 Architecture + core engine on top of Ultimate 2.0.0. Does not stub the 297 KB v0.32 panel. Does not bump the 2.0.0 tag.
 
-- Docs: `docs/TRANSITION_KIT.md`, `docs/TRANSITION_PHASES.md` (phases 0–2 **done**)
-- Engine: `core/transitions/` — easing, timing, target zoom, control null, `applyTransitionPlan`, `uiPush.js`
+- Docs: `docs/TRANSITION_KIT.md`, `docs/TRANSITION_PHASES.md` (phases 0–3 **done**)
+- Engine: `core/transitions/` — easing, timing, target zoom, control null, `applyTransitionPlan`, `uiPush.js`, `uiSlide.js`
 - Catalog: `transitions/Metadata/catalog.json` — unique `EVT_*` IDs, families A–16
-- Implemented plans: full UI Push family (15 IDs) — Left/Right/Up/Down, + Scale, + Depth, Soft, Snap, Overshoot, Parallax, Fade, Cover, **Panel Push**, **Dashboard Push**, **Split Panel Push**
+- Implemented plans: full UI Push family (15 IDs) + **UI-Slide card family (8 IDs)** — `EVT_SLIDE_CARD_LEFT` / `CARD_RIGHT` / `PANEL_IN` / `PANEL_OUT` / `DRAWER` / `SHEET_UP` / `STACK` / `PEEK` (card-width travel, not full-frame)
 - Companion: `ae/Evotechly Transitions.jsx` — Window → Evotechly Transitions (install beside Hub)
 - Tests: `tests/transitions-engine.test.js`
 - Demo sequence (data only): `transitions/Examples/demo-storyboard.json` (apply in Phase 16)
 
-**Limitations:** AE cannot run in CI. JSX mirrors Node numbers. Non–UI-Push catalog IDs are metadata. No `.ffx` / `.aep` / SFX audio / vendor plugins.
+**Limitations:** AE cannot run in CI. JSX mirrors Node numbers. Non–UI-Push / non–UI-Slide catalog IDs are metadata. No `.ffx` / `.aep` / SFX audio / vendor plugins. Charts / device plates are P2b.
 
 ## SaaS Assets Pack — P1 (native generators)
 

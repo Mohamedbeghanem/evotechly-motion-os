@@ -55,7 +55,11 @@ P1 KEEP ID rows (all **OWNED**, implemented):
 | Verdict | **KEEP** |
 | Score | **96** (20+25+15+15+10+10+1) — vendor risk n/a, tiny “we must not drift JSX” residual |
 | Downloaded? | N/A — already in repo (`core/transitions`, catalog, `ae/Evotechly Transitions.jsx`) |
-| Notes | `sourceType: native`. Full UI Push family implemented (Phase 2). Other families catalog-only. |
+| Notes | `sourceType: native`, `commercialUse: true`. Full UI Push family (Phase 2) + **UI-Slide card family (Phase 3)**. Other families catalog-only. |
+
+Phase 3 KEEP ID rows (all **OWNED**, implemented):
+
+- Slide: `EVT_SLIDE_CARD_LEFT`, `EVT_SLIDE_CARD_RIGHT`, `EVT_SLIDE_PANEL_IN`, `EVT_SLIDE_PANEL_OUT`, `EVT_SLIDE_DRAWER`, `EVT_SLIDE_SHEET_UP`, `EVT_SLIDE_STACK`, `EVT_SLIDE_PEEK`
 
 ### Lucide curated SVGs
 
@@ -217,7 +221,7 @@ P1 KEEP ID rows (all **OWNED**, implemented):
 | ID | Verdict | Score | On disk in P0? |
 |---|---|---|---|
 | P1 native text / UI / cursor | KEEP | 95 | Yes (`core/assets` + registry) |
-| Transition Kit native | KEEP | 96 | Yes (Motion OS) |
+| Transition Kit native (Push + Slide) | KEEP | 96 | Yes (Motion OS) |
 | Lucide curated | KEEP | 92 | Yes (`ThirdParty/lucide`) |
 | Phosphor / Heroicons | REBUILD | 88 | No |
 | Mixkit Free SFX | KEEP local / REJECT zip | 74 | No |

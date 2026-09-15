@@ -2,7 +2,7 @@
 
 Premium SaaS screen-to-screen motion. Apple / Linear / Stripe / Raycast taste. Not a glitch pack.
 
-**Phase 0–2** ships this document, the folder scaffold, a Node-testable engine, catalog metadata, and a companion ScriptUI panel. The full UI Push family produces complete keyframe plans. Everything else is catalogued for later phases and AI pairing.
+**Phase 0–3** ships this document, the folder scaffold, a Node-testable engine, catalog metadata, and a companion ScriptUI panel. The full UI Push family and the UI-Slide card family produce complete keyframe plans. Everything else is catalogued for later phases and AI pairing.
 
 This kit does **not** replace the v0.32 Motion tab transitions (shot-level Clean Push / Whip / Zoom Match). Those stay in `ae/Evotechly Motion OS.jsx` (~297 KB — never stub). This kit is UI-to-UI: dashboard → card → analytics.
 
@@ -23,7 +23,7 @@ This kit does **not** replace the v0.32 Motion tab transitions (shot-level Clean
 
 **CI cannot open After Effects.** Plans are deterministic JSON. Visual taste is an editor soak, same as the rest of Motion OS.
 
-**ExtendScript cannot `require` Node.** `core/transitions/*.js` is the source of truth for numbers and tests. `ae/Evotechly Transitions.jsx` mirrors the UI Push constants and apply math. If they drift, fix Node first, then the JSX.
+**ExtendScript cannot `require` Node.** `core/transitions/*.js` is the source of truth for numbers and tests. `ae/Evotechly Transitions.jsx` mirrors the UI Push and UI-Slide constants and apply math. If they drift, fix Node first, then the JSX.
 
 **Progress slider** is reserved. Phase 1 keys are time-based. Driving the whole transition from `Progress` (0–100) is an Expressions-folder job in a later phase.
 
@@ -110,7 +110,7 @@ Folder names under `transitions/`. Letters are A=01 … P=16.
 | # | Family | Folder | Phase | Phase 1 |
 |---|---|---|---|---|
 | A / 01 | UI-Push | `01_UI-Push/` | 1–2 | **15 IDs implemented (Phase 2)** |
-| B / 02 | UI-Slide | `02_UI-Slide/` | 3 | catalog |
+| B / 02 | UI-Slide | `02_UI-Slide/` | 3 | **8 IDs implemented (Phase 3)** |
 | C / 03 | Scale-Zoom | `03_Scale-Zoom/` | 4 | catalog |
 | D / 04 | Crossfade | `04_Crossfade/` | 5 | catalog |
 | E / 05 | Mask-Reveal | `05_Mask-Reveal/` | 6 | catalog |
@@ -127,6 +127,20 @@ Folder names under `transitions/`. Letters are A=01 … P=16.
 | P / 16 | Micro | `16_Micro/` | 17 | catalog |
 
 IDs live in `transitions/Metadata/catalog.json`. Each README stub lists the planned IDs for that family.
+
+### Phase 3 implemented IDs (UI-Slide card family)
+
+Card-width travel (0.22–0.42 of the axis), not a full-frame push. EvoCRM: dashboard → card → detail.
+
+- `EVT_SLIDE_CARD_LEFT` / `RIGHT` — **Slide Card Left/Right**. Single card travels a card-width; incoming enters from the opposite edge.
+- `EVT_SLIDE_PANEL_IN` — **Slide Panel In**. Inspector from the trailing edge; content stays and dims.
+- `EVT_SLIDE_PANEL_OUT` — **Slide Panel Out**. Panel dismisses; content recovers.
+- `EVT_SLIDE_DRAWER` — **Slide Drawer**. Nav drawer from the leading edge.
+- `EVT_SLIDE_SHEET_UP` — **Slide Sheet Up**. Bottom sheet present; dashboard stays.
+- `EVT_SLIDE_STACK` — **Slide Stack**. Outgoing recedes into a stack; incoming peeks then commits.
+- `EVT_SLIDE_PEEK` — **Slide Peek**. Partial reveal, then hold (incoming never reaches rest).
+
+Plans: `core/transitions/uiSlide.js`. `EVT_CARD_SLIDE_LEFT` aliases `EVT_SLIDE_CARD_LEFT`.
 
 ### Phase 1–2 implemented IDs (UI Push family)
 
@@ -155,10 +169,16 @@ Suggested prompt → ID mapping (later Phase 18):
 |---|---|
 | “next screen”, “forward”, “push left” | `EVT_UI_PUSH_LEFT` |
 | “back”, “previous” | `EVT_UI_PUSH_RIGHT` or `EVT_NAV_BACK` |
-| “side panel”, “inspector”, “panel push” | `EVT_UI_PUSH_PANEL` |
+| “open card”, “card from the right” | `EVT_SLIDE_CARD_LEFT` |
+| “side panel”, “inspector”, “panel in” | `EVT_SLIDE_PANEL_IN` |
+| “panel push” | `EVT_UI_PUSH_PANEL` |
+| “drawer”, “nav drawer” | `EVT_SLIDE_DRAWER` |
+| “bottom sheet” | `EVT_SLIDE_SHEET_UP` |
+| “card stack”, “peek then commit” | `EVT_SLIDE_STACK` |
+| “peek”, “partial card” | `EVT_SLIDE_PEEK` |
 | “dashboard push”, “tour the dashboard” | `EVT_UI_PUSH_DASHBOARD` |
 | “split view”, “master detail” | `EVT_UI_PUSH_SPLIT` |
-| “open card”, “zoom this widget” | `EVT_ZOOM_TARGET` (needs target bounds) |
+| “zoom this widget” | `EVT_ZOOM_TARGET` (needs target bounds) |
 | “modal”, “dialog” | `EVT_MODAL_IN` |
 | “quiet”, “calm”, “expensive” | `SMOOTH` + `premium-smooth` or `soft-ui` |
 | “snappy”, “product” | `FAST` + `fast-product` |
@@ -189,6 +209,7 @@ Catalog `sfx: []` (or a short list of hook ids) is metadata for a future sound p
 | `core/transitions/control.js` | Control-null plan |
 | `core/transitions/engine.js` | `applyTransitionPlan` |
 | `core/transitions/uiPush.js` | UI Push family keyframe plans |
+| `core/transitions/uiSlide.js` | UI-Slide card family keyframe plans |
 | `core/transitions/registry.js` | Catalog load / filter |
 | `transitions/Metadata/catalog.json` | Every planned `EVT_*` |
 | `ae/Evotechly Transitions.jsx` | Companion panel |
@@ -217,10 +238,10 @@ Do not: RGB split, glitch, lens flares, explosions, 360 spins, bounce loops, com
 
 1. AE is not in CI. Green tests ≠ soaked comps.
 2. JSX is a mirror, not a `require`.
-3. UI Push family implemented (15 IDs). Other catalog rows are metadata.
+3. UI Push (15) + UI-Slide card family (8) implemented. Other catalog rows are metadata.
 4. No `.ffx`, `.aep`, or vendored plugins.
 5. No SFX audio.
-6. Target zoom is math; target-required IDs are not applied in Phase 2.
+6. Target zoom is math; target-required IDs are not applied in Phase 3.
 7. Shared-element morph will be bounds, not True Comp or mesh.
 8. Glass is native frost, not refraction.
 9. Does not rewrite or stub `ae/Evotechly Motion OS.jsx`.

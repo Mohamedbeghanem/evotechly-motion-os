@@ -1,10 +1,10 @@
 #target aftereffects
 /*
-  Evotechly Transitions — companion ScriptUI (Transition Kit Phase 2 + SaaS Assets P1).
+  Evotechly Transitions — companion ScriptUI (Transition Kit Phase 3 + SaaS Assets P1).
   Window → Evotechly Transitions.
   Tabs: Transitions / Text / UI / Cursor.
   Numbers mirrored from core/transitions/*.js and core/assets/*.js — Node is source of truth.
-  ExtendScript cannot require Node. Apply the full UI Push family and P1 native assets here.
+  ExtendScript cannot require Node. Apply UI Push + UI-Slide card family and P1 native assets here.
   Native AE only. No .ffx / .aep / vendor plugins.
   Does not replace Evotechly Motion OS v0.32 (~297 KB).
 */
@@ -33,7 +33,15 @@
     EVT_UI_PUSH_COVER: 1,
     EVT_UI_PUSH_PANEL: 1,
     EVT_UI_PUSH_DASHBOARD: 1,
-    EVT_UI_PUSH_SPLIT: 1
+    EVT_UI_PUSH_SPLIT: 1,
+    EVT_SLIDE_CARD_LEFT: 1,
+    EVT_SLIDE_CARD_RIGHT: 1,
+    EVT_SLIDE_PANEL_IN: 1,
+    EVT_SLIDE_PANEL_OUT: 1,
+    EVT_SLIDE_DRAWER: 1,
+    EVT_SLIDE_SHEET_UP: 1,
+    EVT_SLIDE_STACK: 1,
+    EVT_SLIDE_PEEK: 1
   };
   /* influence pairs match core/transitions/easing.js + polish.js */
   var EASE = {
@@ -63,14 +71,14 @@
     { id: "EVT_UI_PUSH_PANEL", name: "Panel Push", category: "UI-Push", duration: "STANDARD", intensity: "standard", implemented: true, phase: 2, bestUse: "Inspector / side panel covers content from the trailing edge" },
     { id: "EVT_UI_PUSH_DASHBOARD", name: "Dashboard Push", category: "UI-Push", duration: "SMOOTH", intensity: "standard", implemented: true, phase: 2, bestUse: "Dashboard → next view with a quiet depth push" },
     { id: "EVT_UI_PUSH_SPLIT", name: "Split Panel Push", category: "UI-Push", duration: "STANDARD", intensity: "standard", implemented: true, phase: 2, bestUse: "Master–detail split: panes part, incoming takes the open half" },
-    { id: "EVT_SLIDE_CARD_LEFT", category: "UI-Slide", duration: "FAST", intensity: "subtle", implemented: false, phase: 3, bestUse: "Single card enters from right" },
-    { id: "EVT_SLIDE_CARD_RIGHT", category: "UI-Slide", duration: "FAST", intensity: "subtle", implemented: false, phase: 3, bestUse: "Single card enters from left" },
-    { id: "EVT_SLIDE_PANEL_IN", category: "UI-Slide", duration: "STANDARD", intensity: "standard", implemented: false, phase: 3, bestUse: "Side panel / inspector in" },
-    { id: "EVT_SLIDE_PANEL_OUT", category: "UI-Slide", duration: "FAST", intensity: "standard", implemented: false, phase: 3, bestUse: "Side panel dismiss" },
-    { id: "EVT_SLIDE_DRAWER", category: "UI-Slide", duration: "STANDARD", intensity: "standard", implemented: false, phase: 3, bestUse: "Nav drawer from leading edge" },
-    { id: "EVT_SLIDE_SHEET_UP", category: "UI-Slide", duration: "STANDARD", intensity: "standard", implemented: false, phase: 3, bestUse: "Bottom sheet present" },
-    { id: "EVT_SLIDE_STACK", category: "UI-Slide", duration: "SMOOTH", intensity: "subtle", implemented: false, phase: 3, bestUse: "Card stack peek + commit" },
-    { id: "EVT_SLIDE_PEEK", category: "UI-Slide", duration: "MICRO", intensity: "subtle", implemented: false, phase: 3, bestUse: "Partial reveal, then hold" },
+    { id: "EVT_SLIDE_CARD_LEFT", name: "Slide Card Left", category: "UI-Slide", duration: "FAST", intensity: "subtle", implemented: true, phase: 3, bestUse: "Single card enters from right" },
+    { id: "EVT_SLIDE_CARD_RIGHT", name: "Slide Card Right", category: "UI-Slide", duration: "FAST", intensity: "subtle", implemented: true, phase: 3, bestUse: "Single card enters from left" },
+    { id: "EVT_SLIDE_PANEL_IN", name: "Slide Panel In", category: "UI-Slide", duration: "STANDARD", intensity: "standard", implemented: true, phase: 3, bestUse: "Side panel / inspector in" },
+    { id: "EVT_SLIDE_PANEL_OUT", name: "Slide Panel Out", category: "UI-Slide", duration: "FAST", intensity: "standard", implemented: true, phase: 3, bestUse: "Side panel dismiss" },
+    { id: "EVT_SLIDE_DRAWER", name: "Slide Drawer", category: "UI-Slide", duration: "STANDARD", intensity: "standard", implemented: true, phase: 3, bestUse: "Nav drawer from leading edge" },
+    { id: "EVT_SLIDE_SHEET_UP", name: "Slide Sheet Up", category: "UI-Slide", duration: "STANDARD", intensity: "standard", implemented: true, phase: 3, bestUse: "Bottom sheet present" },
+    { id: "EVT_SLIDE_STACK", name: "Slide Stack", category: "UI-Slide", duration: "SMOOTH", intensity: "subtle", implemented: true, phase: 3, bestUse: "Card stack peek + commit" },
+    { id: "EVT_SLIDE_PEEK", name: "Slide Peek", category: "UI-Slide", duration: "MICRO", intensity: "subtle", implemented: true, phase: 3, bestUse: "Partial reveal, then hold" },
     { id: "EVT_ZOOM_IN", category: "Scale-Zoom", duration: "STANDARD", intensity: "standard", implemented: false, phase: 4, bestUse: "Plate scales up into frame" },
     { id: "EVT_ZOOM_OUT", category: "Scale-Zoom", duration: "STANDARD", intensity: "standard", implemented: false, phase: 4, bestUse: "Pull back to context" },
     { id: "EVT_ZOOM_TARGET", category: "Scale-Zoom", duration: "SMOOTH", intensity: "standard", implemented: false, phase: 4, bestUse: "Frame a selected region (target required)" },
@@ -1090,6 +1098,161 @@
       phases: ph
     };
   }
+  function planCard(dir, frames, fps, comp) {
+    var ph = phaseFrames(frames);
+    var distance = travelDistance(dir, comp, 100, 100) * 0.28;
+    var anti = anticipatePx(distance);
+    var over = overshootPx(distance, 4);
+    var a = axisOf(dir);
+    return {
+      outgoing: [
+        key(ph.start, fps, 0, 0, 100, 100, 0, "anticipate"),
+        key(ph.anticipate, fps, -a.x * anti, -a.y * anti, 100.2, 100, 0, "action"),
+        key(ph.mid, fps, a.x * distance * 0.5, a.y * distance * 0.5, 99.4, 48, 1, "crossover"),
+        key(ph.end, fps, a.x * distance, a.y * distance, 98.6, 0, 3, "done")
+      ],
+      incoming: [
+        key(ph.start, fps, -a.x * distance, -a.y * distance, 101.2, 0, 3, "anticipate"),
+        key(ph.mid, fps, -a.x * distance * 0.18, -a.y * distance * 0.18, 100.4, 82, 1, "crossover"),
+        key(ph.settle, fps, a.x * over, a.y * over, 100.2, 100, 0, "settle"),
+        key(ph.end, fps, 0, 0, 100, 100, 0, "done")
+      ],
+      phases: ph
+    };
+  }
+  function planPanelIn(dir, frames, fps, comp) {
+    var ph = phaseFrames(frames);
+    var distance = travelDistance(dir, comp, 100, 100) * 0.32;
+    var anti = anticipatePx(distance);
+    var over = overshootPx(distance, 4);
+    var from = axisOf(dir);
+    return {
+      outgoing: [
+        key(ph.start, fps, 0, 0, 100, 100, 0, "anticipate"),
+        key(ph.anticipate, fps, from.x * anti * 0.35, from.y * anti * 0.35, 99.8, 100, 0, "action"),
+        key(ph.mid, fps, -from.x * distance * 0.12, -from.y * distance * 0.12, 98.8, 78, 1, "crossover"),
+        key(ph.end, fps, -from.x * distance * 0.18, -from.y * distance * 0.18, 98.4, 68, 2, "done")
+      ],
+      incoming: [
+        key(ph.start, fps, from.x * distance, from.y * distance, 100, 100, 0, "anticipate"),
+        key(ph.mid, fps, from.x * distance * 0.16, from.y * distance * 0.16, 100, 100, 0, "crossover"),
+        key(ph.settle, fps, -from.x * over, -from.y * over, 100.1, 100, 0, "settle"),
+        key(ph.end, fps, 0, 0, 100, 100, 0, "done")
+      ],
+      phases: ph
+    };
+  }
+  function planPanelOut(dir, frames, fps, comp) {
+    var ph = phaseFrames(frames);
+    var distance = travelDistance(dir, comp, 100, 100) * 0.32;
+    var anti = anticipatePx(distance);
+    var over = overshootPx(distance, 3);
+    var from = axisOf(dir);
+    return {
+      outgoing: [
+        key(ph.start, fps, 0, 0, 100, 100, 0, "anticipate"),
+        key(ph.anticipate, fps, -from.x * anti * 0.4, -from.y * anti * 0.4, 100.1, 100, 0, "action"),
+        key(ph.mid, fps, from.x * distance * 0.45, from.y * distance * 0.45, 99.6, 52, 1, "crossover"),
+        key(ph.end, fps, from.x * distance, from.y * distance, 99, 0, 2, "done")
+      ],
+      incoming: [
+        key(ph.start, fps, -from.x * distance * 0.18, -from.y * distance * 0.18, 98.4, 68, 2, "anticipate"),
+        key(ph.mid, fps, -from.x * distance * 0.06, -from.y * distance * 0.06, 99.6, 88, 0, "crossover"),
+        key(ph.settle, fps, from.x * over * 0.4, from.y * over * 0.4, 100.1, 100, 0, "settle"),
+        key(ph.end, fps, 0, 0, 100, 100, 0, "done")
+      ],
+      phases: ph
+    };
+  }
+  function planDrawer(dir, frames, fps, comp) {
+    var ph = phaseFrames(frames);
+    var distance = travelDistance(dir, comp, 100, 100) * 0.22;
+    var anti = anticipatePx(distance);
+    var over = overshootPx(distance, 4);
+    var from = axisOf(dir);
+    return {
+      outgoing: [
+        key(ph.start, fps, 0, 0, 100, 100, 0, "anticipate"),
+        key(ph.anticipate, fps, from.x * anti * 0.3, from.y * anti * 0.3, 99.8, 100, 0, "action"),
+        key(ph.mid, fps, -from.x * distance * 0.1, -from.y * distance * 0.1, 99.2, 80, 1, "crossover"),
+        key(ph.end, fps, -from.x * distance * 0.14, -from.y * distance * 0.14, 98.8, 72, 2, "done")
+      ],
+      incoming: [
+        key(ph.start, fps, from.x * distance, from.y * distance, 100, 100, 0, "anticipate"),
+        key(ph.mid, fps, from.x * distance * 0.14, from.y * distance * 0.14, 100, 100, 0, "crossover"),
+        key(ph.settle, fps, -from.x * over, -from.y * over, 100.1, 100, 0, "settle"),
+        key(ph.end, fps, 0, 0, 100, 100, 0, "done")
+      ],
+      phases: ph
+    };
+  }
+  function planSheetUp(dir, frames, fps, comp) {
+    var ph = phaseFrames(frames);
+    var distance = travelDistance(dir, comp, 100, 100) * 0.42;
+    var anti = anticipatePx(distance);
+    var over = overshootPx(distance, 5);
+    var a = axisOf(dir);
+    return {
+      outgoing: [
+        key(ph.start, fps, 0, 0, 100, 100, 0, "anticipate"),
+        key(ph.anticipate, fps, 0, anti * 0.25, 99.8, 100, 0, "action"),
+        key(ph.mid, fps, 0, -4, 98.6, 76, 2, "crossover"),
+        key(ph.end, fps, 0, -8, 97.8, 64, 3, "done")
+      ],
+      incoming: [
+        key(ph.start, fps, -a.x * distance, -a.y * distance, 100, 100, 0, "anticipate"),
+        key(ph.mid, fps, -a.x * distance * 0.16, -a.y * distance * 0.16, 100, 100, 0, "crossover"),
+        key(ph.settle, fps, a.x * over, a.y * over, 100.2, 100, 0, "settle"),
+        key(ph.end, fps, 0, 0, 100, 100, 0, "done")
+      ],
+      phases: ph
+    };
+  }
+  function planStack(dir, frames, fps, comp) {
+    var ph = phaseFrames(frames);
+    var distance = travelDistance(dir, comp, 100, 100) * 0.24;
+    var anti = anticipatePx(distance);
+    var over = overshootPx(distance, 6);
+    var a = axisOf(dir);
+    return {
+      outgoing: [
+        key(ph.start, fps, 0, 0, 100, 100, 0, "anticipate"),
+        key(ph.anticipate, fps, -a.x * anti * 0.6, -a.y * anti * 0.6 + 2, 99.2, 100, 0, "action"),
+        key(ph.mid, fps, a.x * distance * 0.22, a.y * distance * 0.22 + 6, 96, 78, 2, "crossover"),
+        key(ph.end, fps, a.x * distance * 0.28, a.y * distance * 0.28 + 10, 92, 58, 3, "done")
+      ],
+      incoming: [
+        key(ph.start, fps, -a.x * distance, -a.y * distance, 96, 0, 3, "anticipate"),
+        key(ph.mid, fps, -a.x * distance * 0.2, -a.y * distance * 0.2, 99, 86, 1, "crossover"),
+        key(ph.settle, fps, a.x * over, a.y * over, 100.6, 100, 0, "settle"),
+        key(ph.end, fps, 0, 0, 100, 100, 0, "done")
+      ],
+      phases: ph
+    };
+  }
+  function planPeek(dir, frames, fps, comp) {
+    var ph = phaseFrames(frames);
+    var distance = travelDistance(dir, comp, 100, 100) * 0.28;
+    var hold = distance * 0.36;
+    var anti = anticipatePx(distance);
+    var over = overshootPx(hold, 2);
+    var a = axisOf(dir);
+    return {
+      outgoing: [
+        key(ph.start, fps, 0, 0, 100, 100, 0, "anticipate"),
+        key(ph.anticipate, fps, -a.x * anti * 0.4, -a.y * anti * 0.4, 99.8, 100, 0, "action"),
+        key(ph.mid, fps, a.x * distance * 0.05, a.y * distance * 0.05, 99.7, 96, 0, "crossover"),
+        key(ph.end, fps, a.x * distance * 0.08, a.y * distance * 0.08, 99.6, 92, 1, "done")
+      ],
+      incoming: [
+        key(ph.start, fps, -a.x * distance, -a.y * distance, 100.4, 0, 2, "anticipate"),
+        key(ph.mid, fps, -a.x * distance * 0.55, -a.y * distance * 0.55, 100.2, 78, 1, "crossover"),
+        key(ph.settle, fps, -a.x * hold - a.x * over * 0.3, -a.y * hold - a.y * over * 0.3, 100.1, 100, 0, "settle"),
+        key(ph.end, fps, -a.x * hold, -a.y * hold, 100, 100, 0, "done")
+      ],
+      phases: ph
+    };
+  }
   function planForId(id, dir, frames, fps, comp) {
     if (id === "EVT_UI_PUSH_SCALE") return planScale(frames, fps);
     if (id === "EVT_UI_PUSH_DEPTH") return planDepth(frames, fps);
@@ -1102,6 +1265,13 @@
     if (id === "EVT_UI_PUSH_PANEL") return planPanel(dir, frames, fps, comp);
     if (id === "EVT_UI_PUSH_DASHBOARD") return planDashboard(dir, frames, fps, comp);
     if (id === "EVT_UI_PUSH_SPLIT") return planSplit(dir, frames, fps, comp);
+    if (id === "EVT_SLIDE_CARD_LEFT" || id === "EVT_SLIDE_CARD_RIGHT") return planCard(dir, frames, fps, comp);
+    if (id === "EVT_SLIDE_PANEL_IN") return planPanelIn(dir, frames, fps, comp);
+    if (id === "EVT_SLIDE_PANEL_OUT") return planPanelOut(dir, frames, fps, comp);
+    if (id === "EVT_SLIDE_DRAWER") return planDrawer(dir, frames, fps, comp);
+    if (id === "EVT_SLIDE_SHEET_UP") return planSheetUp(dir, frames, fps, comp);
+    if (id === "EVT_SLIDE_STACK") return planStack(dir, frames, fps, comp);
+    if (id === "EVT_SLIDE_PEEK") return planPeek(dir, frames, fps, comp);
     return planDirectional(dir, frames, fps, comp);
   }
   function defaultDirForId(id) {
@@ -1109,6 +1279,9 @@
     if (id === "EVT_UI_PUSH_UP") return "up";
     if (id === "EVT_UI_PUSH_DOWN") return "down";
     if (id === "EVT_UI_PUSH_PANEL") return "right";
+    if (id === "EVT_SLIDE_CARD_RIGHT") return "right";
+    if (id === "EVT_SLIDE_PANEL_IN" || id === "EVT_SLIDE_PANEL_OUT") return "right";
+    if (id === "EVT_SLIDE_SHEET_UP") return "up";
     return "left";
   }
   function remapId(id, dir) {
@@ -1117,6 +1290,10 @@
       if (dir === "right") return "EVT_UI_PUSH_RIGHT";
       if (dir === "up") return "EVT_UI_PUSH_UP";
       if (dir === "down") return "EVT_UI_PUSH_DOWN";
+    }
+    if (id === "EVT_SLIDE_CARD_LEFT" || id === "EVT_SLIDE_CARD_RIGHT") {
+      if (dir === "right") return "EVT_SLIDE_CARD_RIGHT";
+      if (dir === "left") return "EVT_SLIDE_CARD_LEFT";
     }
     return id;
   }
@@ -1137,7 +1314,7 @@
     id = remapId(row.id, dir);
     row = findCatalog(id) || row;
     if (!row.implemented) {
-      alert(row.id + " is catalogued for Phase " + row.phase + ".\nPhase 2 applies the full UI Push family.\nSee docs/TRANSITION_PHASES.md.");
+      alert(row.id + " is catalogued for Phase " + row.phase + ".\nPhase 3 applies the UI-Slide card family (plus UI Push).\nSee docs/TRANSITION_PHASES.md.");
       return;
     }
     if (sel.length < 2) { alert("Select outgoing, then incoming (two layers)."); return; }
@@ -1194,7 +1371,7 @@
     win.spacing = 8;
     win.margins = 10;
     win.add("statictext", undefined, "EVOTECHLY  ·  Transitions");
-    intro = win.add("statictext", undefined, "Phase 2 UI Push + P1 native Text / UI / Cursor. Catalog is searchable. Companion to Motion OS — does not replace v0.32. Node is source of truth; this panel mirrors apply numbers.", { multiline: true });
+    intro = win.add("statictext", undefined, "Phase 3 UI-Slide (card family) + Phase 2 UI Push + P1 native Text / UI / Cursor. Catalog is searchable. Companion to Motion OS — does not replace v0.32. Node is source of truth; this panel mirrors apply numbers.", { multiline: true });
     intro.characters = 46;
 
     g = win.add("group");
@@ -1254,7 +1431,7 @@
     note = win.add("statictext", undefined, "Transitions: select outgoing, then incoming. Text / UI / Cursor: select the target layer (Swap needs two). ● = apply. Native only — no vendor packs.", { multiline: true });
     note.characters = 46;
 
-    foot = win.add("statictext", undefined, "Install: Scripts/ScriptUI Panels next to Motion OS Hub. Docs: TRANSITION_KIT.md · P1_NATIVE.md.", { multiline: true });
+    foot = win.add("statictext", undefined, "Install: Scripts/ScriptUI Panels next to Motion OS Hub. Docs: TRANSITION_KIT.md · TRANSITION_PHASES.md.", { multiline: true });
     foot.characters = 46;
 
     function onFilter() { refreshList(list, searchField, catList); }

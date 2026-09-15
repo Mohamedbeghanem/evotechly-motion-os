@@ -1,5 +1,5 @@
 {
-  "version": "phase-2",
+  "version": "phase-3",
   "style": "premium-saas",
   "aspectRatios": [
     "16:9",
@@ -8,7 +8,7 @@
     "4:5"
   ],
   "generated": "transitions/Metadata/catalog.json",
-  "note": "Phase 2 implements the full UI Push family. Other rows are metadata for later phases and AI pairing.",
+  "note": "Phase 3 implements the UI-Slide card family (plus Phase 2 UI Push). Other rows are metadata for later phases and AI pairing.",
   "transitions": [
     {
       "id": "EVT_UI_PUSH_LEFT",
@@ -339,9 +339,12 @@
         "1:1",
         "4:5"
       ],
-      "sfx": [],
+      "sfx": [
+        "ui-whoosh-soft"
+      ],
       "phase": 3,
-      "implemented": false
+      "implemented": true,
+      "name": "Slide Card Left"
     },
     {
       "id": "EVT_SLIDE_CARD_RIGHT",
@@ -357,9 +360,12 @@
         "1:1",
         "4:5"
       ],
-      "sfx": [],
+      "sfx": [
+        "ui-whoosh-soft"
+      ],
       "phase": 3,
-      "implemented": false
+      "implemented": true,
+      "name": "Slide Card Right"
     },
     {
       "id": "EVT_SLIDE_PANEL_IN",
@@ -375,9 +381,12 @@
         "1:1",
         "4:5"
       ],
-      "sfx": [],
+      "sfx": [
+        "ui-whoosh-soft"
+      ],
       "phase": 3,
-      "implemented": false
+      "implemented": true,
+      "name": "Slide Panel In"
     },
     {
       "id": "EVT_SLIDE_PANEL_OUT",
@@ -393,9 +402,12 @@
         "1:1",
         "4:5"
       ],
-      "sfx": [],
+      "sfx": [
+        "ui-whoosh-soft"
+      ],
       "phase": 3,
-      "implemented": false
+      "implemented": true,
+      "name": "Slide Panel Out"
     },
     {
       "id": "EVT_SLIDE_DRAWER",
@@ -411,9 +423,12 @@
         "1:1",
         "4:5"
       ],
-      "sfx": [],
+      "sfx": [
+        "ui-whoosh-soft"
+      ],
       "phase": 3,
-      "implemented": false
+      "implemented": true,
+      "name": "Slide Drawer"
     },
     {
       "id": "EVT_SLIDE_SHEET_UP",
@@ -429,9 +444,12 @@
         "1:1",
         "4:5"
       ],
-      "sfx": [],
+      "sfx": [
+        "ui-whoosh-soft"
+      ],
       "phase": 3,
-      "implemented": false
+      "implemented": true,
+      "name": "Slide Sheet Up"
     },
     {
       "id": "EVT_SLIDE_STACK",
@@ -447,9 +465,12 @@
         "1:1",
         "4:5"
       ],
-      "sfx": [],
+      "sfx": [
+        "ui-cross"
+      ],
       "phase": 3,
-      "implemented": false
+      "implemented": true,
+      "name": "Slide Stack"
     },
     {
       "id": "EVT_SLIDE_PEEK",
@@ -465,9 +486,12 @@
         "1:1",
         "4:5"
       ],
-      "sfx": [],
+      "sfx": [
+        "ui-soft-in"
+      ],
       "phase": 3,
-      "implemented": false
+      "implemented": true,
+      "name": "Slide Peek"
     },
     {
       "id": "EVT_ZOOM_IN",

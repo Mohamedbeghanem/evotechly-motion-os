@@ -7,6 +7,17 @@ const ROOT = path.join(__dirname, "..");
 const REGISTRY = path.join(ROOT, "Evotechly-SaaS-Assets", "Metadata", "asset-registry.json");
 const LUCIDE_SVG = path.join(ROOT, "Evotechly-SaaS-Assets", "ThirdParty", "lucide", "svg");
 
+const NATIVE_SLIDE = [
+  { id: "EVT_SLIDE_CARD_LEFT", name: "Slide Card Left", implemented: true, phase: 3, bestUse: "Single card enters from right" },
+  { id: "EVT_SLIDE_CARD_RIGHT", name: "Slide Card Right", implemented: true, phase: 3, bestUse: "Single card enters from left" },
+  { id: "EVT_SLIDE_PANEL_IN", name: "Slide Panel In", implemented: true, phase: 3, bestUse: "Side panel / inspector in" },
+  { id: "EVT_SLIDE_PANEL_OUT", name: "Slide Panel Out", implemented: true, phase: 3, bestUse: "Side panel dismiss" },
+  { id: "EVT_SLIDE_DRAWER", name: "Slide Drawer", implemented: true, phase: 3, bestUse: "Nav drawer from leading edge" },
+  { id: "EVT_SLIDE_SHEET_UP", name: "Slide Sheet Up", implemented: true, phase: 3, bestUse: "Bottom sheet present" },
+  { id: "EVT_SLIDE_STACK", name: "Slide Stack", implemented: true, phase: 3, bestUse: "Card stack peek + commit" },
+  { id: "EVT_SLIDE_PEEK", name: "Slide Peek", implemented: true, phase: 3, bestUse: "Partial reveal, then hold" }
+];
+
 const NATIVE_PUSH = [
   { id: "EVT_UI_PUSH_LEFT", name: "UI Push Left", implemented: true, phase: 1, bestUse: "Dashboard → next screen" },
   { id: "EVT_UI_PUSH_RIGHT", name: "UI Push Right", implemented: true, phase: 1, bestUse: "Back navigation" },
@@ -67,7 +78,7 @@ function lucideId(file) {
   return "EVT_ICON_LUCIDE_" + stem.toUpperCase().replace(/-/g, "_");
 }
 
-function nativePushRow(row) {
+function nativeKitRow(row, planFile) {
   return {
     id: row.id,
     name: row.name,
@@ -88,10 +99,20 @@ function nativePushRow(row) {
     files: [],
     downloaded: false,
     notes:
-      "Ours. Plan generator in core/transitions (uiPush.js). Companion apply: ae/Evotechly Transitions.jsx. No binary in this pack. " +
+      "Ours. Plan generator in core/transitions (" +
+      planFile +
+      "). Companion apply: ae/Evotechly Transitions.jsx. No binary in this pack. " +
       row.bestUse +
       "."
   };
+}
+
+function nativePushRow(row) {
+  return nativeKitRow(row, "uiPush.js");
+}
+
+function nativeSlideRow(row) {
+  return nativeKitRow(row, "uiSlide.js");
 }
 
 function otherNativeRow(row) {
@@ -155,7 +176,7 @@ const registry = {
   style: "premium-saas",
   schemaVersion: 1,
   note:
-    "P1: native text / UI micro / cursor generators (sourceType native, commercialUse true). P0 Lucide + Transition Kit stubs remain. No AEJuice / Motion Bro / Bento binaries.",
+    "P1 native text / UI / cursor + Transition Kit Phase 3 UI-Slide card family (sourceType native, commercialUse true). No AEJuice / Motion Bro / Bento binaries.",
   fields: {
     id: "EVT_* unique pack id",
     sourceType: "native | thirdParty",
@@ -164,6 +185,7 @@ const registry = {
     transitionKitId: "optional link into transitions/Metadata/catalog.json"
   },
   assets: NATIVE_PUSH.map(nativePushRow)
+    .concat(NATIVE_SLIDE.map(nativeSlideRow))
     .concat(OTHER_NATIVE.map(otherNativeRow))
     .concat(P1_NATIVE.map(otherNativeRow))
     .concat(lucideRows())

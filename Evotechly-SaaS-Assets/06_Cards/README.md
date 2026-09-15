@@ -8,14 +8,14 @@ Nothing binary ships in this folder in P0. P1 fills **EvotechlyNative** generato
 
 ## EVT_ naming examples
 
-- `EVT_CARD_LIFT` — planned
-- `EVT_CARD_SWAP_SCALE` — planned
-- `EVT_CARD_STACK_IN` — planned
+- `EVT_SLIDE_CARD_LEFT` / `EVT_SLIDE_CARD_RIGHT` — already owned (Transition Kit Phase 3)
+- `EVT_SLIDE_STACK` / `EVT_SLIDE_PEEK` — already owned (Transition Kit Phase 3)
 - `EVT_UI_PUSH_SCALE` — already owned
+- `EVT_CARD_LIFT` — planned (P2b / later)
 
 ## Native path
 
-Reuse UI Push + Scale / Cover. P1 card-specific settle.
+Reuse UI-Slide card family (`core/transitions/uiSlide.js`) + UI Push + Scale / Cover.
 
 ## Third-party path
 
