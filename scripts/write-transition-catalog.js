@@ -11,8 +11,8 @@ const path = require("path");
 const ASPECT = ["16:9", "9:16", "1:1", "4:5"];
 const STYLE = "premium-saas";
 
-function row(id, category, duration, intensity, targetRequired, bestUse, phase, implemented, sfx) {
-  return {
+function row(id, category, duration, intensity, targetRequired, bestUse, phase, implemented, sfx, name) {
+  const rec = {
     id: id,
     category: category,
     style: STYLE,
@@ -25,22 +25,27 @@ function row(id, category, duration, intensity, targetRequired, bestUse, phase, 
     phase: phase,
     implemented: implemented === true
   };
+  if (name) rec.name = name;
+  return rec;
 }
 
 const transitions = [
-  // 01 UI-Push — Phase 1 implements the first six
-  row("EVT_UI_PUSH_LEFT", "UI-Push", "STANDARD", "standard", false, "Dashboard → next screen, iOS-style push left", 1, true, ["ui-whoosh-soft"]),
-  row("EVT_UI_PUSH_RIGHT", "UI-Push", "STANDARD", "standard", false, "Back navigation, previous screen from the left", 1, true, ["ui-whoosh-soft"]),
-  row("EVT_UI_PUSH_UP", "UI-Push", "STANDARD", "standard", false, "Sheet-like screen rise, settings stack", 1, true, ["ui-whoosh-soft"]),
-  row("EVT_UI_PUSH_DOWN", "UI-Push", "STANDARD", "standard", false, "Dismiss upward stack, close overlay screen", 1, true, ["ui-whoosh-soft"]),
-  row("EVT_UI_PUSH_SCALE", "UI-Push", "STANDARD", "subtle", false, "Card or modal swap without a hard slide", 1, true, ["ui-cross"]),
-  row("EVT_UI_PUSH_DEPTH", "UI-Push", "SMOOTH", "subtle", false, "Recede outgoing, lift incoming — product tour", 1, true, ["ui-cross"]),
-  row("EVT_UI_PUSH_SOFT", "UI-Push", "SMOOTH", "subtle", false, "Same as left with longer settle", 2, false, []),
-  row("EVT_UI_PUSH_SNAP", "UI-Push", "FAST", "bold", false, "Short product chrome, tab-to-tab", 2, false, []),
-  row("EVT_UI_PUSH_OVERSHOOT", "UI-Push", "STANDARD", "standard", false, "Push with a quieter elastic settle", 2, false, []),
-  row("EVT_UI_PUSH_PARALLAX", "UI-Push", "SMOOTH", "subtle", false, "Foreground moves more than background", 2, false, []),
-  row("EVT_UI_PUSH_FADE", "UI-Push", "STANDARD", "subtle", false, "Push plus crossfade for busy UI", 2, false, []),
-  row("EVT_UI_PUSH_COVER", "UI-Push", "STANDARD", "standard", false, "Incoming covers outgoing; outgoing stays", 2, false, []),
+  // 01 UI-Push — Phase 2 implements the full family
+  row("EVT_UI_PUSH_LEFT", "UI-Push", "STANDARD", "standard", false, "Dashboard → next screen, iOS-style push left", 1, true, ["ui-whoosh-soft"], "UI Push Left"),
+  row("EVT_UI_PUSH_RIGHT", "UI-Push", "STANDARD", "standard", false, "Back navigation, previous screen from the left", 1, true, ["ui-whoosh-soft"], "UI Push Right"),
+  row("EVT_UI_PUSH_UP", "UI-Push", "STANDARD", "standard", false, "Sheet-like screen rise, settings stack", 1, true, ["ui-whoosh-soft"], "UI Push Up"),
+  row("EVT_UI_PUSH_DOWN", "UI-Push", "STANDARD", "standard", false, "Dismiss upward stack, close overlay screen", 1, true, ["ui-whoosh-soft"], "UI Push Down"),
+  row("EVT_UI_PUSH_SCALE", "UI-Push", "STANDARD", "subtle", false, "Card or modal swap without a hard slide", 1, true, ["ui-cross"], "UI Push + Scale"),
+  row("EVT_UI_PUSH_DEPTH", "UI-Push", "SMOOTH", "subtle", false, "Recede outgoing, lift incoming — product tour", 1, true, ["ui-cross"], "UI Push + Depth"),
+  row("EVT_UI_PUSH_SOFT", "UI-Push", "SMOOTH", "subtle", false, "Same as left with longer settle", 2, true, ["ui-whoosh-soft"], "UI Push Soft"),
+  row("EVT_UI_PUSH_SNAP", "UI-Push", "FAST", "bold", false, "Short product chrome, tab-to-tab", 2, true, ["ui-whoosh-soft"], "UI Push Snap"),
+  row("EVT_UI_PUSH_OVERSHOOT", "UI-Push", "STANDARD", "standard", false, "Push with a quieter elastic settle", 2, true, ["ui-whoosh-soft"], "UI Push Overshoot"),
+  row("EVT_UI_PUSH_PARALLAX", "UI-Push", "SMOOTH", "subtle", false, "Foreground moves more than background", 2, true, ["ui-whoosh-soft"], "UI Push Parallax"),
+  row("EVT_UI_PUSH_FADE", "UI-Push", "STANDARD", "subtle", false, "Push plus crossfade for busy UI", 2, true, ["ui-cross"], "UI Push Fade"),
+  row("EVT_UI_PUSH_COVER", "UI-Push", "STANDARD", "standard", false, "Incoming covers outgoing; outgoing stays", 2, true, ["ui-whoosh-soft"], "UI Push Cover"),
+  row("EVT_UI_PUSH_PANEL", "UI-Push", "STANDARD", "standard", false, "Inspector / side panel covers content from the trailing edge", 2, true, ["ui-whoosh-soft"], "Panel Push"),
+  row("EVT_UI_PUSH_DASHBOARD", "UI-Push", "SMOOTH", "standard", false, "Dashboard → next view with a quiet depth push", 2, true, ["ui-whoosh-soft"], "Dashboard Push"),
+  row("EVT_UI_PUSH_SPLIT", "UI-Push", "STANDARD", "standard", false, "Master–detail split: panes part, incoming takes the open half", 2, true, ["ui-whoosh-soft"], "Split Panel Push"),
 
   // 02 UI-Slide
   row("EVT_SLIDE_CARD_LEFT", "UI-Slide", "FAST", "subtle", false, "Single card enters from right", 3, false, []),
@@ -171,11 +176,11 @@ const transitions = [
 ];
 
 const out = {
-  version: "phase-1",
+  version: "phase-2",
   style: STYLE,
   aspectRatios: ASPECT,
   generated: "transitions/Metadata/catalog.json",
-  note: "Phase 1 implements six UI Push IDs. Other rows are metadata for later phases and AI pairing.",
+  note: "Phase 2 implements the full UI Push family. Other rows are metadata for later phases and AI pairing.",
   transitions: transitions
 };
 

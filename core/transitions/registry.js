@@ -83,7 +83,7 @@ function filterCatalog(opts) {
     if (opts.implemented === false && row.implemented !== false) return false;
     if (category && row.category !== category) return false;
     if (!query) return true;
-    const blob = [row.id, row.category, row.bestUse, row.duration, row.intensity].join(" ").toLowerCase();
+    const blob = [row.id, row.name, row.category, row.bestUse, row.duration, row.intensity].join(" ").toLowerCase();
     return blob.indexOf(query) !== -1;
   });
 }

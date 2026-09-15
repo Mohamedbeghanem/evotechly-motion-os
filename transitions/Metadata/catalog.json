@@ -1,5 +1,5 @@
 {
-  "version": "phase-1",
+  "version": "phase-2",
   "style": "premium-saas",
   "aspectRatios": [
     "16:9",
@@ -8,7 +8,7 @@
     "4:5"
   ],
   "generated": "transitions/Metadata/catalog.json",
-  "note": "Phase 1 implements six UI Push IDs. Other rows are metadata for later phases and AI pairing.",
+  "note": "Phase 2 implements the full UI Push family. Other rows are metadata for later phases and AI pairing.",
   "transitions": [
     {
       "id": "EVT_UI_PUSH_LEFT",
@@ -28,7 +28,8 @@
         "ui-whoosh-soft"
       ],
       "phase": 1,
-      "implemented": true
+      "implemented": true,
+      "name": "UI Push Left"
     },
     {
       "id": "EVT_UI_PUSH_RIGHT",
@@ -48,7 +49,8 @@
         "ui-whoosh-soft"
       ],
       "phase": 1,
-      "implemented": true
+      "implemented": true,
+      "name": "UI Push Right"
     },
     {
       "id": "EVT_UI_PUSH_UP",
@@ -68,7 +70,8 @@
         "ui-whoosh-soft"
       ],
       "phase": 1,
-      "implemented": true
+      "implemented": true,
+      "name": "UI Push Up"
     },
     {
       "id": "EVT_UI_PUSH_DOWN",
@@ -88,7 +91,8 @@
         "ui-whoosh-soft"
       ],
       "phase": 1,
-      "implemented": true
+      "implemented": true,
+      "name": "UI Push Down"
     },
     {
       "id": "EVT_UI_PUSH_SCALE",
@@ -108,7 +112,8 @@
         "ui-cross"
       ],
       "phase": 1,
-      "implemented": true
+      "implemented": true,
+      "name": "UI Push + Scale"
     },
     {
       "id": "EVT_UI_PUSH_DEPTH",
@@ -128,7 +133,8 @@
         "ui-cross"
       ],
       "phase": 1,
-      "implemented": true
+      "implemented": true,
+      "name": "UI Push + Depth"
     },
     {
       "id": "EVT_UI_PUSH_SOFT",
@@ -144,9 +150,12 @@
         "1:1",
         "4:5"
       ],
-      "sfx": [],
+      "sfx": [
+        "ui-whoosh-soft"
+      ],
       "phase": 2,
-      "implemented": false
+      "implemented": true,
+      "name": "UI Push Soft"
     },
     {
       "id": "EVT_UI_PUSH_SNAP",
@@ -162,9 +171,12 @@
         "1:1",
         "4:5"
       ],
-      "sfx": [],
+      "sfx": [
+        "ui-whoosh-soft"
+      ],
       "phase": 2,
-      "implemented": false
+      "implemented": true,
+      "name": "UI Push Snap"
     },
     {
       "id": "EVT_UI_PUSH_OVERSHOOT",
@@ -180,9 +192,12 @@
         "1:1",
         "4:5"
       ],
-      "sfx": [],
+      "sfx": [
+        "ui-whoosh-soft"
+      ],
       "phase": 2,
-      "implemented": false
+      "implemented": true,
+      "name": "UI Push Overshoot"
     },
     {
       "id": "EVT_UI_PUSH_PARALLAX",
@@ -198,9 +213,12 @@
         "1:1",
         "4:5"
       ],
-      "sfx": [],
+      "sfx": [
+        "ui-whoosh-soft"
+      ],
       "phase": 2,
-      "implemented": false
+      "implemented": true,
+      "name": "UI Push Parallax"
     },
     {
       "id": "EVT_UI_PUSH_FADE",
@@ -216,9 +234,12 @@
         "1:1",
         "4:5"
       ],
-      "sfx": [],
+      "sfx": [
+        "ui-cross"
+      ],
       "phase": 2,
-      "implemented": false
+      "implemented": true,
+      "name": "UI Push Fade"
     },
     {
       "id": "EVT_UI_PUSH_COVER",
@@ -234,9 +255,75 @@
         "1:1",
         "4:5"
       ],
-      "sfx": [],
+      "sfx": [
+        "ui-whoosh-soft"
+      ],
       "phase": 2,
-      "implemented": false
+      "implemented": true,
+      "name": "UI Push Cover"
+    },
+    {
+      "id": "EVT_UI_PUSH_PANEL",
+      "category": "UI-Push",
+      "style": "premium-saas",
+      "duration": "STANDARD",
+      "intensity": "standard",
+      "targetRequired": false,
+      "bestUse": "Inspector / side panel covers content from the trailing edge",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [
+        "ui-whoosh-soft"
+      ],
+      "phase": 2,
+      "implemented": true,
+      "name": "Panel Push"
+    },
+    {
+      "id": "EVT_UI_PUSH_DASHBOARD",
+      "category": "UI-Push",
+      "style": "premium-saas",
+      "duration": "SMOOTH",
+      "intensity": "standard",
+      "targetRequired": false,
+      "bestUse": "Dashboard → next view with a quiet depth push",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [
+        "ui-whoosh-soft"
+      ],
+      "phase": 2,
+      "implemented": true,
+      "name": "Dashboard Push"
+    },
+    {
+      "id": "EVT_UI_PUSH_SPLIT",
+      "category": "UI-Push",
+      "style": "premium-saas",
+      "duration": "STANDARD",
+      "intensity": "standard",
+      "targetRequired": false,
+      "bestUse": "Master–detail split: panes part, incoming takes the open half",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [
+        "ui-whoosh-soft"
+      ],
+      "phase": 2,
+      "implemented": true,
+      "name": "Split Panel Push"
     },
     {
       "id": "EVT_SLIDE_CARD_LEFT",
