@@ -37,6 +37,15 @@ const NATIVE_OVERLAY = [
   { id: "EVT_TOAST_IN", name: "Toast In", implemented: true, phase: 9, bestUse: "Toast from edge, then settle" }
 ];
 
+const NATIVE_PAGE = [
+  { id: "EVT_PAGE_PUSH", name: "Page Push", implemented: true, phase: 10, bestUse: "Full-page push using UI Push math" },
+  { id: "EVT_PAGE_FADE", name: "Page Fade", implemented: true, phase: 10, bestUse: "Full-page fade" },
+  { id: "EVT_SCREEN_SWAP", name: "Screen Swap", implemented: true, phase: 10, bestUse: "Replace screen, keep app chrome" },
+  { id: "EVT_NAV_FORWARD", name: "Nav Forward", implemented: true, phase: 10, bestUse: "Forward in an IA stack" },
+  { id: "EVT_NAV_BACK", name: "Nav Back", implemented: true, phase: 10, bestUse: "Back in an IA stack" },
+  { id: "EVT_TAB_CROSS", name: "Tab Cross", implemented: true, phase: 10, bestUse: "Tab content crossfade" }
+];
+
 const NATIVE_SLIDE = [
   { id: "EVT_SLIDE_CARD_LEFT", name: "Slide Card Left", implemented: true, phase: 3, bestUse: "Single card enters from right" },
   { id: "EVT_SLIDE_CARD_RIGHT", name: "Slide Card Right", implemented: true, phase: 3, bestUse: "Single card enters from left" },
@@ -160,6 +169,10 @@ function nativeOverlayRow(row) {
   return rec;
 }
 
+function nativePageRow(row) {
+  return nativeKitRow(row, "pageScreen.js");
+}
+
 function otherNativeRow(row) {
   return {
     id: row.id,
@@ -221,7 +234,7 @@ const registry = {
   style: "premium-saas",
   schemaVersion: 1,
   note:
-    "P1 native text / UI / cursor + Transition Kit Phase 9 Overlay-Modal (plus Phase 2–4 UI Push / UI-Slide / Scale-Zoom and Phase 12 Shared-Element). sourceType native, commercialUse true. No AEJuice / Motion Bro / Bento binaries.",
+    "P1 native text / UI / cursor + Transition Kit Phase 10 Page-Screen (plus Phase 2–4 UI Push / UI-Slide / Scale-Zoom, Phase 9 Overlay-Modal, and Phase 12 Shared-Element). sourceType native, commercialUse true. No AEJuice / Motion Bro / Bento binaries.",
   fields: {
     id: "EVT_* unique pack id",
     sourceType: "native | thirdParty",
@@ -234,6 +247,7 @@ const registry = {
     .concat(NATIVE_ZOOM.map(nativeZoomRow))
     .concat(NATIVE_SHARED.map(nativeSharedRow))
     .concat(NATIVE_OVERLAY.map(nativeOverlayRow))
+    .concat(NATIVE_PAGE.map(nativePageRow))
     .concat(OTHER_NATIVE.map(otherNativeRow))
     .concat(P1_NATIVE.map(otherNativeRow))
     .concat(lucideRows())

@@ -181,6 +181,25 @@ test("asset registry schema + native Transition Kit stubs", function () {
     assert.match(a.notes, /overlayModal\.js/);
   });
 
+  const page = native.filter(function (a) {
+    return (
+      a.transitionKitId &&
+      (a.transitionKitId === "EVT_PAGE_PUSH" ||
+        a.transitionKitId === "EVT_PAGE_FADE" ||
+        a.transitionKitId === "EVT_SCREEN_SWAP" ||
+        a.transitionKitId === "EVT_NAV_FORWARD" ||
+        a.transitionKitId === "EVT_NAV_BACK" ||
+        a.transitionKitId === "EVT_TAB_CROSS")
+    );
+  });
+  assert.equal(page.length, 6);
+  page.forEach(function (a) {
+    assert.equal(a.sourceType, "native");
+    assert.equal(a.commercialUse, true);
+    assert.equal(a.implemented, true);
+    assert.match(a.notes, /pageScreen\.js/);
+  });
+
   const catalog = JSON.parse(
     fs.readFileSync(path.join(__dirname, "..", "transitions", "Metadata", "catalog.json"), "utf8")
   );
@@ -188,7 +207,7 @@ test("asset registry schema + native Transition Kit stubs", function () {
   catalog.transitions.forEach(function (row) {
     byId[row.id] = row;
   });
-  push.concat(slide).concat(zoom).concat(shared).concat(overlay).forEach(function (a) {
+  push.concat(slide).concat(zoom).concat(shared).concat(overlay).concat(page).forEach(function (a) {
     assert.ok(byId[a.transitionKitId], "catalog missing " + a.transitionKitId);
     assert.equal(byId[a.transitionKitId].implemented, true);
   });
