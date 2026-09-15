@@ -1,0 +1,19 @@
+# Editor-local vendor drops. Redistribution is usually forbidden.
+# Exception: tracked Lucide subtree (ISC / MIT, LICENSE included).
+ThirdParty/**
+!ThirdParty/README.md
+!ThirdParty/lucide/
+!ThirdParty/lucide/**
+
+# Never commit vendor binaries even if someone copies them into numbered folders
+**/*.aex
+**/*.plugin
+**/*.jsxbin
+**/*.mbr
+**/*.aep
+**/*.ffx
+**/*.zip
+**/*.mp3
+**/*.wav
+**/*.aif
+**/*.caf

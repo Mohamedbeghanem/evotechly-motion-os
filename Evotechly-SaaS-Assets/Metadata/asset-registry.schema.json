@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://evotechly.local/saas-assets/asset-registry.schema.json",
+  "title": "Evotechly SaaS Assets registry",
+  "type": "object",
+  "required": ["version", "phase", "schemaVersion", "assets"],
+  "additionalProperties": true,
+  "properties": {
+    "version": { "type": "string" },
+    "phase": { "type": "string" },
+    "product": { "type": "string" },
+    "style": { "type": "string" },
+    "note": { "type": "string" },
+    "schemaVersion": { "type": "integer", "minimum": 1 },
+    "fields": { "type": "object" },
+    "assets": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/asset" }
+    }
+  },
+  "$defs": {
+    "asset": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "category",
+        "folder",
+        "sourceType",
+        "owner",
+        "commercialUse",
+        "redistributionAllowed",
+        "license",
+        "status",
+        "downloaded"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "id": { "type": "string", "pattern": "^EVT_" },
+        "name": { "type": "string" },
+        "category": { "type": "string" },
+        "folder": { "type": "string" },
+        "sourceType": { "enum": ["native", "thirdParty"] },
+        "owner": { "type": "string" },
+        "commercialUse": { "type": ["boolean", "null"] },
+        "redistributionAllowed": { "type": "boolean" },
+        "license": { "type": "string" },
+        "licenseUrl": { "type": "string" },
+        "licenseVerified": { "type": "boolean" },
+        "status": {
+          "enum": [
+            "OWNED",
+            "VENDORED",
+            "MANUAL",
+            "BLOCKED_FOR_COMMERCIAL",
+            "REQUIRES_LICENSE_REVIEW",
+            "NATIVE_BUILD_INSTEAD"
+          ]
+        },
+        "transitionKitId": { "type": "string" },
+        "transitionKitPath": { "type": "string" },
+        "catalogPath": { "type": "string" },
+        "implemented": { "type": "boolean" },
+        "attribution": { "type": "string" },
+        "files": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "downloaded": { "type": "boolean" },
+        "notes": { "type": "string" }
+      }
+    }
+  }
+}
