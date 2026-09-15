@@ -1,13 +1,13 @@
 # Transition Kit — phase roadmap
 
-Status after this PR: **Phase 0, Phase 1, and Phase 2 are done.** Later phases are catalogued, not implemented.
+Status after this PR: **Phase 0–3 are done.** Later phases are catalogued, not implemented.
 
 | Phase | Job | Status |
 |---|---|---|
 | **0** | Architecture docs, feasibility, folder scaffold, catalog shape | **done** |
 | **1** | Core engine + 6 UI Push plan generators + companion panel + tests | **done** |
 | **2** | Full UI Push family (soft / snap / overshoot / parallax / fade / cover / panel / dashboard / split) | **done** |
-| 3 | UI-Slide family | planned |
+| **3** | UI-Slide card family (card / panel / drawer / sheet / stack / peek) | **done** |
 | 4 | Scale-Zoom family + JSX apply for `planTargetZoom` | planned |
 | 5 | Crossfade family | planned |
 | 6 | Mask-Reveal family (native masks, no plugins) | planned |
@@ -48,6 +48,16 @@ Status after this PR: **Phase 0, Phase 1, and Phase 2 are done.** Later phases a
 - `implemented:true` on the full UI Push family (15 IDs)
 - JSX mirrors apply math for every UI Push ID
 - Tests: every UI Push ID produces a deterministic plan
+
+## Phase 3 — done
+
+- `core/transitions/uiSlide.js` — card-width (not full-frame) plans for every UI-Slide catalog ID
+- `EVT_SLIDE_CARD_LEFT` / `CARD_RIGHT` / `PANEL_IN` / `PANEL_OUT` / `DRAWER` / `SHEET_UP` / `STACK` / `PEEK`
+- Catalog `implemented:true` + `phase: 3` on the 8 IDs
+- JSX mirrors apply math in `ae/Evotechly Transitions.jsx` Transitions tab
+- Registry: native `sourceType` rows, `commercialUse: true`
+- Tests: deterministic plans, unique IDs, implemented flags
+- Charts / device plates deferred to P2b
 
 ## What “done” means later
 

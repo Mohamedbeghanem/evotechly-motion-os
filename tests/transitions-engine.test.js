@@ -129,8 +129,9 @@ test("control plan is a shy null with the documented sliders", function () {
 
 test("every UI Push ID produces a deterministic complete plan", function () {
   const uiPush = require("../core/transitions/uiPush");
+  const uiSlide = require("../core/transitions/uiSlide");
   const ids = engine.IMPLEMENTED_IDS.slice();
-  assert.deepEqual(ids, uiPush.UI_PUSH_IDS);
+  assert.deepEqual(ids, uiPush.UI_PUSH_IDS.concat(uiSlide.UI_SLIDE_IDS));
   assert.deepEqual(ids, [
     "EVT_UI_PUSH_LEFT",
     "EVT_UI_PUSH_RIGHT",
@@ -146,7 +147,15 @@ test("every UI Push ID produces a deterministic complete plan", function () {
     "EVT_UI_PUSH_COVER",
     "EVT_UI_PUSH_PANEL",
     "EVT_UI_PUSH_DASHBOARD",
-    "EVT_UI_PUSH_SPLIT"
+    "EVT_UI_PUSH_SPLIT",
+    "EVT_SLIDE_CARD_LEFT",
+    "EVT_SLIDE_CARD_RIGHT",
+    "EVT_SLIDE_PANEL_IN",
+    "EVT_SLIDE_PANEL_OUT",
+    "EVT_SLIDE_DRAWER",
+    "EVT_SLIDE_SHEET_UP",
+    "EVT_SLIDE_STACK",
+    "EVT_SLIDE_PEEK"
   ]);
   ids.forEach(function (id) {
     const opts = {
@@ -177,7 +186,7 @@ test("every UI Push ID produces a deterministic complete plan", function () {
     assert.ok(a.anatomy.action);
     assert.ok(a.anatomy.crossover);
     assert.ok(a.anatomy.settle);
-    assert.equal(a.name, uiPush.displayName(id));
+    assert.equal(a.name, uiSlide.isUiSlideId(id) ? uiSlide.displayName(id) : uiPush.displayName(id));
     assert.ok(a.outgoing.keys.length >= 3, id + " outgoing keys");
     assert.ok(a.incoming.keys.length >= 3, id + " incoming keys");
   });
@@ -313,6 +322,90 @@ test("panel / dashboard / split match named UI Push variants", function () {
   assert.equal(split.outgoing.keys[2].x + split.incoming.keys[1].x, 0);
 });
 
+test("UI-Slide card family uses card-width travel, not full-frame", function () {
+  const uiSlide = require("../core/transitions/uiSlide");
+  const left = engine.applyTransitionPlan({ id: "EVT_SLIDE_CARD_LEFT", durationFrames: 16, fps: 30 });
+  const right = engine.applyTransitionPlan({ id: "EVT_SLIDE_CARD_RIGHT", durationFrames: 16, fps: 30 });
+  const push = engine.applyTransitionPlan({ id: "EVT_UI_PUSH_LEFT", durationFrames: 16, fps: 30 });
+
+  assert.equal(left.category, "UI-Slide");
+  assert.equal(left.name, "Slide Card Left");
+  assert.equal(left.direction, "left");
+  assert.equal(left.travel.cardWidth, true);
+  assert.equal(left.travel.distance, 537.6);
+  assert.ok(left.travel.distance < push.travel.distance);
+  assert.equal(left.outgoing.keys[0].x, 0);
+  assert.equal(left.outgoing.keys[3].x, -537.6);
+  assert.equal(left.outgoing.keys[3].opacity, 0);
+  assert.equal(left.incoming.keys[0].x, 537.6);
+  assert.equal(left.incoming.keys[3].x, 0);
+  assert.equal(left.incoming.keys[3].opacity, 100);
+
+  assert.equal(right.name, "Slide Card Right");
+  assert.equal(right.direction, "right");
+  assert.equal(right.outgoing.keys[3].x, 537.6);
+  assert.equal(right.incoming.keys[0].x, -537.6);
+
+  const remapped = engine.applyTransitionPlan({ id: "EVT_SLIDE_CARD_LEFT", direction: "right", durationFrames: 16 });
+  assert.equal(remapped.id, "EVT_SLIDE_CARD_RIGHT");
+  assert.equal(uiSlide.CARD_WIDTH_RATIO, 0.28);
+});
+
+test("UI-Slide panel / drawer / sheet / stack / peek match named variants", function () {
+  const panelIn = engine.applyTransitionPlan({ id: "EVT_SLIDE_PANEL_IN", durationFrames: 16, fps: 30 });
+  const panelOut = engine.applyTransitionPlan({ id: "EVT_SLIDE_PANEL_OUT", durationFrames: 16, fps: 30 });
+  const drawer = engine.applyTransitionPlan({ id: "EVT_SLIDE_DRAWER", durationFrames: 16, fps: 30 });
+  const sheet = engine.applyTransitionPlan({ id: "EVT_SLIDE_SHEET_UP", durationFrames: 16, fps: 30 });
+  const stack = engine.applyTransitionPlan({ id: "EVT_SLIDE_STACK", durationFrames: 16, fps: 30 });
+  const peek = engine.applyTransitionPlan({ id: "EVT_SLIDE_PEEK", durationFrames: 16, fps: 30 });
+
+  assert.equal(panelIn.name, "Slide Panel In");
+  assert.equal(panelIn.direction, "right");
+  assert.equal(panelIn.travel.distance, 614.4);
+  assert.equal(panelIn.travel.outgoingStays, true);
+  assert.equal(panelIn.incoming.keys[0].x, 614.4);
+  assert.ok(panelIn.outgoing.keys[3].x < 0);
+  assert.equal(panelIn.outgoing.keys[3].opacity, 68);
+
+  assert.equal(panelOut.name, "Slide Panel Out");
+  assert.equal(panelOut.travel.dismiss, true);
+  assert.equal(panelOut.outgoing.keys[3].x, 614.4);
+  assert.equal(panelOut.outgoing.keys[3].opacity, 0);
+  assert.equal(panelOut.incoming.keys[3].x, 0);
+  assert.equal(panelOut.incoming.keys[3].opacity, 100);
+
+  assert.equal(drawer.name, "Slide Drawer");
+  assert.equal(drawer.direction, "left");
+  assert.equal(drawer.travel.distance, 422.4);
+  assert.equal(drawer.travel.drawer, true);
+  assert.equal(drawer.incoming.keys[0].x, -422.4);
+  assert.equal(drawer.outgoing.keys[3].opacity, 72);
+
+  assert.equal(sheet.name, "Slide Sheet Up");
+  assert.equal(sheet.direction, "up");
+  assert.equal(sheet.travel.distance, 453.6);
+  assert.equal(sheet.travel.sheet, true);
+  assert.equal(sheet.incoming.keys[0].y, 453.6);
+  assert.equal(sheet.outgoing.keys[3].y, -8);
+  assert.equal(sheet.outgoing.keys[3].opacity, 64);
+
+  assert.equal(stack.name, "Slide Stack");
+  assert.equal(stack.travel.stack, true);
+  assert.equal(stack.travel.distance, 460.8);
+  assert.equal(stack.outgoing.keys[3].scale[0], 92);
+  assert.equal(stack.outgoing.keys[3].opacity, 58);
+  assert.equal(stack.incoming.keys[0].scale[0], 96);
+  assert.equal(stack.incoming.keys[3].x, 0);
+
+  assert.equal(peek.name, "Slide Peek");
+  assert.equal(peek.travel.peek, true);
+  assert.equal(peek.travel.hold, 193.536);
+  assert.equal(peek.incoming.keys[3].x, 193.536);
+  assert.equal(peek.incoming.keys[3].opacity, 100);
+  assert.ok(peek.incoming.keys[3].x !== 0, "peek holds off rest");
+  assert.equal(peek.outgoing.keys[3].opacity, 92);
+});
+
 test("unimplemented catalog IDs return a safe stub plan", function () {
   const plan = engine.applyTransitionPlan({ id: "EVT_MICRO_HOVER" });
   assert.equal(plan.implemented, false);
@@ -320,8 +413,9 @@ test("unimplemented catalog IDs return a safe stub plan", function () {
   assert.equal(plan.outgoing.set.position.length, 0);
 });
 
-test("catalog has unique EVT_ IDs and UI Push implemented flags", function () {
+test("catalog has unique EVT_ IDs and UI Push / UI-Slide implemented flags", function () {
   const uiPush = require("../core/transitions/uiPush");
+  const uiSlide = require("../core/transitions/uiSlide");
   const list = registry.loadCatalog();
   assert.ok(list.length >= 90);
   assert.deepEqual(registry.uniqueIdErrors(), []);
@@ -334,17 +428,22 @@ test("catalog has unique EVT_ IDs and UI Push implemented flags", function () {
     set[id] = true;
   });
   const implemented = registry.listImplemented();
-  assert.equal(implemented.length, 15);
+  assert.equal(implemented.length, 23);
   implemented.forEach(function (row) {
     assert.equal(row.implemented, true);
     assert.equal(row.style, "premium-saas");
-    assert.equal(row.category, "UI-Push");
-    assert.ok(uiPush.PHASE1_IDS.indexOf(row.id) !== -1 ? row.phase === 1 : row.phase === 2, row.id + " phase");
+    if (row.category === "UI-Slide") {
+      assert.equal(row.phase, 3);
+      assert.equal(row.name, uiSlide.displayName(row.id));
+    } else {
+      assert.equal(row.category, "UI-Push");
+      assert.ok(uiPush.PHASE1_IDS.indexOf(row.id) !== -1 ? row.phase === 1 : row.phase === 2, row.id + " phase");
+      assert.equal(row.name, uiPush.displayName(row.id));
+    }
     assert.ok(row.aspectRatios.indexOf("16:9") !== -1);
     assert.ok(row.aspectRatios.indexOf("9:16") !== -1);
     assert.ok(row.aspectRatios.indexOf("1:1") !== -1);
     assert.ok(row.aspectRatios.indexOf("4:5") !== -1);
-    assert.equal(row.name, uiPush.displayName(row.id));
   });
   assert.equal(registry.getById("EVT_UI_PUSH_LEFT").category, "UI-Push");
   assert.equal(registry.getById("EVT_UI_PUSH_LEFT").name, "UI Push Left");
@@ -355,11 +454,17 @@ test("catalog has unique EVT_ IDs and UI Push implemented flags", function () {
   assert.equal(registry.getById("EVT_UI_PUSH_SPLIT").name, "Split Panel Push");
   assert.equal(registry.getById("evt-ui-push-depth").implemented, true);
   assert.equal(registry.getById("EVT_UI_PUSH_COVER").implemented, true);
+  assert.equal(registry.getById("EVT_SLIDE_CARD_LEFT").implemented, true);
+  assert.equal(registry.getById("EVT_SLIDE_CARD_LEFT").name, "Slide Card Left");
+  assert.equal(registry.getById("EVT_SLIDE_PANEL_IN").name, "Slide Panel In");
+  assert.equal(registry.getById("EVT_SLIDE_STACK").name, "Slide Stack");
   assert.equal(registry.filterCatalog({ query: "micro", category: "Micro" }).length, 8);
   assert.equal(registry.filterCatalog({ query: "dashboard push", category: "UI-Push" }).length, 1);
   assert.equal(registry.filterCatalog({ query: "split panel", category: "UI-Push" })[0].id, "EVT_UI_PUSH_SPLIT");
+  assert.equal(registry.filterCatalog({ query: "EVT_SLIDE_CARD", category: "UI-Slide" }).length, 2);
   assert.equal(registry.categories().length, 16);
   assert.equal(registry.listByCategory("UI-Push").length, 15);
+  assert.equal(registry.listByCategory("UI-Slide").length, 8);
 });
 
 test("demo storyboard is a dashboard→card→analytics sequence", function () {
@@ -391,9 +496,19 @@ test("JSX companion embeds UI Push IDs and mirrored constants", function () {
   assert.ok(jsx.indexOf("function planSoft") !== -1);
   assert.ok(jsx.indexOf("function planParallax") !== -1);
   assert.ok(jsx.indexOf("function planCover") !== -1);
+  assert.ok(jsx.indexOf("function planCard") !== -1);
+  assert.ok(jsx.indexOf("function planPanelIn") !== -1);
+  assert.ok(jsx.indexOf("function planPanelOut") !== -1);
+  assert.ok(jsx.indexOf("function planDrawer") !== -1);
+  assert.ok(jsx.indexOf("function planSheetUp") !== -1);
+  assert.ok(jsx.indexOf("function planStack") !== -1);
+  assert.ok(jsx.indexOf("function planPeek") !== -1);
   assert.ok(jsx.indexOf("Panel Push") !== -1);
   assert.ok(jsx.indexOf("Dashboard Push") !== -1);
   assert.ok(jsx.indexOf("Split Panel Push") !== -1);
+  assert.ok(jsx.indexOf("Slide Card Left") !== -1);
+  assert.ok(jsx.indexOf("Slide Panel In") !== -1);
+  assert.ok(jsx.indexOf("Slide Stack") !== -1);
   assert.ok(/#target aftereffects/.test(jsx));
   assert.ok(jsx.indexOf("does not replace") !== -1);
   registry.catalogIds().forEach(function (id) {

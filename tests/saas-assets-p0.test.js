@@ -116,6 +116,19 @@ test("asset registry schema + native Transition Kit stubs", function () {
     assert.equal(a.implemented, true);
   });
 
+  const slide = native.filter(function (a) {
+    return a.transitionKitId && a.transitionKitId.indexOf("EVT_SLIDE_") === 0;
+  });
+  assert.equal(slide.length, 8);
+  slide.forEach(function (a) {
+    assert.equal(a.sourceType, "native");
+    assert.equal(a.commercialUse, true);
+    assert.equal(a.transitionKitPath, "core/transitions");
+    assert.equal(a.catalogPath, "transitions/Metadata/catalog.json");
+    assert.equal(a.implemented, true);
+    assert.match(a.notes, /uiSlide\.js/);
+  });
+
   const catalog = JSON.parse(
     fs.readFileSync(path.join(__dirname, "..", "transitions", "Metadata", "catalog.json"), "utf8")
   );
@@ -123,7 +136,7 @@ test("asset registry schema + native Transition Kit stubs", function () {
   catalog.transitions.forEach(function (row) {
     byId[row.id] = row;
   });
-  push.forEach(function (a) {
+  push.concat(slide).forEach(function (a) {
     assert.ok(byId[a.transitionKitId], "catalog missing " + a.transitionKitId);
     assert.equal(byId[a.transitionKitId].implemented, true);
   });

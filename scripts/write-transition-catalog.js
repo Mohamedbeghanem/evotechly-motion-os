@@ -47,15 +47,15 @@ const transitions = [
   row("EVT_UI_PUSH_DASHBOARD", "UI-Push", "SMOOTH", "standard", false, "Dashboard → next view with a quiet depth push", 2, true, ["ui-whoosh-soft"], "Dashboard Push"),
   row("EVT_UI_PUSH_SPLIT", "UI-Push", "STANDARD", "standard", false, "Master–detail split: panes part, incoming takes the open half", 2, true, ["ui-whoosh-soft"], "Split Panel Push"),
 
-  // 02 UI-Slide
-  row("EVT_SLIDE_CARD_LEFT", "UI-Slide", "FAST", "subtle", false, "Single card enters from right", 3, false, []),
-  row("EVT_SLIDE_CARD_RIGHT", "UI-Slide", "FAST", "subtle", false, "Single card enters from left", 3, false, []),
-  row("EVT_SLIDE_PANEL_IN", "UI-Slide", "STANDARD", "standard", false, "Side panel / inspector in", 3, false, []),
-  row("EVT_SLIDE_PANEL_OUT", "UI-Slide", "FAST", "standard", false, "Side panel dismiss", 3, false, []),
-  row("EVT_SLIDE_DRAWER", "UI-Slide", "STANDARD", "standard", false, "Nav drawer from leading edge", 3, false, []),
-  row("EVT_SLIDE_SHEET_UP", "UI-Slide", "STANDARD", "standard", false, "Bottom sheet present", 3, false, []),
-  row("EVT_SLIDE_STACK", "UI-Slide", "SMOOTH", "subtle", false, "Card stack peek + commit", 3, false, []),
-  row("EVT_SLIDE_PEEK", "UI-Slide", "MICRO", "subtle", false, "Partial reveal, then hold", 3, false, []),
+  // 02 UI-Slide — Phase 3 implements the card family
+  row("EVT_SLIDE_CARD_LEFT", "UI-Slide", "FAST", "subtle", false, "Single card enters from right", 3, true, ["ui-whoosh-soft"], "Slide Card Left"),
+  row("EVT_SLIDE_CARD_RIGHT", "UI-Slide", "FAST", "subtle", false, "Single card enters from left", 3, true, ["ui-whoosh-soft"], "Slide Card Right"),
+  row("EVT_SLIDE_PANEL_IN", "UI-Slide", "STANDARD", "standard", false, "Side panel / inspector in", 3, true, ["ui-whoosh-soft"], "Slide Panel In"),
+  row("EVT_SLIDE_PANEL_OUT", "UI-Slide", "FAST", "standard", false, "Side panel dismiss", 3, true, ["ui-whoosh-soft"], "Slide Panel Out"),
+  row("EVT_SLIDE_DRAWER", "UI-Slide", "STANDARD", "standard", false, "Nav drawer from leading edge", 3, true, ["ui-whoosh-soft"], "Slide Drawer"),
+  row("EVT_SLIDE_SHEET_UP", "UI-Slide", "STANDARD", "standard", false, "Bottom sheet present", 3, true, ["ui-whoosh-soft"], "Slide Sheet Up"),
+  row("EVT_SLIDE_STACK", "UI-Slide", "SMOOTH", "subtle", false, "Card stack peek + commit", 3, true, ["ui-cross"], "Slide Stack"),
+  row("EVT_SLIDE_PEEK", "UI-Slide", "MICRO", "subtle", false, "Partial reveal, then hold", 3, true, ["ui-soft-in"], "Slide Peek"),
 
   // 03 Scale-Zoom
   row("EVT_ZOOM_IN", "Scale-Zoom", "STANDARD", "standard", false, "Plate scales up into frame", 4, false, []),
@@ -176,11 +176,11 @@ const transitions = [
 ];
 
 const out = {
-  version: "phase-2",
+  version: "phase-3",
   style: STYLE,
   aspectRatios: ASPECT,
   generated: "transitions/Metadata/catalog.json",
-  note: "Phase 2 implements the full UI Push family. Other rows are metadata for later phases and AI pairing.",
+  note: "Phase 3 implements the UI-Slide card family (plus Phase 2 UI Push). Other rows are metadata for later phases and AI pairing.",
   transitions: transitions
 };
 

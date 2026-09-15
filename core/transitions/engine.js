@@ -2,7 +2,7 @@
 
 /**
  * Transition Kit engine — deterministic plans.
- * Node is source of truth. JSX mirrors UI Push family numbers.
+ * Node is source of truth. JSX mirrors UI Push + UI Slide family numbers.
  * Native AE only. No .ffx / .aep / vendor plugins.
  */
 
@@ -12,8 +12,9 @@ const { durationFrames, secondsFromFrames, DEFAULT_FPS, normalizeFps, normalizeT
 const { planTargetZoom } = require("./target");
 const { planTransitionControl, CONTROL_NAME, DIRECTION_ENUM } = require("./control");
 const uiPush = require("./uiPush");
+const uiSlide = require("./uiSlide");
 
-const IMPLEMENTED_IDS = uiPush.UI_PUSH_IDS.slice();
+const IMPLEMENTED_IDS = uiPush.UI_PUSH_IDS.concat(uiSlide.UI_SLIDE_IDS);
 const ANATOMY = uiPush.ANATOMY;
 const STYLE = "premium-saas";
 const DEFAULT_COMP = { w: 1920, h: 1080, fps: DEFAULT_FPS };
@@ -33,7 +34,36 @@ function layerRest(layer) {
 }
 
 function normalizeId(id) {
+  const slide = uiSlide.resolveId(id);
+  if (uiSlide.isUiSlideId(slide)) return slide;
   return uiPush.resolveId(id);
+}
+
+function defaultDirectionForId(id) {
+  if (uiSlide.DEFAULT_DIRECTION_BY_ID[id]) return uiSlide.DEFAULT_DIRECTION_BY_ID[id];
+  if (uiPush.DEFAULT_DIRECTION_BY_ID[id]) return uiPush.DEFAULT_DIRECTION_BY_ID[id];
+  return "left";
+}
+
+function defaultGroupForId(id) {
+  return uiSlide.DEFAULT_GROUP_BY_ID[id] || uiPush.DEFAULT_GROUP_BY_ID[id] || "STANDARD";
+}
+
+function defaultOvershootForId(id) {
+  if (uiSlide.DEFAULT_OVERSHOOT_BY_ID[id] != null) return uiSlide.DEFAULT_OVERSHOOT_BY_ID[id];
+  if (uiPush.DEFAULT_OVERSHOOT_BY_ID[id] != null) return uiPush.DEFAULT_OVERSHOOT_BY_ID[id];
+  return 6;
+}
+
+function familyCategory(id) {
+  if (uiSlide.isUiSlideId(id)) return "UI-Slide";
+  if (uiPush.isUiPushId(id)) return "UI-Push";
+  return "UI-Push";
+}
+
+function familyDisplayName(id) {
+  if (uiSlide.isUiSlideId(id)) return uiSlide.displayName(id);
+  return uiPush.displayName(id);
 }
 
 function normalizePushDirection(value, id) {
@@ -44,8 +74,7 @@ function normalizePushDirection(value, id) {
     const asNum = Number(value);
     if (asNum === asNum && DIRECTION_ENUM[asNum]) return DIRECTION_ENUM[asNum];
   }
-  if (uiPush.DEFAULT_DIRECTION_BY_ID[resolved]) return uiPush.DEFAULT_DIRECTION_BY_ID[resolved];
-  return "left";
+  return defaultDirectionForId(resolved);
 }
 
 function implementedIdForDirection(direction) {
@@ -56,6 +85,20 @@ function implementedIdForDirection(direction) {
     down: "EVT_UI_PUSH_DOWN"
   };
   return map[direction] || "EVT_UI_PUSH_LEFT";
+}
+
+function remapDirectionalId(id, direction, explicitDirection) {
+  if (id === "EVT_UI_PUSH_LEFT" || id === "EVT_UI_PUSH_RIGHT" || id === "EVT_UI_PUSH_UP" || id === "EVT_UI_PUSH_DOWN") {
+    if (explicitDirection != null && direction !== defaultDirectionForId(id)) {
+      return implementedIdForDirection(direction);
+    }
+  }
+  if (id === "EVT_SLIDE_CARD_LEFT" || id === "EVT_SLIDE_CARD_RIGHT") {
+    if (explicitDirection != null && (direction === "left" || direction === "right") && direction !== defaultDirectionForId(id)) {
+      return direction === "right" ? "EVT_SLIDE_CARD_RIGHT" : "EVT_SLIDE_CARD_LEFT";
+    }
+  }
+  return id;
 }
 
 function sfxMarkers(fps, phases) {
@@ -89,18 +132,13 @@ function applyTransitionPlan(opts) {
   const strength = opts.strength == null ? 100 : opts.strength;
   const distancePct = opts.distance == null ? 100 : opts.distance;
 
-  if (id === "EVT_UI_PUSH_LEFT" || id === "EVT_UI_PUSH_RIGHT" || id === "EVT_UI_PUSH_UP" || id === "EVT_UI_PUSH_DOWN") {
-    const dir = normalizePushDirection(opts.direction, id);
-    if (opts.direction != null && dir !== normalizePushDirection(null, id)) {
-      id = implementedIdForDirection(dir);
-    }
-  }
+  const direction = normalizePushDirection(opts.direction, id);
+  id = remapDirectionalId(id, direction, opts.direction);
 
   const implemented = IMPLEMENTED_IDS.indexOf(id) !== -1;
-  const direction = normalizePushDirection(opts.direction, id);
-  const group = normalizeTimingGroup(opts.group || opts.duration || uiPush.DEFAULT_GROUP_BY_ID[id] || "STANDARD");
+  const group = normalizeTimingGroup(opts.group || opts.duration || defaultGroupForId(id));
   const frames = opts.durationFrames != null ? Math.round(clamp(opts.durationFrames, 2, 240)) : durationFrames(group, fps);
-  const overshoot = opts.overshoot == null ? uiPush.DEFAULT_OVERSHOOT_BY_ID[id] || 6 : opts.overshoot;
+  const overshoot = opts.overshoot == null ? defaultOvershootForId(id) : opts.overshoot;
   const outgoingName = layerName(opts.outgoing, "Outgoing");
   const incomingName = layerName(opts.incoming, "Incoming");
   const outgoingRest = layerRest(opts.outgoing);
@@ -121,8 +159,8 @@ function applyTransitionPlan(opts) {
   const shared = {
     kind: "transition",
     id: id,
-    name: uiPush.displayName(id),
-    category: "UI-Push",
+    name: familyDisplayName(id),
+    category: familyCategory(id),
     style: STYLE,
     implemented: implemented,
     fps: fps,
@@ -142,7 +180,7 @@ function applyTransitionPlan(opts) {
     layers: [],
     outgoing: uiPush.emptyLayer(outgoingName, "outgoing", outgoingRest),
     incoming: uiPush.emptyLayer(incomingName, "incoming", incomingRest),
-    note: "Native AE keyframes. Node plan is source of truth. JSX mirrors the UI Push family."
+    note: "Native AE keyframes. Node plan is source of truth. JSX mirrors the UI Push and UI Slide families."
   };
 
   if (opts.target && opts.target.layerBounds) {
@@ -173,7 +211,7 @@ function applyTransitionPlan(opts) {
     incomingRest: incomingRest
   };
 
-  const built = uiPush.plan(id, ctx);
+  const built = uiSlide.isUiSlideId(id) ? uiSlide.plan(id, ctx) : uiPush.plan(id, ctx);
   shared.outgoing = built.outgoing;
   shared.incoming = built.incoming;
   shared.travel = built.travel;
