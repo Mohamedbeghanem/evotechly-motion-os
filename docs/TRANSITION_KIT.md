@@ -2,7 +2,7 @@
 
 Premium SaaS screen-to-screen motion. Apple / Linear / Stripe / Raycast taste. Not a glitch pack.
 
-**Phase 0–3** ships this document, the folder scaffold, a Node-testable engine, catalog metadata, and a companion ScriptUI panel. The full UI Push family and the UI-Slide card family produce complete keyframe plans. Everything else is catalogued for later phases and AI pairing.
+**Phase 0–4** ships this document, the folder scaffold, a Node-testable engine, catalog metadata, and a companion ScriptUI panel. The full UI Push family, the UI-Slide card family, the Scale-Zoom family, and `EVT_SHARED_CARD` produce complete keyframe plans. Everything else is catalogued for later phases and AI pairing.
 
 This kit does **not** replace the v0.32 Motion tab transitions (shot-level Clean Push / Whip / Zoom Match). Those stay in `ae/Evotechly Motion OS.jsx` (~297 KB — never stub). This kit is UI-to-UI: dashboard → card → analytics.
 
@@ -13,9 +13,9 @@ This kit does **not** replace the v0.32 Motion tab transitions (shot-level Clean
 | Position / scale / opacity push | Yes | **Implemented** for the full UI Push family |
 | Fast Box Blur / Gaussian Blur | Yes | Planned on those 6 (blur keys in the plan) |
 | Shy control null + Slider Controls | Yes | Plan + JSX wiring |
-| Target-frame zoom math | Yes (pure math) | `planTargetZoom` only — JSX apply later |
+| Target-frame zoom math | Yes (pure math) | **Implemented** — `planTargetZoom` + JSX apply |
 | Rounded mask expand / iris | Yes (masks) | Catalog only (Phase 6) |
-| Shared-element “morph” | Partial | Bounds match (pos+scale), not mesh warp |
+| Shared-element “morph” | Partial | **`EVT_SHARED_CARD` implemented** — bounds match (pos+scale), not mesh warp |
 | True glass refraction | No (without a plugin) | Native frost only; Liquid Glass stays companion |
 | SFX | Markers only | Metadata hooks — **no audio files** |
 | `.ffx` / `.aep` presets | Out of scope | Never checked in. AE cannot run in CI |
@@ -23,7 +23,7 @@ This kit does **not** replace the v0.32 Motion tab transitions (shot-level Clean
 
 **CI cannot open After Effects.** Plans are deterministic JSON. Visual taste is an editor soak, same as the rest of Motion OS.
 
-**ExtendScript cannot `require` Node.** `core/transitions/*.js` is the source of truth for numbers and tests. `ae/Evotechly Transitions.jsx` mirrors the UI Push and UI-Slide constants and apply math. If they drift, fix Node first, then the JSX.
+**ExtendScript cannot `require` Node.** `core/transitions/*.js` is the source of truth for numbers and tests. `ae/Evotechly Transitions.jsx` mirrors the UI Push, UI-Slide, Scale-Zoom, and Shared Card constants and apply math. If they drift, fix Node first, then the JSX.
 
 **Progress slider** is reserved. Phase 1 keys are time-based. Driving the whole transition from `Progress` (0–100) is an Expressions-folder job in a later phase.
 
@@ -111,7 +111,7 @@ Folder names under `transitions/`. Letters are A=01 … P=16.
 |---|---|---|---|---|
 | A / 01 | UI-Push | `01_UI-Push/` | 1–2 | **15 IDs implemented (Phase 2)** |
 | B / 02 | UI-Slide | `02_UI-Slide/` | 3 | **8 IDs implemented (Phase 3)** |
-| C / 03 | Scale-Zoom | `03_Scale-Zoom/` | 4 | catalog |
+| C / 03 | Scale-Zoom | `03_Scale-Zoom/` | 4 | **8 IDs implemented (Phase 4)** |
 | D / 04 | Crossfade | `04_Crossfade/` | 5 | catalog |
 | E / 05 | Mask-Reveal | `05_Mask-Reveal/` | 6 | catalog |
 | F / 06 | Blur-Focus | `06_Blur-Focus/` | 7 | catalog |
@@ -119,7 +119,7 @@ Folder names under `transitions/`. Letters are A=01 … P=16.
 | H / 08 | Overlay-Modal | `08_Overlay-Modal/` | 9 | catalog |
 | I / 09 | Page-Screen | `09_Page-Screen/` | 10 | catalog |
 | J / 10 | Wipe-Split | `10_Wipe-Split/` | 11 | catalog |
-| K / 11 | Shared-Element | `11_Shared-Element/` | 12 | catalog |
+| K / 11 | Shared-Element | `11_Shared-Element/` | 12 | **`EVT_SHARED_CARD` implemented**; rest catalog |
 | L / 12 | Stagger-Cascade | `12_Stagger-Cascade/` | 13 | catalog |
 | M / 13 | Camera-Dolly | `13_Camera-Dolly/` | 14 | catalog |
 | N / 14 | Glass-Frost | `14_Glass-Frost/` | 15 | catalog |
@@ -141,6 +141,22 @@ Card-width travel (0.22–0.42 of the axis), not a full-frame push. EvoCRM: dash
 - `EVT_SLIDE_PEEK` — **Slide Peek**. Partial reveal, then hold (incoming never reaches rest).
 
 Plans: `core/transitions/uiSlide.js`. `EVT_CARD_SLIDE_LEFT` aliases `EVT_SLIDE_CARD_LEFT`.
+
+### Phase 4 implemented IDs (Scale-Zoom + Shared Card)
+
+Opacity + transform. No mesh warp. EvoCRM: after a card slide, zoom or bounds-match into detail.
+
+- `EVT_ZOOM_IN` — **Zoom In**. Incoming 88→100; outgoing 100→108 + fade. Plate scales up into frame.
+- `EVT_ZOOM_OUT` — **Zoom Out**. Incoming 112→100; outgoing 100→92 + fade. Pull back to context.
+- `EVT_ZOOM_TARGET` — **Zoom Target**. Outgoing uses `planTargetZoom` (default KPI widget, or `target.layerBounds`). Incoming fades in at rest. JSX apply reads selected-layer bounds.
+- `EVT_ZOOM_MATCH` — **Zoom Match**. Same target math; outgoing fades out so the incoming plate takes the matched crop.
+- `EVT_SCALE_POP` — **Scale Pop**. Incoming 90→100 card present.
+- `EVT_SCALE_BREATHE` — **Scale Breathe**. Idle 100→102→100 on incoming. Use sparingly.
+- `EVT_SCALE_PUNCH` — **Scale Punch**. Short 100→106→100 punch. If `target.layerBounds` is set, punches 18% toward the framed region.
+- `EVT_SCALE_SETTLE` — **Scale Settle**. Oversize incoming (108) eases to 100.
+- `EVT_SHARED_CARD` — **Shared Card**. Card bounds morph to detail: position + independent scale. Not mesh. `EVT_CARD_TO_DETAIL` aliases this ID.
+
+Plans: `core/transitions/scaleZoom.js`, `core/transitions/sharedElement.js`. Math: `planTargetZoom`, `planBoundsMorph` in `target.js`.
 
 ### Phase 1–2 implemented IDs (UI Push family)
 
@@ -178,7 +194,11 @@ Suggested prompt → ID mapping (later Phase 18):
 | “peek”, “partial card” | `EVT_SLIDE_PEEK` |
 | “dashboard push”, “tour the dashboard” | `EVT_UI_PUSH_DASHBOARD` |
 | “split view”, “master detail” | `EVT_UI_PUSH_SPLIT` |
-| “zoom this widget” | `EVT_ZOOM_TARGET` (needs target bounds) |
+| “zoom this widget” | `EVT_ZOOM_TARGET` (uses target bounds or a default KPI region) |
+| “zoom in”, “scale into” | `EVT_ZOOM_IN` |
+| “zoom out”, “pull back” | `EVT_ZOOM_OUT` |
+| “open this card into detail”, “shared element” | `EVT_SHARED_CARD` |
+| “pop the card” | `EVT_SCALE_POP` |
 | “modal”, “dialog” | `EVT_MODAL_IN` |
 | “quiet”, “calm”, “expensive” | `SMOOTH` + `premium-smooth` or `soft-ui` |
 | “snappy”, “product” | `FAST` + `fast-product` |
@@ -210,6 +230,8 @@ Catalog `sfx: []` (or a short list of hook ids) is metadata for a future sound p
 | `core/transitions/engine.js` | `applyTransitionPlan` |
 | `core/transitions/uiPush.js` | UI Push family keyframe plans |
 | `core/transitions/uiSlide.js` | UI-Slide card family keyframe plans |
+| `core/transitions/scaleZoom.js` | Scale-Zoom family keyframe plans |
+| `core/transitions/sharedElement.js` | Shared Card bounds-match plan |
 | `core/transitions/registry.js` | Catalog load / filter |
 | `transitions/Metadata/catalog.json` | Every planned `EVT_*` |
 | `ae/Evotechly Transitions.jsx` | Companion panel |

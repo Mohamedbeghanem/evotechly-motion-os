@@ -1,10 +1,10 @@
 #target aftereffects
 /*
-  Evotechly Transitions — companion ScriptUI (Transition Kit Phase 3 + SaaS Assets P1).
+  Evotechly Transitions — companion ScriptUI (Transition Kit Phase 4 + SaaS Assets P1).
   Window → Evotechly Transitions.
   Tabs: Transitions / Text / UI / Cursor.
   Numbers mirrored from core/transitions/*.js and core/assets/*.js — Node is source of truth.
-  ExtendScript cannot require Node. Apply UI Push + UI-Slide card family and P1 native assets here.
+  ExtendScript cannot require Node. Apply UI Push + UI-Slide + Scale-Zoom + Shared Card and P1 native assets here.
   Native AE only. No .ffx / .aep / vendor plugins.
   Does not replace Evotechly Motion OS v0.32 (~297 KB).
 */
@@ -41,7 +41,16 @@
     EVT_SLIDE_DRAWER: 1,
     EVT_SLIDE_SHEET_UP: 1,
     EVT_SLIDE_STACK: 1,
-    EVT_SLIDE_PEEK: 1
+    EVT_SLIDE_PEEK: 1,
+    EVT_ZOOM_IN: 1,
+    EVT_ZOOM_OUT: 1,
+    EVT_ZOOM_TARGET: 1,
+    EVT_ZOOM_MATCH: 1,
+    EVT_SCALE_POP: 1,
+    EVT_SCALE_BREATHE: 1,
+    EVT_SCALE_PUNCH: 1,
+    EVT_SCALE_SETTLE: 1,
+    EVT_SHARED_CARD: 1
   };
   /* influence pairs match core/transitions/easing.js + polish.js */
   var EASE = {
@@ -79,14 +88,14 @@
     { id: "EVT_SLIDE_SHEET_UP", name: "Slide Sheet Up", category: "UI-Slide", duration: "STANDARD", intensity: "standard", implemented: true, phase: 3, bestUse: "Bottom sheet present" },
     { id: "EVT_SLIDE_STACK", name: "Slide Stack", category: "UI-Slide", duration: "SMOOTH", intensity: "subtle", implemented: true, phase: 3, bestUse: "Card stack peek + commit" },
     { id: "EVT_SLIDE_PEEK", name: "Slide Peek", category: "UI-Slide", duration: "MICRO", intensity: "subtle", implemented: true, phase: 3, bestUse: "Partial reveal, then hold" },
-    { id: "EVT_ZOOM_IN", category: "Scale-Zoom", duration: "STANDARD", intensity: "standard", implemented: false, phase: 4, bestUse: "Plate scales up into frame" },
-    { id: "EVT_ZOOM_OUT", category: "Scale-Zoom", duration: "STANDARD", intensity: "standard", implemented: false, phase: 4, bestUse: "Pull back to context" },
-    { id: "EVT_ZOOM_TARGET", category: "Scale-Zoom", duration: "SMOOTH", intensity: "standard", implemented: false, phase: 4, bestUse: "Frame a selected region (target required)" },
-    { id: "EVT_ZOOM_MATCH", category: "Scale-Zoom", duration: "STANDARD", intensity: "subtle", implemented: false, phase: 4, bestUse: "Match outgoing crop to incoming" },
-    { id: "EVT_SCALE_POP", category: "Scale-Zoom", duration: "FAST", intensity: "standard", implemented: false, phase: 4, bestUse: "90→100 card present" },
-    { id: "EVT_SCALE_BREATHE", category: "Scale-Zoom", duration: "SMOOTH", intensity: "subtle", implemented: false, phase: 4, bestUse: "Idle 100→102→100 — use sparingly" },
-    { id: "EVT_SCALE_PUNCH", category: "Scale-Zoom", duration: "FAST", intensity: "bold", implemented: false, phase: 4, bestUse: "Short punch-in on a KPI" },
-    { id: "EVT_SCALE_SETTLE", category: "Scale-Zoom", duration: "STANDARD", intensity: "subtle", implemented: false, phase: 4, bestUse: "Oversize incoming eases to 100" },
+    { id: "EVT_ZOOM_IN", name: "Zoom In", category: "Scale-Zoom", duration: "STANDARD", intensity: "standard", implemented: true, phase: 4, bestUse: "Plate scales up into frame" },
+    { id: "EVT_ZOOM_OUT", name: "Zoom Out", category: "Scale-Zoom", duration: "STANDARD", intensity: "standard", implemented: true, phase: 4, bestUse: "Pull back to context" },
+    { id: "EVT_ZOOM_TARGET", name: "Zoom Target", category: "Scale-Zoom", duration: "SMOOTH", intensity: "standard", implemented: true, phase: 4, bestUse: "Frame a selected region (target required)" },
+    { id: "EVT_ZOOM_MATCH", name: "Zoom Match", category: "Scale-Zoom", duration: "STANDARD", intensity: "subtle", implemented: true, phase: 4, bestUse: "Match outgoing crop to incoming" },
+    { id: "EVT_SCALE_POP", name: "Scale Pop", category: "Scale-Zoom", duration: "FAST", intensity: "standard", implemented: true, phase: 4, bestUse: "90→100 card present" },
+    { id: "EVT_SCALE_BREATHE", name: "Scale Breathe", category: "Scale-Zoom", duration: "SMOOTH", intensity: "subtle", implemented: true, phase: 4, bestUse: "Idle 100→102→100 — use sparingly" },
+    { id: "EVT_SCALE_PUNCH", name: "Scale Punch", category: "Scale-Zoom", duration: "FAST", intensity: "bold", implemented: true, phase: 4, bestUse: "Short punch-in on a KPI" },
+    { id: "EVT_SCALE_SETTLE", name: "Scale Settle", category: "Scale-Zoom", duration: "STANDARD", intensity: "subtle", implemented: true, phase: 4, bestUse: "Oversize incoming eases to 100" },
     { id: "EVT_FADE_CROSS", category: "Crossfade", duration: "STANDARD", intensity: "subtle", implemented: false, phase: 5, bestUse: "Opacity swap, no travel" },
     { id: "EVT_FADE_SOFT", category: "Crossfade", duration: "SMOOTH", intensity: "subtle", implemented: false, phase: 5, bestUse: "Longer dissolve for dense UI" },
     { id: "EVT_FADE_HOLD", category: "Crossfade", duration: "SMOOTH", intensity: "subtle", implemented: false, phase: 5, bestUse: "Crossfade with a still hold" },
@@ -130,7 +139,7 @@
     { id: "EVT_SPLIT_V", category: "Wipe-Split", duration: "STANDARD", intensity: "standard", implemented: false, phase: 11, bestUse: "Vertical split reveal" },
     { id: "EVT_WIPE_GRADIENT", category: "Wipe-Split", duration: "SMOOTH", intensity: "subtle", implemented: false, phase: 11, bestUse: "Native gradient wipe, Apple ease" },
     { id: "EVT_SPLIT_REVEAL", category: "Wipe-Split", duration: "SMOOTH", intensity: "subtle", implemented: false, phase: 11, bestUse: "Center split, incoming in the gap" },
-    { id: "EVT_SHARED_CARD", category: "Shared-Element", duration: "SMOOTH", intensity: "standard", implemented: false, phase: 12, bestUse: "Card bounds morph to detail" },
+    { id: "EVT_SHARED_CARD", name: "Shared Card", category: "Shared-Element", duration: "SMOOTH", intensity: "standard", implemented: true, phase: 12, bestUse: "Card bounds morph to detail" },
     { id: "EVT_SHARED_IMAGE", category: "Shared-Element", duration: "SMOOTH", intensity: "standard", implemented: false, phase: 12, bestUse: "Image hero → gallery" },
     { id: "EVT_MATCH_CUT", category: "Shared-Element", duration: "FAST", intensity: "subtle", implemented: false, phase: 12, bestUse: "Match position/scale, cut the rest" },
     { id: "EVT_MORPH_BOUNDS", category: "Shared-Element", duration: "STANDARD", intensity: "standard", implemented: false, phase: 12, bestUse: "Rect morph only (no mesh)" },
@@ -838,8 +847,82 @@
   function overshootPx(distance, overshootPct) {
     return Math.min(OVERSHOOT_CAP, distance * (clamp(overshootPct, 0, 24) / 100));
   }
-  function key(frame, fps, x, y, sx, opacity, blur, phase) {
-    return { t: secondsFromFrames(frame, fps), frame: frame, x: x, y: y, sx: sx, sy: sx, opacity: opacity, blur: blur, phase: phase };
+  function key(frame, fps, x, y, sx, opacity, blur, phase, sy) {
+    return { t: secondsFromFrames(frame, fps), frame: frame, x: x, y: y, sx: sx, sy: (sy == null ? sx : sy), opacity: opacity, blur: blur, phase: phase };
+  }
+  function r4(n) {
+    return Math.round(Number(n) * 10000) / 10000;
+  }
+  function mixScale(from, to, strengthPct) {
+    var t = clamp(strengthPct == null ? 100 : strengthPct, 0, 200) / 100;
+    return r4(from + (to - from) * t);
+  }
+  function defaultTargetBounds() {
+    return { l: 760, t: 340, r: 1160, b: 740 };
+  }
+  function defaultCardBounds() {
+    return { l: 240, t: 300, r: 720, b: 660 };
+  }
+  function defaultDetailBounds() {
+    return { l: 280, t: 80, r: 1640, b: 1000 };
+  }
+  function layerBoundsBox(layer, t) {
+    var rect, pos, sc, w, h;
+    try {
+      rect = layer.sourceRectAtTime(t, false);
+      pos = layer.property("ADBE Transform Group").property("ADBE Position").value;
+      sc = layer.property("ADBE Transform Group").property("ADBE Scale").value;
+      w = rect.width * ((sc[0] || 100) / 100);
+      h = rect.height * ((sc[1] || sc[0] || 100) / 100);
+      if (!(w > 1) || !(h > 1)) return null;
+      return { l: pos[0] + rect.left * ((sc[0] || 100) / 100), t: pos[1] + rect.top * ((sc[1] || sc[0] || 100) / 100), r: pos[0] + rect.left * ((sc[0] || 100) / 100) + w, b: pos[1] + rect.top * ((sc[1] || sc[0] || 100) / 100) + h };
+    } catch (e) {
+      return null;
+    }
+  }
+  function planTargetZoomJs(compW, compH, box, padding) {
+    var width, height, availW, availH, scaleFactor, targetCenter, compCenter;
+    padding = padding == null ? 80 : padding;
+    box = box || defaultTargetBounds();
+    width = box.r - box.l;
+    height = box.b - box.t;
+    if (!(compW > 0) || !(compH > 0) || !(width > 0) || !(height > 0)) {
+      return { valid: false, scale: 100, dx: 0, dy: 0 };
+    }
+    availW = Math.max(1, compW - padding * 2);
+    availH = Math.max(1, compH - padding * 2);
+    scaleFactor = Math.min(availW / width, availH / height);
+    targetCenter = [(box.l + box.r) / 2, (box.t + box.b) / 2];
+    compCenter = [compW / 2, compH / 2];
+    return {
+      valid: true,
+      scale: r4(scaleFactor * 100),
+      dx: r4(-(targetCenter[0] - compCenter[0]) * scaleFactor) || 0,
+      dy: r4(-(targetCenter[1] - compCenter[1]) * scaleFactor) || 0
+    };
+  }
+  function planBoundsMorphJs(fromB, toB) {
+    var fromW, fromH, toW, toH, fromC, toC;
+    fromB = fromB || defaultCardBounds();
+    toB = toB || defaultDetailBounds();
+    fromW = fromB.r - fromB.l;
+    fromH = fromB.b - fromB.t;
+    toW = toB.r - toB.l;
+    toH = toB.b - toB.t;
+    if (!(fromW > 0) || !(fromH > 0) || !(toW > 0) || !(toH > 0)) {
+      return { valid: false, dx: 0, dy: 0, sx: 100, sy: 100, invSx: 100, invSy: 100 };
+    }
+    fromC = [(fromB.l + fromB.r) / 2, (fromB.t + fromB.b) / 2];
+    toC = [(toB.l + toB.r) / 2, (toB.t + toB.b) / 2];
+    return {
+      valid: true,
+      dx: r4(toC[0] - fromC[0]) || 0,
+      dy: r4(toC[1] - fromC[1]) || 0,
+      sx: r4((toW / fromW) * 100),
+      sy: r4((toH / fromH) * 100),
+      invSx: r4((fromW / toW) * 100),
+      invSy: r4((fromH / toH) * 100)
+    };
   }
   function planDirectional(dir, frames, fps, comp) {
     var ph = phaseFrames(frames);
@@ -1253,7 +1336,199 @@
       phases: ph
     };
   }
-  function planForId(id, dir, frames, fps, comp) {
+  function planZoomIn(frames, fps) {
+    var ph = phaseFrames(frames);
+    return {
+      outgoing: [
+        key(ph.start, fps, 0, 0, 100, 100, 0, "anticipate"),
+        key(ph.anticipate, fps, 0, 0, 100.6, 100, 0, "action"),
+        key(ph.mid, fps, 0, 0, 104, 42, 2, "crossover"),
+        key(ph.end, fps, 0, 0, 108, 0, 4, "done")
+      ],
+      incoming: [
+        key(ph.start, fps, 0, 0, 88, 0, 4, "anticipate"),
+        key(ph.mid, fps, 0, 0, mixScale(88, 100, 50), 72, 1, "crossover"),
+        key(ph.settle, fps, 0, 0, 100.4, 100, 0, "settle"),
+        key(ph.end, fps, 0, 0, 100, 100, 0, "done")
+      ],
+      phases: ph
+    };
+  }
+  function planZoomOut(frames, fps) {
+    var ph = phaseFrames(frames);
+    return {
+      outgoing: [
+        key(ph.start, fps, 0, 0, 100, 100, 0, "anticipate"),
+        key(ph.anticipate, fps, 0, 0, 99.6, 100, 0, "action"),
+        key(ph.mid, fps, 0, 0, 96, 48, 2, "crossover"),
+        key(ph.end, fps, 0, 0, 92, 0, 4, "done")
+      ],
+      incoming: [
+        key(ph.start, fps, 0, 0, 112, 0, 4, "anticipate"),
+        key(ph.mid, fps, 0, 0, mixScale(112, 100, 50), 74, 1, "crossover"),
+        key(ph.settle, fps, 0, 0, 100.4, 100, 0, "settle"),
+        key(ph.end, fps, 0, 0, 100, 100, 0, "done")
+      ],
+      phases: ph
+    };
+  }
+  function planZoomTarget(frames, fps, comp, target) {
+    var ph = phaseFrames(frames);
+    var tz = planTargetZoomJs(comp.width, comp.height, (target && target.layerBounds) || defaultTargetBounds(), 80);
+    var endSx = tz.valid ? tz.scale : 100;
+    var endX = tz.valid ? tz.dx : 0;
+    var endY = tz.valid ? tz.dy : 0;
+    var midSx = r4(100 + (endSx - 100) * 0.5);
+    return {
+      outgoing: [
+        key(ph.start, fps, 0, 0, 100, 100, 0, "anticipate"),
+        key(ph.anticipate, fps, 0, 0, 101.2, 100, 0, "action"),
+        key(ph.mid, fps, r4(endX * 0.5), r4(endY * 0.5), midSx, 88, 1, "crossover"),
+        key(ph.end, fps, endX, endY, endSx, 72, 2, "done")
+      ],
+      incoming: [
+        key(ph.start, fps, 0, 0, 100, 0, 3, "anticipate"),
+        key(ph.mid, fps, 0, 0, 100, 58, 1, "crossover"),
+        key(ph.settle, fps, 0, 0, 100.2, 100, 0, "settle"),
+        key(ph.end, fps, 0, 0, 100, 100, 0, "done")
+      ],
+      phases: ph
+    };
+  }
+  function planZoomMatch(frames, fps, comp, target) {
+    var ph = phaseFrames(frames);
+    var tz = planTargetZoomJs(comp.width, comp.height, (target && target.layerBounds) || defaultTargetBounds(), 80);
+    var endSx = tz.valid ? tz.scale : 100;
+    var endX = tz.valid ? tz.dx : 0;
+    var endY = tz.valid ? tz.dy : 0;
+    var midSx = r4(100 + (endSx - 100) * 0.5);
+    return {
+      outgoing: [
+        key(ph.start, fps, 0, 0, 100, 100, 0, "anticipate"),
+        key(ph.anticipate, fps, 0, 0, 100.8, 100, 0, "action"),
+        key(ph.mid, fps, r4(endX * 0.5), r4(endY * 0.5), midSx, 46, 2, "crossover"),
+        key(ph.end, fps, endX, endY, endSx, 0, 3, "done")
+      ],
+      incoming: [
+        key(ph.start, fps, 0, 0, 100, 0, 3, "anticipate"),
+        key(ph.mid, fps, 0, 0, 100, 62, 1, "crossover"),
+        key(ph.settle, fps, 0, 0, 100.2, 100, 0, "settle"),
+        key(ph.end, fps, 0, 0, 100, 100, 0, "done")
+      ],
+      phases: ph
+    };
+  }
+  function planScalePop(frames, fps) {
+    var ph = phaseFrames(frames, "snap");
+    return {
+      outgoing: [
+        key(ph.start, fps, 0, 0, 100, 100, 0, "anticipate"),
+        key(ph.anticipate, fps, 0, 0, 99.6, 100, 0, "action"),
+        key(ph.mid, fps, 0, 0, 98.8, 40, 1, "crossover"),
+        key(ph.end, fps, 0, 0, 98, 0, 2, "done")
+      ],
+      incoming: [
+        key(ph.start, fps, 0, 0, 90, 0, 2, "anticipate"),
+        key(ph.mid, fps, 0, 0, mixScale(90, 100, 60), 84, 0, "crossover"),
+        key(ph.settle, fps, 0, 0, 100.4, 100, 0, "settle"),
+        key(ph.end, fps, 0, 0, 100, 100, 0, "done")
+      ],
+      phases: ph
+    };
+  }
+  function planScaleBreathe(frames, fps) {
+    var ph = phaseFrames(frames, "soft");
+    return {
+      outgoing: [
+        key(ph.start, fps, 0, 0, 100, 100, 0, "anticipate"),
+        key(ph.anticipate, fps, 0, 0, 100, 100, 0, "action"),
+        key(ph.mid, fps, 0, 0, 100, 100, 0, "crossover"),
+        key(ph.end, fps, 0, 0, 100, 100, 0, "done")
+      ],
+      incoming: [
+        key(ph.start, fps, 0, 0, 100, 100, 0, "anticipate"),
+        key(ph.mid, fps, 0, 0, 102, 100, 0, "crossover"),
+        key(ph.settle, fps, 0, 0, mixScale(100, 102, 40), 100, 0, "settle"),
+        key(ph.end, fps, 0, 0, 100, 100, 0, "done")
+      ],
+      phases: ph
+    };
+  }
+  function planScalePunch(frames, fps, comp, target) {
+    var ph = phaseFrames(frames, "snap");
+    var punchSx = 106;
+    var punchX = 0;
+    var punchY = 0;
+    var tz;
+    if (target && target.layerBounds) {
+      tz = planTargetZoomJs(comp.width, comp.height, target.layerBounds, 80);
+      if (tz.valid) {
+        punchSx = r4(100 + (tz.scale - 100) * 0.18);
+        punchX = r4(tz.dx * 0.18);
+        punchY = r4(tz.dy * 0.18);
+      }
+    }
+    return {
+      outgoing: [
+        key(ph.start, fps, 0, 0, 100, 100, 0, "anticipate"),
+        key(ph.anticipate, fps, 0, 0, 99.8, 100, 0, "action"),
+        key(ph.mid, fps, 0, 0, 99.4, 86, 1, "crossover"),
+        key(ph.end, fps, 0, 0, 100, 100, 0, "done")
+      ],
+      incoming: [
+        key(ph.start, fps, 0, 0, 100, 100, 0, "anticipate"),
+        key(ph.mid, fps, punchX, punchY, punchSx, 100, 0, "crossover"),
+        key(ph.settle, fps, r4(punchX * 0.2), r4(punchY * 0.2), 100.6, 100, 0, "settle"),
+        key(ph.end, fps, 0, 0, 100, 100, 0, "done")
+      ],
+      phases: ph
+    };
+  }
+  function planScaleSettle(frames, fps) {
+    var ph = phaseFrames(frames);
+    return {
+      outgoing: [
+        key(ph.start, fps, 0, 0, 100, 100, 0, "anticipate"),
+        key(ph.anticipate, fps, 0, 0, 99.4, 100, 0, "action"),
+        key(ph.mid, fps, 0, 0, 97.5, 44, 2, "crossover"),
+        key(ph.end, fps, 0, 0, 96, 0, 3, "done")
+      ],
+      incoming: [
+        key(ph.start, fps, 0, 0, 108, 0, 3, "anticipate"),
+        key(ph.mid, fps, 0, 0, mixScale(108, 100, 62), 78, 1, "crossover"),
+        key(ph.settle, fps, 0, 0, 100.6, 100, 0, "settle"),
+        key(ph.end, fps, 0, 0, 100, 100, 0, "done")
+      ],
+      phases: ph
+    };
+  }
+  function planSharedCard(frames, fps, comp, target) {
+    var ph = phaseFrames(frames);
+    var morph = planBoundsMorphJs((target && target.layerBounds) || defaultCardBounds(), (target && target.destBounds) || defaultDetailBounds());
+    var dx = morph.valid ? morph.dx : 0;
+    var dy = morph.valid ? morph.dy : 0;
+    var outSx = morph.valid ? morph.sx : 100;
+    var outSy = morph.valid ? morph.sy : 100;
+    var inSx = morph.valid ? morph.invSx : 100;
+    var inSy = morph.valid ? morph.invSy : 100;
+    var over = overshootPx(Math.max(Math.abs(dx), Math.abs(dy), 24), 4);
+    return {
+      outgoing: [
+        key(ph.start, fps, 0, 0, 100, 100, 0, "anticipate", 100),
+        key(ph.anticipate, fps, r4(dx * 0.04), r4(dy * 0.04), 101.2, 100, 0, "action", 101.2),
+        key(ph.mid, fps, r4(dx * 0.5), r4(dy * 0.5), r4(100 + (outSx - 100) * 0.5), 36, 1, "crossover", r4(100 + (outSy - 100) * 0.5)),
+        key(ph.end, fps, dx, dy, outSx, 0, 2, "done", outSy)
+      ],
+      incoming: [
+        key(ph.start, fps, r4(-dx), r4(-dy), inSx, 0, 2, "anticipate", inSy),
+        key(ph.mid, fps, r4(-dx * 0.18), r4(-dy * 0.18), r4(inSx + (100 - inSx) * 0.72), 78, 1, "crossover", r4(inSy + (100 - inSy) * 0.72)),
+        key(ph.settle, fps, r4(dx === 0 ? 0 : (dx > 0 ? over : -over) * 0.15), r4(dy === 0 ? 0 : (dy > 0 ? over : -over) * 0.15), 100.6, 100, 0, "settle", 100.6),
+        key(ph.end, fps, 0, 0, 100, 100, 0, "done", 100)
+      ],
+      phases: ph
+    };
+  }
+  function planForId(id, dir, frames, fps, comp, target) {
     if (id === "EVT_UI_PUSH_SCALE") return planScale(frames, fps);
     if (id === "EVT_UI_PUSH_DEPTH") return planDepth(frames, fps);
     if (id === "EVT_UI_PUSH_SOFT") return planSoft(dir, frames, fps, comp);
@@ -1272,6 +1547,15 @@
     if (id === "EVT_SLIDE_SHEET_UP") return planSheetUp(dir, frames, fps, comp);
     if (id === "EVT_SLIDE_STACK") return planStack(dir, frames, fps, comp);
     if (id === "EVT_SLIDE_PEEK") return planPeek(dir, frames, fps, comp);
+    if (id === "EVT_ZOOM_IN") return planZoomIn(frames, fps);
+    if (id === "EVT_ZOOM_OUT") return planZoomOut(frames, fps);
+    if (id === "EVT_ZOOM_TARGET") return planZoomTarget(frames, fps, comp, target);
+    if (id === "EVT_ZOOM_MATCH") return planZoomMatch(frames, fps, comp, target);
+    if (id === "EVT_SCALE_POP") return planScalePop(frames, fps);
+    if (id === "EVT_SCALE_BREATHE") return planScaleBreathe(frames, fps);
+    if (id === "EVT_SCALE_PUNCH") return planScalePunch(frames, fps, comp, target);
+    if (id === "EVT_SCALE_SETTLE") return planScaleSettle(frames, fps);
+    if (id === "EVT_SHARED_CARD") return planSharedCard(frames, fps, comp, target);
     return planDirectional(dir, frames, fps, comp);
   }
   function defaultDirForId(id) {
@@ -1314,7 +1598,7 @@
     id = remapId(row.id, dir);
     row = findCatalog(id) || row;
     if (!row.implemented) {
-      alert(row.id + " is catalogued for Phase " + row.phase + ".\nPhase 3 applies the UI-Slide card family (plus UI Push).\nSee docs/TRANSITION_PHASES.md.");
+      alert(row.id + " is catalogued for Phase " + row.phase + ".\nPhase 4 applies Scale-Zoom + Shared Card (plus UI Push / UI-Slide).\nSee docs/TRANSITION_PHASES.md.");
       return;
     }
     if (sel.length < 2) { alert("Select outgoing, then incoming (two layers)."); return; }
@@ -1323,7 +1607,10 @@
     frames = durationFrames(group, fps);
     ease = EASING_IDS[easeList.selection ? easeList.selection.index : 0] || "premium-smooth";
     t0 = comp.time;
-    plan = planForId(id, dir, frames, fps, comp);
+    plan = planForId(id, dir, frames, fps, comp, {
+      layerBounds: layerBoundsBox(sel[0], t0) || (id === "EVT_SHARED_CARD" ? defaultCardBounds() : defaultTargetBounds()),
+      destBounds: layerBoundsBox(sel[1], t0) || defaultDetailBounds()
+    });
     undo = "Evotechly Transition · " + id;
     app.beginUndoGroup(undo);
     try {
@@ -1371,7 +1658,7 @@
     win.spacing = 8;
     win.margins = 10;
     win.add("statictext", undefined, "EVOTECHLY  ·  Transitions");
-    intro = win.add("statictext", undefined, "Phase 3 UI-Slide (card family) + Phase 2 UI Push + P1 native Text / UI / Cursor. Catalog is searchable. Companion to Motion OS — does not replace v0.32. Node is source of truth; this panel mirrors apply numbers.", { multiline: true });
+    intro = win.add("statictext", undefined, "Phase 4 Scale-Zoom + Shared Card + Phase 3 UI-Slide + Phase 2 UI Push + P1 native Text / UI / Cursor. Catalog is searchable. Companion to Motion OS — does not replace v0.32. Node is source of truth; this panel mirrors apply numbers.", { multiline: true });
     intro.characters = 46;
 
     g = win.add("group");

@@ -89,6 +89,28 @@ test("planTargetZoom frames a centered and an offset region", function () {
   assert.deepEqual(bad.positionDelta, [0, 0]);
 });
 
+test("planBoundsMorph matches card rect to detail without mesh", function () {
+  const morph = target.planBoundsMorph({
+    fromBounds: { l: 240, t: 300, r: 720, b: 660 },
+    toBounds: { l: 280, t: 80, r: 1640, b: 1000 }
+  });
+  assert.equal(morph.valid, true);
+  assert.deepEqual(morph.fromCenter, [480, 480]);
+  assert.deepEqual(morph.toCenter, [960, 540]);
+  assert.deepEqual(morph.positionDelta, [480, 60]);
+  assert.deepEqual(morph.scale, [283.3333, 255.5556]);
+  assert.deepEqual(morph.inverseScale, [35.2941, 39.1304]);
+  assert.deepEqual(morph.fromSize, [480, 360]);
+  assert.deepEqual(morph.toSize, [1360, 920]);
+
+  const empty = target.planBoundsMorph({
+    fromBounds: { l: 10, t: 10, r: 10, b: 10 },
+    toBounds: { l: 0, t: 0, r: 100, b: 100 }
+  });
+  assert.equal(empty.valid, false);
+  assert.deepEqual(empty.scale, [100, 100]);
+});
+
 test("control plan is a shy null with the documented sliders", function () {
   const plan = control.planTransitionControl({
     group: "STANDARD",
@@ -127,11 +149,16 @@ test("control plan is a shy null with the documented sliders", function () {
   assert.ok(plan.note.indexOf("metadata") !== -1);
 });
 
-test("every UI Push ID produces a deterministic complete plan", function () {
+test("every implemented ID produces a deterministic complete plan", function () {
   const uiPush = require("../core/transitions/uiPush");
   const uiSlide = require("../core/transitions/uiSlide");
+  const scaleZoom = require("../core/transitions/scaleZoom");
+  const sharedElement = require("../core/transitions/sharedElement");
   const ids = engine.IMPLEMENTED_IDS.slice();
-  assert.deepEqual(ids, uiPush.UI_PUSH_IDS.concat(uiSlide.UI_SLIDE_IDS));
+  assert.deepEqual(
+    ids,
+    uiPush.UI_PUSH_IDS.concat(uiSlide.UI_SLIDE_IDS).concat(scaleZoom.SCALE_ZOOM_IDS).concat(sharedElement.SHARED_ELEMENT_IDS)
+  );
   assert.deepEqual(ids, [
     "EVT_UI_PUSH_LEFT",
     "EVT_UI_PUSH_RIGHT",
@@ -155,7 +182,16 @@ test("every UI Push ID produces a deterministic complete plan", function () {
     "EVT_SLIDE_DRAWER",
     "EVT_SLIDE_SHEET_UP",
     "EVT_SLIDE_STACK",
-    "EVT_SLIDE_PEEK"
+    "EVT_SLIDE_PEEK",
+    "EVT_ZOOM_IN",
+    "EVT_ZOOM_OUT",
+    "EVT_ZOOM_TARGET",
+    "EVT_ZOOM_MATCH",
+    "EVT_SCALE_POP",
+    "EVT_SCALE_BREATHE",
+    "EVT_SCALE_PUNCH",
+    "EVT_SCALE_SETTLE",
+    "EVT_SHARED_CARD"
   ]);
   ids.forEach(function (id) {
     const opts = {
@@ -186,7 +222,14 @@ test("every UI Push ID produces a deterministic complete plan", function () {
     assert.ok(a.anatomy.action);
     assert.ok(a.anatomy.crossover);
     assert.ok(a.anatomy.settle);
-    assert.equal(a.name, uiSlide.isUiSlideId(id) ? uiSlide.displayName(id) : uiPush.displayName(id));
+    const name = sharedElement.isSharedElementId(id)
+      ? sharedElement.displayName(id)
+      : scaleZoom.isScaleZoomId(id)
+        ? scaleZoom.displayName(id)
+        : uiSlide.isUiSlideId(id)
+          ? uiSlide.displayName(id)
+          : uiPush.displayName(id);
+    assert.equal(a.name, name);
     assert.ok(a.outgoing.keys.length >= 3, id + " outgoing keys");
     assert.ok(a.incoming.keys.length >= 3, id + " incoming keys");
   });
@@ -406,6 +449,114 @@ test("UI-Slide panel / drawer / sheet / stack / peek match named variants", func
   assert.equal(peek.outgoing.keys[3].opacity, 92);
 });
 
+test("Scale-Zoom in / out / pop / breathe / punch / settle use opacity + scale", function () {
+  const zoomIn = engine.applyTransitionPlan({ id: "EVT_ZOOM_IN", durationFrames: 16, fps: 30 });
+  const zoomOut = engine.applyTransitionPlan({ id: "EVT_ZOOM_OUT", durationFrames: 16, fps: 30 });
+  const pop = engine.applyTransitionPlan({ id: "EVT_SCALE_POP", durationFrames: 16, fps: 30 });
+  const breathe = engine.applyTransitionPlan({ id: "EVT_SCALE_BREATHE", durationFrames: 16, fps: 30 });
+  const punch = engine.applyTransitionPlan({ id: "EVT_SCALE_PUNCH", durationFrames: 16, fps: 30 });
+  const settle = engine.applyTransitionPlan({ id: "EVT_SCALE_SETTLE", durationFrames: 16, fps: 30 });
+
+  assert.equal(zoomIn.category, "Scale-Zoom");
+  assert.equal(zoomIn.name, "Zoom In");
+  assert.equal(zoomIn.travel.zoom, true);
+  assert.equal(zoomIn.travel.distance, 0);
+  assert.equal(zoomIn.incoming.keys[0].scale[0], 88);
+  assert.equal(zoomIn.incoming.keys[3].scale[0], 100);
+  assert.equal(zoomIn.outgoing.keys[3].scale[0], 108);
+  assert.equal(zoomIn.outgoing.keys[3].opacity, 0);
+  assert.equal(zoomIn.outgoing.keys[0].x, 0);
+  assert.equal(zoomIn.incoming.keys[0].x, 0);
+
+  assert.equal(zoomOut.name, "Zoom Out");
+  assert.equal(zoomOut.incoming.keys[0].scale[0], 112);
+  assert.equal(zoomOut.outgoing.keys[3].scale[0], 92);
+  assert.equal(zoomOut.incoming.keys[3].opacity, 100);
+
+  assert.equal(pop.name, "Scale Pop");
+  assert.equal(pop.incoming.keys[0].scale[0], 90);
+  assert.equal(pop.incoming.keys[3].scale[0], 100);
+  assert.equal(pop.outgoing.keys[3].opacity, 0);
+
+  assert.equal(breathe.name, "Scale Breathe");
+  assert.equal(breathe.travel.breathe, true);
+  assert.equal(breathe.travel.outgoingStays, true);
+  assert.equal(breathe.incoming.keys[1].scale[0], 102);
+  assert.equal(breathe.incoming.keys[3].scale[0], 100);
+  assert.equal(breathe.outgoing.keys[3].opacity, 100);
+
+  assert.equal(punch.name, "Scale Punch");
+  assert.equal(punch.incoming.keys[1].scale[0], 106);
+  assert.equal(punch.incoming.keys[3].scale[0], 100);
+  assert.equal(punch.outgoing.keys[3].opacity, 100);
+
+  assert.equal(settle.name, "Scale Settle");
+  assert.equal(settle.incoming.keys[0].scale[0], 108);
+  assert.equal(settle.incoming.keys[3].scale[0], 100);
+  assert.equal(settle.outgoing.keys[3].opacity, 0);
+});
+
+test("Zoom Target and Zoom Match apply planTargetZoom to the outgoing plate", function () {
+  const targetZoom = engine.applyTransitionPlan({ id: "EVT_ZOOM_TARGET", durationFrames: 16, fps: 30 });
+  const match = engine.applyTransitionPlan({ id: "EVT_ZOOM_MATCH", durationFrames: 16, fps: 30 });
+  const offset = engine.applyTransitionPlan({
+    id: "EVT_ZOOM_TARGET",
+    durationFrames: 16,
+    fps: 30,
+    target: { layerBounds: { left: 100, top: 100, right: 500, bottom: 400 }, padding: 80 }
+  });
+
+  assert.equal(targetZoom.name, "Zoom Target");
+  assert.equal(targetZoom.travel.targetZoom, true);
+  assert.equal(targetZoom.target.valid, true);
+  assert.deepEqual(targetZoom.target.scale, [230, 230]);
+  assert.deepEqual(targetZoom.target.positionDelta, [0, 0]);
+  assert.equal(targetZoom.outgoing.keys[3].scale[0], 230);
+  assert.equal(targetZoom.outgoing.keys[3].x, 0);
+  assert.equal(targetZoom.outgoing.keys[3].opacity, 72);
+  assert.equal(targetZoom.incoming.keys[3].scale[0], 100);
+  assert.equal(targetZoom.incoming.keys[3].opacity, 100);
+
+  assert.equal(match.name, "Zoom Match");
+  assert.equal(match.travel.match, true);
+  assert.equal(match.outgoing.keys[3].scale[0], 230);
+  assert.equal(match.outgoing.keys[3].opacity, 0);
+  assert.equal(match.incoming.keys[0].opacity, 0);
+  assert.equal(match.incoming.keys[3].opacity, 100);
+
+  assert.equal(offset.target.scaleFactor, 3.0667);
+  assert.deepEqual(offset.outgoing.keys[3].scale, [306.6667, 306.6667]);
+  assert.equal(offset.outgoing.keys[3].x, 2024);
+  assert.equal(offset.outgoing.keys[3].y, 889.3333);
+});
+
+test("Shared Card morphs card bounds to detail with position + scale, not mesh", function () {
+  const plan = engine.applyTransitionPlan({ id: "EVT_SHARED_CARD", durationFrames: 16, fps: 30 });
+  const alias = engine.applyTransitionPlan({ id: "EVT_CARD_TO_DETAIL", durationFrames: 16, fps: 30 });
+
+  assert.equal(plan.category, "Shared-Element");
+  assert.equal(plan.name, "Shared Card");
+  assert.equal(plan.travel.boundsMatch, true);
+  assert.equal(plan.travel.shared, true);
+  assert.equal(plan.travel.mesh, false);
+  assert.equal(plan.morph.valid, true);
+  assert.deepEqual(plan.morph.positionDelta, [480, 60]);
+  assert.deepEqual(plan.morph.scale, [283.3333, 255.5556]);
+  assert.equal(plan.outgoing.keys[0].x, 0);
+  assert.equal(plan.outgoing.keys[0].scale[0], 100);
+  assert.equal(plan.outgoing.keys[3].x, 480);
+  assert.equal(plan.outgoing.keys[3].y, 60);
+  assert.deepEqual(plan.outgoing.keys[3].scale, [283.3333, 255.5556]);
+  assert.equal(plan.outgoing.keys[3].opacity, 0);
+  assert.equal(plan.incoming.keys[0].x, -480);
+  assert.equal(plan.incoming.keys[0].y, -60);
+  assert.deepEqual(plan.incoming.keys[0].scale, [35.2941, 39.1304]);
+  assert.equal(plan.incoming.keys[3].x, 0);
+  assert.equal(plan.incoming.keys[3].scale[0], 100);
+  assert.equal(plan.incoming.keys[3].opacity, 100);
+  assert.deepEqual(alias, plan);
+});
+
 test("unimplemented catalog IDs return a safe stub plan", function () {
   const plan = engine.applyTransitionPlan({ id: "EVT_MICRO_HOVER" });
   assert.equal(plan.implemented, false);
@@ -413,9 +564,11 @@ test("unimplemented catalog IDs return a safe stub plan", function () {
   assert.equal(plan.outgoing.set.position.length, 0);
 });
 
-test("catalog has unique EVT_ IDs and UI Push / UI-Slide implemented flags", function () {
+test("catalog has unique EVT_ IDs and implemented flags for shipped families", function () {
   const uiPush = require("../core/transitions/uiPush");
   const uiSlide = require("../core/transitions/uiSlide");
+  const scaleZoom = require("../core/transitions/scaleZoom");
+  const sharedElement = require("../core/transitions/sharedElement");
   const list = registry.loadCatalog();
   assert.ok(list.length >= 90);
   assert.deepEqual(registry.uniqueIdErrors(), []);
@@ -428,13 +581,19 @@ test("catalog has unique EVT_ IDs and UI Push / UI-Slide implemented flags", fun
     set[id] = true;
   });
   const implemented = registry.listImplemented();
-  assert.equal(implemented.length, 23);
+  assert.equal(implemented.length, 32);
   implemented.forEach(function (row) {
     assert.equal(row.implemented, true);
     assert.equal(row.style, "premium-saas");
     if (row.category === "UI-Slide") {
       assert.equal(row.phase, 3);
       assert.equal(row.name, uiSlide.displayName(row.id));
+    } else if (row.category === "Scale-Zoom") {
+      assert.equal(row.phase, 4);
+      assert.equal(row.name, scaleZoom.displayName(row.id));
+    } else if (row.category === "Shared-Element") {
+      assert.equal(row.phase, 12);
+      assert.equal(row.name, sharedElement.displayName(row.id));
     } else {
       assert.equal(row.category, "UI-Push");
       assert.ok(uiPush.PHASE1_IDS.indexOf(row.id) !== -1 ? row.phase === 1 : row.phase === 2, row.id + " phase");
@@ -458,6 +617,12 @@ test("catalog has unique EVT_ IDs and UI Push / UI-Slide implemented flags", fun
   assert.equal(registry.getById("EVT_SLIDE_CARD_LEFT").name, "Slide Card Left");
   assert.equal(registry.getById("EVT_SLIDE_PANEL_IN").name, "Slide Panel In");
   assert.equal(registry.getById("EVT_SLIDE_STACK").name, "Slide Stack");
+  assert.equal(registry.getById("EVT_ZOOM_IN").implemented, true);
+  assert.equal(registry.getById("EVT_ZOOM_IN").name, "Zoom In");
+  assert.equal(registry.getById("EVT_ZOOM_TARGET").implemented, true);
+  assert.equal(registry.getById("EVT_SCALE_POP").name, "Scale Pop");
+  assert.equal(registry.getById("EVT_SHARED_CARD").implemented, true);
+  assert.equal(registry.getById("EVT_SHARED_CARD").name, "Shared Card");
   assert.equal(registry.filterCatalog({ query: "micro", category: "Micro" }).length, 8);
   assert.equal(registry.filterCatalog({ query: "dashboard push", category: "UI-Push" }).length, 1);
   assert.equal(registry.filterCatalog({ query: "split panel", category: "UI-Push" })[0].id, "EVT_UI_PUSH_SPLIT");
@@ -465,6 +630,9 @@ test("catalog has unique EVT_ IDs and UI Push / UI-Slide implemented flags", fun
   assert.equal(registry.categories().length, 16);
   assert.equal(registry.listByCategory("UI-Push").length, 15);
   assert.equal(registry.listByCategory("UI-Slide").length, 8);
+  assert.equal(registry.listByCategory("Scale-Zoom").length, 8);
+  assert.equal(registry.listByCategory("Shared-Element").length, 6);
+  assert.equal(registry.filterCatalog({ query: "shared card", category: "Shared-Element" })[0].id, "EVT_SHARED_CARD");
 });
 
 test("demo storyboard is a dashboard→card→analytics sequence", function () {
@@ -503,12 +671,26 @@ test("JSX companion embeds UI Push IDs and mirrored constants", function () {
   assert.ok(jsx.indexOf("function planSheetUp") !== -1);
   assert.ok(jsx.indexOf("function planStack") !== -1);
   assert.ok(jsx.indexOf("function planPeek") !== -1);
+  assert.ok(jsx.indexOf("function planZoomIn") !== -1);
+  assert.ok(jsx.indexOf("function planZoomOut") !== -1);
+  assert.ok(jsx.indexOf("function planZoomTarget") !== -1);
+  assert.ok(jsx.indexOf("function planZoomMatch") !== -1);
+  assert.ok(jsx.indexOf("function planScalePop") !== -1);
+  assert.ok(jsx.indexOf("function planScaleBreathe") !== -1);
+  assert.ok(jsx.indexOf("function planScalePunch") !== -1);
+  assert.ok(jsx.indexOf("function planScaleSettle") !== -1);
+  assert.ok(jsx.indexOf("function planSharedCard") !== -1);
+  assert.ok(jsx.indexOf("function planTargetZoomJs") !== -1);
   assert.ok(jsx.indexOf("Panel Push") !== -1);
   assert.ok(jsx.indexOf("Dashboard Push") !== -1);
   assert.ok(jsx.indexOf("Split Panel Push") !== -1);
   assert.ok(jsx.indexOf("Slide Card Left") !== -1);
   assert.ok(jsx.indexOf("Slide Panel In") !== -1);
   assert.ok(jsx.indexOf("Slide Stack") !== -1);
+  assert.ok(jsx.indexOf("Zoom In") !== -1);
+  assert.ok(jsx.indexOf("Zoom Target") !== -1);
+  assert.ok(jsx.indexOf("Scale Pop") !== -1);
+  assert.ok(jsx.indexOf("Shared Card") !== -1);
   assert.ok(/#target aftereffects/.test(jsx));
   assert.ok(jsx.indexOf("does not replace") !== -1);
   registry.catalogIds().forEach(function (id) {

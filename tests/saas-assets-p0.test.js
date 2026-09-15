@@ -129,6 +129,29 @@ test("asset registry schema + native Transition Kit stubs", function () {
     assert.match(a.notes, /uiSlide\.js/);
   });
 
+  const zoom = native.filter(function (a) {
+    return (
+      a.transitionKitId &&
+      (a.transitionKitId.indexOf("EVT_ZOOM_") === 0 || a.transitionKitId.indexOf("EVT_SCALE_") === 0)
+    );
+  });
+  assert.equal(zoom.length, 8);
+  zoom.forEach(function (a) {
+    assert.equal(a.sourceType, "native");
+    assert.equal(a.commercialUse, true);
+    assert.equal(a.implemented, true);
+    assert.match(a.notes, /scaleZoom\.js/);
+  });
+
+  const shared = native.filter(function (a) {
+    return a.transitionKitId === "EVT_SHARED_CARD";
+  });
+  assert.equal(shared.length, 1);
+  assert.equal(shared[0].sourceType, "native");
+  assert.equal(shared[0].commercialUse, true);
+  assert.equal(shared[0].implemented, true);
+  assert.match(shared[0].notes, /sharedElement\.js/);
+
   const catalog = JSON.parse(
     fs.readFileSync(path.join(__dirname, "..", "transitions", "Metadata", "catalog.json"), "utf8")
   );
@@ -136,7 +159,7 @@ test("asset registry schema + native Transition Kit stubs", function () {
   catalog.transitions.forEach(function (row) {
     byId[row.id] = row;
   });
-  push.concat(slide).forEach(function (a) {
+  push.concat(slide).concat(zoom).concat(shared).forEach(function (a) {
     assert.ok(byId[a.transitionKitId], "catalog missing " + a.transitionKitId);
     assert.equal(byId[a.transitionKitId].implemented, true);
   });

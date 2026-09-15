@@ -70,7 +70,40 @@ function planTargetZoom(opts) {
   };
 }
 
+/**
+ * Card → detail bounds morph. Position + independent scale — not mesh warp.
+ * Outgoing travels +scale toward dest. Incoming starts at inverse scale/offset.
+ */
+function planBoundsMorph(opts) {
+  opts = opts || {};
+  const from = boundsOf(opts.fromBounds || opts.sourceBounds || opts.layerBounds);
+  const to = boundsOf(opts.toBounds || opts.destBounds);
+  const fromW = from.r - from.l;
+  const fromH = from.b - from.t;
+  const toW = to.r - to.l;
+  const toH = to.b - to.t;
+  const fromCenter = [round4((from.l + from.r) / 2), round4((from.t + from.b) / 2)];
+  const toCenter = [round4((to.l + to.r) / 2), round4((to.t + to.b) / 2)];
+  const valid = fromW > 0 && fromH > 0 && toW > 0 && toH > 0;
+  const sx = valid ? round4((toW / fromW) * 100) : 100;
+  const sy = valid ? round4((toH / fromH) * 100) : 100;
+  const invSx = valid ? round4((fromW / toW) * 100) : 100;
+  const invSy = valid ? round4((fromH / toH) * 100) : 100;
+  const positionDelta = [round4(toCenter[0] - fromCenter[0]) || 0, round4(toCenter[1] - fromCenter[1]) || 0];
+  return {
+    fromCenter: fromCenter,
+    toCenter: toCenter,
+    positionDelta: positionDelta,
+    scale: [sx, sy],
+    inverseScale: [invSx, invSy],
+    fromSize: [round4(Math.max(0, fromW)), round4(Math.max(0, fromH))],
+    toSize: [round4(Math.max(0, toW)), round4(Math.max(0, toH))],
+    valid: valid
+  };
+}
+
 module.exports = {
   DEFAULT_PADDING,
-  planTargetZoom
+  planTargetZoom,
+  planBoundsMorph
 };

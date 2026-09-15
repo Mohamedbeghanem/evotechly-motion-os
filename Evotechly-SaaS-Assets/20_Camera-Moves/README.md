@@ -9,7 +9,7 @@ Nothing binary ships in this folder in P0. P1 fills **EvotechlyNative** generato
 ## EVT_ naming examples
 
 - `EVT_CAM_DOLLY_IN` — catalog
-- `EVT_ZOOM_TARGET` — planTargetZoom math exists; JSX apply later
+- `EVT_ZOOM_TARGET` — owned (Transition Kit Phase 4; `planTargetZoom` + JSX apply)
 - `EVT_CAM_PUSH_SOFT` — planned
 
 ## Native path
