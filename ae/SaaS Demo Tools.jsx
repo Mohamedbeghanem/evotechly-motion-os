@@ -1028,6 +1028,7 @@
     kitP.orientation = "column";
     kitP.alignChildren = ["fill", "top"];
     kitP.margins = 8;
+    kitP.add("statictext", undefined, "Evotechly Transitions — Window → Evotechly Transitions (companion panel).");
     kitNote = kitP.add("statictext", undefined, "Companion names + official URLs only. Copy or alert. Never download or vendor binaries.", { multiline: true });
     kitNote.characters = 40;
     kitList = kitP.add("listbox", undefined, KIT_HUB_NAMES);

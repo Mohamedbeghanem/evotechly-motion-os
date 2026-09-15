@@ -14,6 +14,7 @@ Soak after unpack (confidence, not a tag blocker): [SOAK_CHECKLIST.md](SOAK_CHEC
 | `ae/SaaS Demo Tools.jsx` | Window → SaaS Demo Tools / Motion OS Hub (Home seed, SaaS engines, Kit Hub URLs). | ~45 KB |
 | `ae/Seed Golden Project.jsx` | File → Scripts → Run Script File… (or SaaS Demo → Seed). Builds the four golden comps. | ~8 KB |
 | `ae/Caption Style Tools.jsx` | Window → Caption Style Tools (P1c keyword color + in/out). Native text animators. | ~14 KB |
+| `ae/Evotechly Transitions.jsx` | Window → Evotechly Transitions (Transition Kit Phase 0–1). Not part of the original 2.0.0 four-file zip — include it when packing the kit. | ~35 KB |
 
 The main panel does **not** replace the companions. A zip with only the 297 KB panel is **not** a full 2.0.0.
 

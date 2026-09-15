@@ -14,6 +14,7 @@ Quit After Effects. Copy these into **Scripts/ScriptUI Panels**, then restart. S
 | 2 | `ae/SaaS Demo Tools.jsx` | **Window → SaaS Demo Tools** / **Motion OS Hub** (palette title Motion OS Hub: Home + SaaS + Kit Hub) |
 | 3 | `ae/Caption Style Tools.jsx` | **Window → Caption Style Tools** (P1c keyword color + in/out; separate from Hub) |
 | 4 | `ae/Seed Golden Project.jsx` | **File → Scripts → Run Script File…** or **Hub → Home → Seed Golden Project** |
+| 5 | `ae/Evotechly Transitions.jsx` | **Window → Evotechly Transitions** (Transition Kit Phase 1 — six UI Push plans). [TRANSITION_KIT.md](TRANSITION_KIT.md) |
 
 Copy Seed into **Scripts** (not ScriptUI Panels) so it appears under **File → Scripts**. Keep a copy next to the Hub panel if you seed from Home.
 

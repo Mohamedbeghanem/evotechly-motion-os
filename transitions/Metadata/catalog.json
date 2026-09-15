@@ -1,0 +1,1988 @@
+{
+  "version": "phase-1",
+  "style": "premium-saas",
+  "aspectRatios": [
+    "16:9",
+    "9:16",
+    "1:1",
+    "4:5"
+  ],
+  "generated": "transitions/Metadata/catalog.json",
+  "note": "Phase 1 implements six UI Push IDs. Other rows are metadata for later phases and AI pairing.",
+  "transitions": [
+    {
+      "id": "EVT_UI_PUSH_LEFT",
+      "category": "UI-Push",
+      "style": "premium-saas",
+      "duration": "STANDARD",
+      "intensity": "standard",
+      "targetRequired": false,
+      "bestUse": "Dashboard → next screen, iOS-style push left",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [
+        "ui-whoosh-soft"
+      ],
+      "phase": 1,
+      "implemented": true
+    },
+    {
+      "id": "EVT_UI_PUSH_RIGHT",
+      "category": "UI-Push",
+      "style": "premium-saas",
+      "duration": "STANDARD",
+      "intensity": "standard",
+      "targetRequired": false,
+      "bestUse": "Back navigation, previous screen from the left",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [
+        "ui-whoosh-soft"
+      ],
+      "phase": 1,
+      "implemented": true
+    },
+    {
+      "id": "EVT_UI_PUSH_UP",
+      "category": "UI-Push",
+      "style": "premium-saas",
+      "duration": "STANDARD",
+      "intensity": "standard",
+      "targetRequired": false,
+      "bestUse": "Sheet-like screen rise, settings stack",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [
+        "ui-whoosh-soft"
+      ],
+      "phase": 1,
+      "implemented": true
+    },
+    {
+      "id": "EVT_UI_PUSH_DOWN",
+      "category": "UI-Push",
+      "style": "premium-saas",
+      "duration": "STANDARD",
+      "intensity": "standard",
+      "targetRequired": false,
+      "bestUse": "Dismiss upward stack, close overlay screen",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [
+        "ui-whoosh-soft"
+      ],
+      "phase": 1,
+      "implemented": true
+    },
+    {
+      "id": "EVT_UI_PUSH_SCALE",
+      "category": "UI-Push",
+      "style": "premium-saas",
+      "duration": "STANDARD",
+      "intensity": "subtle",
+      "targetRequired": false,
+      "bestUse": "Card or modal swap without a hard slide",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [
+        "ui-cross"
+      ],
+      "phase": 1,
+      "implemented": true
+    },
+    {
+      "id": "EVT_UI_PUSH_DEPTH",
+      "category": "UI-Push",
+      "style": "premium-saas",
+      "duration": "SMOOTH",
+      "intensity": "subtle",
+      "targetRequired": false,
+      "bestUse": "Recede outgoing, lift incoming — product tour",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [
+        "ui-cross"
+      ],
+      "phase": 1,
+      "implemented": true
+    },
+    {
+      "id": "EVT_UI_PUSH_SOFT",
+      "category": "UI-Push",
+      "style": "premium-saas",
+      "duration": "SMOOTH",
+      "intensity": "subtle",
+      "targetRequired": false,
+      "bestUse": "Same as left with longer settle",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 2,
+      "implemented": false
+    },
+    {
+      "id": "EVT_UI_PUSH_SNAP",
+      "category": "UI-Push",
+      "style": "premium-saas",
+      "duration": "FAST",
+      "intensity": "bold",
+      "targetRequired": false,
+      "bestUse": "Short product chrome, tab-to-tab",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 2,
+      "implemented": false
+    },
+    {
+      "id": "EVT_UI_PUSH_OVERSHOOT",
+      "category": "UI-Push",
+      "style": "premium-saas",
+      "duration": "STANDARD",
+      "intensity": "standard",
+      "targetRequired": false,
+      "bestUse": "Push with a quieter elastic settle",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 2,
+      "implemented": false
+    },
+    {
+      "id": "EVT_UI_PUSH_PARALLAX",
+      "category": "UI-Push",
+      "style": "premium-saas",
+      "duration": "SMOOTH",
+      "intensity": "subtle",
+      "targetRequired": false,
+      "bestUse": "Foreground moves more than background",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 2,
+      "implemented": false
+    },
+    {
+      "id": "EVT_UI_PUSH_FADE",
+      "category": "UI-Push",
+      "style": "premium-saas",
+      "duration": "STANDARD",
+      "intensity": "subtle",
+      "targetRequired": false,
+      "bestUse": "Push plus crossfade for busy UI",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 2,
+      "implemented": false
+    },
+    {
+      "id": "EVT_UI_PUSH_COVER",
+      "category": "UI-Push",
+      "style": "premium-saas",
+      "duration": "STANDARD",
+      "intensity": "standard",
+      "targetRequired": false,
+      "bestUse": "Incoming covers outgoing; outgoing stays",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 2,
+      "implemented": false
+    },
+    {
+      "id": "EVT_SLIDE_CARD_LEFT",
+      "category": "UI-Slide",
+      "style": "premium-saas",
+      "duration": "FAST",
+      "intensity": "subtle",
+      "targetRequired": false,
+      "bestUse": "Single card enters from right",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 3,
+      "implemented": false
+    },
+    {
+      "id": "EVT_SLIDE_CARD_RIGHT",
+      "category": "UI-Slide",
+      "style": "premium-saas",
+      "duration": "FAST",
+      "intensity": "subtle",
+      "targetRequired": false,
+      "bestUse": "Single card enters from left",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 3,
+      "implemented": false
+    },
+    {
+      "id": "EVT_SLIDE_PANEL_IN",
+      "category": "UI-Slide",
+      "style": "premium-saas",
+      "duration": "STANDARD",
+      "intensity": "standard",
+      "targetRequired": false,
+      "bestUse": "Side panel / inspector in",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 3,
+      "implemented": false
+    },
+    {
+      "id": "EVT_SLIDE_PANEL_OUT",
+      "category": "UI-Slide",
+      "style": "premium-saas",
+      "duration": "FAST",
+      "intensity": "standard",
+      "targetRequired": false,
+      "bestUse": "Side panel dismiss",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 3,
+      "implemented": false
+    },
+    {
+      "id": "EVT_SLIDE_DRAWER",
+      "category": "UI-Slide",
+      "style": "premium-saas",
+      "duration": "STANDARD",
+      "intensity": "standard",
+      "targetRequired": false,
+      "bestUse": "Nav drawer from leading edge",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 3,
+      "implemented": false
+    },
+    {
+      "id": "EVT_SLIDE_SHEET_UP",
+      "category": "UI-Slide",
+      "style": "premium-saas",
+      "duration": "STANDARD",
+      "intensity": "standard",
+      "targetRequired": false,
+      "bestUse": "Bottom sheet present",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 3,
+      "implemented": false
+    },
+    {
+      "id": "EVT_SLIDE_STACK",
+      "category": "UI-Slide",
+      "style": "premium-saas",
+      "duration": "SMOOTH",
+      "intensity": "subtle",
+      "targetRequired": false,
+      "bestUse": "Card stack peek + commit",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 3,
+      "implemented": false
+    },
+    {
+      "id": "EVT_SLIDE_PEEK",
+      "category": "UI-Slide",
+      "style": "premium-saas",
+      "duration": "MICRO",
+      "intensity": "subtle",
+      "targetRequired": false,
+      "bestUse": "Partial reveal, then hold",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 3,
+      "implemented": false
+    },
+    {
+      "id": "EVT_ZOOM_IN",
+      "category": "Scale-Zoom",
+      "style": "premium-saas",
+      "duration": "STANDARD",
+      "intensity": "standard",
+      "targetRequired": false,
+      "bestUse": "Plate scales up into frame",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 4,
+      "implemented": false
+    },
+    {
+      "id": "EVT_ZOOM_OUT",
+      "category": "Scale-Zoom",
+      "style": "premium-saas",
+      "duration": "STANDARD",
+      "intensity": "standard",
+      "targetRequired": false,
+      "bestUse": "Pull back to context",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 4,
+      "implemented": false
+    },
+    {
+      "id": "EVT_ZOOM_TARGET",
+      "category": "Scale-Zoom",
+      "style": "premium-saas",
+      "duration": "SMOOTH",
+      "intensity": "standard",
+      "targetRequired": true,
+      "bestUse": "Frame a selected region (target required)",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 4,
+      "implemented": false
+    },
+    {
+      "id": "EVT_ZOOM_MATCH",
+      "category": "Scale-Zoom",
+      "style": "premium-saas",
+      "duration": "STANDARD",
+      "intensity": "subtle",
+      "targetRequired": true,
+      "bestUse": "Match outgoing crop to incoming",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 4,
+      "implemented": false
+    },
+    {
+      "id": "EVT_SCALE_POP",
+      "category": "Scale-Zoom",
+      "style": "premium-saas",
+      "duration": "FAST",
+      "intensity": "standard",
+      "targetRequired": false,
+      "bestUse": "90→100 card present",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 4,
+      "implemented": false
+    },
+    {
+      "id": "EVT_SCALE_BREATHE",
+      "category": "Scale-Zoom",
+      "style": "premium-saas",
+      "duration": "SMOOTH",
+      "intensity": "subtle",
+      "targetRequired": false,
+      "bestUse": "Idle 100→102→100 — use sparingly",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 4,
+      "implemented": false
+    },
+    {
+      "id": "EVT_SCALE_PUNCH",
+      "category": "Scale-Zoom",
+      "style": "premium-saas",
+      "duration": "FAST",
+      "intensity": "bold",
+      "targetRequired": true,
+      "bestUse": "Short punch-in on a KPI",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 4,
+      "implemented": false
+    },
+    {
+      "id": "EVT_SCALE_SETTLE",
+      "category": "Scale-Zoom",
+      "style": "premium-saas",
+      "duration": "STANDARD",
+      "intensity": "subtle",
+      "targetRequired": false,
+      "bestUse": "Oversize incoming eases to 100",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 4,
+      "implemented": false
+    },
+    {
+      "id": "EVT_FADE_CROSS",
+      "category": "Crossfade",
+      "style": "premium-saas",
+      "duration": "STANDARD",
+      "intensity": "subtle",
+      "targetRequired": false,
+      "bestUse": "Opacity swap, no travel",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 5,
+      "implemented": false
+    },
+    {
+      "id": "EVT_FADE_SOFT",
+      "category": "Crossfade",
+      "style": "premium-saas",
+      "duration": "SMOOTH",
+      "intensity": "subtle",
+      "targetRequired": false,
+      "bestUse": "Longer dissolve for dense UI",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 5,
+      "implemented": false
+    },
+    {
+      "id": "EVT_FADE_HOLD",
+      "category": "Crossfade",
+      "style": "premium-saas",
+      "duration": "SMOOTH",
+      "intensity": "subtle",
+      "targetRequired": false,
+      "bestUse": "Crossfade with a still hold",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 5,
+      "implemented": false
+    },
+    {
+      "id": "EVT_FADE_DIP",
+      "category": "Crossfade",
+      "style": "premium-saas",
+      "duration": "FAST",
+      "intensity": "standard",
+      "targetRequired": false,
+      "bestUse": "Brief dip to brand fill, then in",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 5,
+      "implemented": false
+    },
+    {
+      "id": "EVT_DISSOLVE_UI",
+      "category": "Crossfade",
+      "style": "premium-saas",
+      "duration": "STANDARD",
+      "intensity": "subtle",
+      "targetRequired": false,
+      "bestUse": "UI plate dissolve, keep chrome",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 5,
+      "implemented": false
+    },
+    {
+      "id": "EVT_DISSOLVE_COLOR",
+      "category": "Crossfade",
+      "style": "premium-saas",
+      "duration": "STANDARD",
+      "intensity": "subtle",
+      "targetRequired": false,
+      "bestUse": "Tinted dissolve, one brand color",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 5,
+      "implemented": false
+    },
+    {
+      "id": "EVT_MASK_CIRCLE",
+      "category": "Mask-Reveal",
+      "style": "premium-saas",
+      "duration": "STANDARD",
+      "intensity": "standard",
+      "targetRequired": true,
+      "bestUse": "Soft circular reveal on a card",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 6,
+      "implemented": false
+    },
+    {
+      "id": "EVT_MASK_RECT",
+      "category": "Mask-Reveal",
+      "style": "premium-saas",
+      "duration": "STANDARD",
+      "intensity": "standard",
+      "targetRequired": false,
+      "bestUse": "Rounded-rect expand",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 6,
+      "implemented": false
+    },
+    {
+      "id": "EVT_MASK_SOFT_EDGE",
+      "category": "Mask-Reveal",
+      "style": "premium-saas",
+      "duration": "SMOOTH",
+      "intensity": "subtle",
+      "targetRequired": false,
+      "bestUse": "Feathered matte, no hard wipe",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 6,
+      "implemented": false
+    },
+    {
+      "id": "EVT_MASK_EXPAND",
+      "category": "Mask-Reveal",
+      "style": "premium-saas",
+      "duration": "STANDARD",
+      "intensity": "standard",
+      "targetRequired": false,
+      "bestUse": "Mask expansion from center",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 6,
+      "implemented": false
+    },
+    {
+      "id": "EVT_REVEAL_IRIS",
+      "category": "Mask-Reveal",
+      "style": "premium-saas",
+      "duration": "SMOOTH",
+      "intensity": "subtle",
+      "targetRequired": true,
+      "bestUse": "Quiet iris on a screenshot",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 6,
+      "implemented": false
+    },
+    {
+      "id": "EVT_REVEAL_WIPE_SOFT",
+      "category": "Mask-Reveal",
+      "style": "premium-saas",
+      "duration": "STANDARD",
+      "intensity": "subtle",
+      "targetRequired": false,
+      "bestUse": "Soft directional matte, not a bar wipe",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 6,
+      "implemented": false
+    },
+    {
+      "id": "EVT_BLUR_FOCUS",
+      "category": "Blur-Focus",
+      "style": "premium-saas",
+      "duration": "STANDARD",
+      "intensity": "subtle",
+      "targetRequired": false,
+      "bestUse": "Outgoing blurs as incoming sharpens",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 7,
+      "implemented": false
+    },
+    {
+      "id": "EVT_BLUR_PULL",
+      "category": "Blur-Focus",
+      "style": "premium-saas",
+      "duration": "SMOOTH",
+      "intensity": "subtle",
+      "targetRequired": false,
+      "bestUse": "Focus pull toward the incoming plate",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 7,
+      "implemented": false
+    },
+    {
+      "id": "EVT_BLUR_CROSS",
+      "category": "Blur-Focus",
+      "style": "premium-saas",
+      "duration": "STANDARD",
+      "intensity": "subtle",
+      "targetRequired": false,
+      "bestUse": "Mid-cross blur, both plates",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 7,
+      "implemented": false
+    },
+    {
+      "id": "EVT_FOCUS_RACK",
+      "category": "Blur-Focus",
+      "style": "premium-saas",
+      "duration": "SMOOTH",
+      "intensity": "subtle",
+      "targetRequired": true,
+      "bestUse": "Rack between two depths",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 7,
+      "implemented": false
+    },
+    {
+      "id": "EVT_FOCUS_TARGET",
+      "category": "Blur-Focus",
+      "style": "premium-saas",
+      "duration": "STANDARD",
+      "intensity": "subtle",
+      "targetRequired": true,
+      "bestUse": "Sharpen the framed target",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 7,
+      "implemented": false
+    },
+    {
+      "id": "EVT_BLUR_LIFT",
+      "category": "Blur-Focus",
+      "style": "premium-saas",
+      "duration": "FAST",
+      "intensity": "subtle",
+      "targetRequired": false,
+      "bestUse": "Un-blur a frosted panel",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 7,
+      "implemented": false
+    },
+    {
+      "id": "EVT_DEPTH_PUSH",
+      "category": "Depth-Parallax",
+      "style": "premium-saas",
+      "duration": "SMOOTH",
+      "intensity": "subtle",
+      "targetRequired": false,
+      "bestUse": "Layers recede on Z-feel (scale+blur)",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 8,
+      "implemented": false
+    },
+    {
+      "id": "EVT_DEPTH_PULL",
+      "category": "Depth-Parallax",
+      "style": "premium-saas",
+      "duration": "SMOOTH",
+      "intensity": "subtle",
+      "targetRequired": false,
+      "bestUse": "Layers approach",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 8,
+      "implemented": false
+    },
+    {
+      "id": "EVT_PARALLAX_X",
+      "category": "Depth-Parallax",
+      "style": "premium-saas",
+      "duration": "STANDARD",
+      "intensity": "subtle",
+      "targetRequired": false,
+      "bestUse": "Horizontal parallax, small travel",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 8,
+      "implemented": false
+    },
+    {
+      "id": "EVT_PARALLAX_Y",
+      "category": "Depth-Parallax",
+      "style": "premium-saas",
+      "duration": "STANDARD",
+      "intensity": "subtle",
+      "targetRequired": false,
+      "bestUse": "Vertical parallax, small travel",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 8,
+      "implemented": false
+    },
+    {
+      "id": "EVT_DEPTH_STACK",
+      "category": "Depth-Parallax",
+      "style": "premium-saas",
+      "duration": "SMOOTH",
+      "intensity": "standard",
+      "targetRequired": false,
+      "bestUse": "Card stack depth sort",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 8,
+      "implemented": false
+    },
+    {
+      "id": "EVT_DEPTH_CARD",
+      "category": "Depth-Parallax",
+      "style": "premium-saas",
+      "duration": "STANDARD",
+      "intensity": "subtle",
+      "targetRequired": false,
+      "bestUse": "One card lifts off a grid",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 8,
+      "implemented": false
+    },
+    {
+      "id": "EVT_MODAL_IN",
+      "category": "Overlay-Modal",
+      "style": "premium-saas",
+      "duration": "STANDARD",
+      "intensity": "standard",
+      "targetRequired": false,
+      "bestUse": "Dialog present + dim",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 9,
+      "implemented": false
+    },
+    {
+      "id": "EVT_MODAL_OUT",
+      "category": "Overlay-Modal",
+      "style": "premium-saas",
+      "duration": "FAST",
+      "intensity": "standard",
+      "targetRequired": false,
+      "bestUse": "Dialog dismiss",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 9,
+      "implemented": false
+    },
+    {
+      "id": "EVT_SHEET_UP",
+      "category": "Overlay-Modal",
+      "style": "premium-saas",
+      "duration": "STANDARD",
+      "intensity": "standard",
+      "targetRequired": false,
+      "bestUse": "Modal sheet from bottom",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 9,
+      "implemented": false
+    },
+    {
+      "id": "EVT_SHEET_DOWN",
+      "category": "Overlay-Modal",
+      "style": "premium-saas",
+      "duration": "FAST",
+      "intensity": "standard",
+      "targetRequired": false,
+      "bestUse": "Sheet dismiss",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 9,
+      "implemented": false
+    },
+    {
+      "id": "EVT_OVERLAY_DIM",
+      "category": "Overlay-Modal",
+      "style": "premium-saas",
+      "duration": "FAST",
+      "intensity": "subtle",
+      "targetRequired": false,
+      "bestUse": "Dim plate only",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 9,
+      "implemented": false
+    },
+    {
+      "id": "EVT_POPOVER_IN",
+      "category": "Overlay-Modal",
+      "style": "premium-saas",
+      "duration": "FAST",
+      "intensity": "subtle",
+      "targetRequired": true,
+      "bestUse": "Popover from a target",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 9,
+      "implemented": false
+    },
+    {
+      "id": "EVT_TOAST_IN",
+      "category": "Overlay-Modal",
+      "style": "premium-saas",
+      "duration": "FAST",
+      "intensity": "subtle",
+      "targetRequired": false,
+      "bestUse": "Toast from edge, then settle",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 9,
+      "implemented": false
+    },
+    {
+      "id": "EVT_PAGE_PUSH",
+      "category": "Page-Screen",
+      "style": "premium-saas",
+      "duration": "STANDARD",
+      "intensity": "standard",
+      "targetRequired": false,
+      "bestUse": "Full-page push using UI Push math",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 10,
+      "implemented": false
+    },
+    {
+      "id": "EVT_PAGE_FADE",
+      "category": "Page-Screen",
+      "style": "premium-saas",
+      "duration": "SMOOTH",
+      "intensity": "subtle",
+      "targetRequired": false,
+      "bestUse": "Full-page fade",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 10,
+      "implemented": false
+    },
+    {
+      "id": "EVT_SCREEN_SWAP",
+      "category": "Page-Screen",
+      "style": "premium-saas",
+      "duration": "STANDARD",
+      "intensity": "standard",
+      "targetRequired": false,
+      "bestUse": "Replace screen, keep app chrome",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 10,
+      "implemented": false
+    },
+    {
+      "id": "EVT_NAV_FORWARD",
+      "category": "Page-Screen",
+      "style": "premium-saas",
+      "duration": "STANDARD",
+      "intensity": "standard",
+      "targetRequired": false,
+      "bestUse": "Forward in an IA stack",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 10,
+      "implemented": false
+    },
+    {
+      "id": "EVT_NAV_BACK",
+      "category": "Page-Screen",
+      "style": "premium-saas",
+      "duration": "STANDARD",
+      "intensity": "standard",
+      "targetRequired": false,
+      "bestUse": "Back in an IA stack",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 10,
+      "implemented": false
+    },
+    {
+      "id": "EVT_TAB_CROSS",
+      "category": "Page-Screen",
+      "style": "premium-saas",
+      "duration": "FAST",
+      "intensity": "subtle",
+      "targetRequired": false,
+      "bestUse": "Tab content crossfade",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 10,
+      "implemented": false
+    },
+    {
+      "id": "EVT_WIPE_SOFT_L",
+      "category": "Wipe-Split",
+      "style": "premium-saas",
+      "duration": "STANDARD",
+      "intensity": "subtle",
+      "targetRequired": false,
+      "bestUse": "Soft left wipe — no hard bar",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 11,
+      "implemented": false
+    },
+    {
+      "id": "EVT_WIPE_SOFT_R",
+      "category": "Wipe-Split",
+      "style": "premium-saas",
+      "duration": "STANDARD",
+      "intensity": "subtle",
+      "targetRequired": false,
+      "bestUse": "Soft right wipe",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 11,
+      "implemented": false
+    },
+    {
+      "id": "EVT_SPLIT_H",
+      "category": "Wipe-Split",
+      "style": "premium-saas",
+      "duration": "STANDARD",
+      "intensity": "standard",
+      "targetRequired": false,
+      "bestUse": "Horizontal split reveal",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 11,
+      "implemented": false
+    },
+    {
+      "id": "EVT_SPLIT_V",
+      "category": "Wipe-Split",
+      "style": "premium-saas",
+      "duration": "STANDARD",
+      "intensity": "standard",
+      "targetRequired": false,
+      "bestUse": "Vertical split reveal",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 11,
+      "implemented": false
+    },
+    {
+      "id": "EVT_WIPE_GRADIENT",
+      "category": "Wipe-Split",
+      "style": "premium-saas",
+      "duration": "SMOOTH",
+      "intensity": "subtle",
+      "targetRequired": false,
+      "bestUse": "Native gradient wipe, Apple ease",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 11,
+      "implemented": false
+    },
+    {
+      "id": "EVT_SPLIT_REVEAL",
+      "category": "Wipe-Split",
+      "style": "premium-saas",
+      "duration": "SMOOTH",
+      "intensity": "subtle",
+      "targetRequired": false,
+      "bestUse": "Center split, incoming in the gap",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 11,
+      "implemented": false
+    },
+    {
+      "id": "EVT_SHARED_CARD",
+      "category": "Shared-Element",
+      "style": "premium-saas",
+      "duration": "SMOOTH",
+      "intensity": "standard",
+      "targetRequired": true,
+      "bestUse": "Card bounds morph to detail",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 12,
+      "implemented": false
+    },
+    {
+      "id": "EVT_SHARED_IMAGE",
+      "category": "Shared-Element",
+      "style": "premium-saas",
+      "duration": "SMOOTH",
+      "intensity": "standard",
+      "targetRequired": true,
+      "bestUse": "Image hero → gallery",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 12,
+      "implemented": false
+    },
+    {
+      "id": "EVT_MATCH_CUT",
+      "category": "Shared-Element",
+      "style": "premium-saas",
+      "duration": "FAST",
+      "intensity": "subtle",
+      "targetRequired": true,
+      "bestUse": "Match position/scale, cut the rest",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 12,
+      "implemented": false
+    },
+    {
+      "id": "EVT_MORPH_BOUNDS",
+      "category": "Shared-Element",
+      "style": "premium-saas",
+      "duration": "STANDARD",
+      "intensity": "standard",
+      "targetRequired": true,
+      "bestUse": "Rect morph only (no mesh)",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 12,
+      "implemented": false
+    },
+    {
+      "id": "EVT_HERO_TO_DETAIL",
+      "category": "Shared-Element",
+      "style": "premium-saas",
+      "duration": "SMOOTH",
+      "intensity": "standard",
+      "targetRequired": true,
+      "bestUse": "Marketing hero into app UI",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 12,
+      "implemented": false
+    },
+    {
+      "id": "EVT_LIST_TO_DETAIL",
+      "category": "Shared-Element",
+      "style": "premium-saas",
+      "duration": "STANDARD",
+      "intensity": "standard",
+      "targetRequired": true,
+      "bestUse": "Row expands into detail pane",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 12,
+      "implemented": false
+    },
+    {
+      "id": "EVT_STAGGER_CARDS",
+      "category": "Stagger-Cascade",
+      "style": "premium-saas",
+      "duration": "STANDARD",
+      "intensity": "subtle",
+      "targetRequired": false,
+      "bestUse": "Card row stagger in",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 13,
+      "implemented": false
+    },
+    {
+      "id": "EVT_STAGGER_LIST",
+      "category": "Stagger-Cascade",
+      "style": "premium-saas",
+      "duration": "STANDARD",
+      "intensity": "subtle",
+      "targetRequired": false,
+      "bestUse": "List rows cascade",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 13,
+      "implemented": false
+    },
+    {
+      "id": "EVT_CASCADE_IN",
+      "category": "Stagger-Cascade",
+      "style": "premium-saas",
+      "duration": "SMOOTH",
+      "intensity": "subtle",
+      "targetRequired": false,
+      "bestUse": "Tree / nav cascade in",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 13,
+      "implemented": false
+    },
+    {
+      "id": "EVT_CASCADE_OUT",
+      "category": "Stagger-Cascade",
+      "style": "premium-saas",
+      "duration": "FAST",
+      "intensity": "subtle",
+      "targetRequired": false,
+      "bestUse": "Cascade out",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 13,
+      "implemented": false
+    },
+    {
+      "id": "EVT_STAGGER_FADE",
+      "category": "Stagger-Cascade",
+      "style": "premium-saas",
+      "duration": "STANDARD",
+      "intensity": "subtle",
+      "targetRequired": false,
+      "bestUse": "Opacity-only stagger",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 13,
+      "implemented": false
+    },
+    {
+      "id": "EVT_WAVE_SOFT",
+      "category": "Stagger-Cascade",
+      "style": "premium-saas",
+      "duration": "SMOOTH",
+      "intensity": "subtle",
+      "targetRequired": false,
+      "bestUse": "Soft delay wave, no bounce",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 13,
+      "implemented": false
+    },
+    {
+      "id": "EVT_CAM_DOLLY_IN",
+      "category": "Camera-Dolly",
+      "style": "premium-saas",
+      "duration": "SMOOTH",
+      "intensity": "subtle",
+      "targetRequired": false,
+      "bestUse": "Slow push on the UI plate",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 14,
+      "implemented": false
+    },
+    {
+      "id": "EVT_CAM_DOLLY_OUT",
+      "category": "Camera-Dolly",
+      "style": "premium-saas",
+      "duration": "SMOOTH",
+      "intensity": "subtle",
+      "targetRequired": false,
+      "bestUse": "Slow pull",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 14,
+      "implemented": false
+    },
+    {
+      "id": "EVT_CAM_PAN_SOFT",
+      "category": "Camera-Dolly",
+      "style": "premium-saas",
+      "duration": "STANDARD",
+      "intensity": "subtle",
+      "targetRequired": false,
+      "bestUse": "Small pan, no whip",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 14,
+      "implemented": false
+    },
+    {
+      "id": "EVT_CAM_DRIFT",
+      "category": "Camera-Dolly",
+      "style": "premium-saas",
+      "duration": "HERO",
+      "intensity": "subtle",
+      "targetRequired": false,
+      "bestUse": "Interview / hold drift",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 14,
+      "implemented": false
+    },
+    {
+      "id": "EVT_CAM_REFRAME",
+      "category": "Camera-Dolly",
+      "style": "premium-saas",
+      "duration": "STANDARD",
+      "intensity": "standard",
+      "targetRequired": true,
+      "bestUse": "Reframe to a target",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 14,
+      "implemented": false
+    },
+    {
+      "id": "EVT_CAM_MICRO",
+      "category": "Camera-Dolly",
+      "style": "premium-saas",
+      "duration": "MICRO",
+      "intensity": "subtle",
+      "targetRequired": false,
+      "bestUse": "Sub-8px settle",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 14,
+      "implemented": false
+    },
+    {
+      "id": "EVT_GLASS_IN",
+      "category": "Glass-Frost",
+      "style": "premium-saas",
+      "duration": "STANDARD",
+      "intensity": "subtle",
+      "targetRequired": false,
+      "bestUse": "Frosted plate fades in",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 15,
+      "implemented": false
+    },
+    {
+      "id": "EVT_GLASS_OUT",
+      "category": "Glass-Frost",
+      "style": "premium-saas",
+      "duration": "FAST",
+      "intensity": "subtle",
+      "targetRequired": false,
+      "bestUse": "Frosted plate out",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 15,
+      "implemented": false
+    },
+    {
+      "id": "EVT_FROST_REVEAL",
+      "category": "Glass-Frost",
+      "style": "premium-saas",
+      "duration": "SMOOTH",
+      "intensity": "subtle",
+      "targetRequired": false,
+      "bestUse": "Blur + tint reveal",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 15,
+      "implemented": false
+    },
+    {
+      "id": "EVT_GLASS_DIM",
+      "category": "Glass-Frost",
+      "style": "premium-saas",
+      "duration": "FAST",
+      "intensity": "subtle",
+      "targetRequired": false,
+      "bestUse": "Glass dim over content",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 15,
+      "implemented": false
+    },
+    {
+      "id": "EVT_BLUR_PANEL",
+      "category": "Glass-Frost",
+      "style": "premium-saas",
+      "duration": "STANDARD",
+      "intensity": "subtle",
+      "targetRequired": false,
+      "bestUse": "Native frost panel (Phase 2 glass)",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 15,
+      "implemented": false
+    },
+    {
+      "id": "EVT_GLASS_CROSS",
+      "category": "Glass-Frost",
+      "style": "premium-saas",
+      "duration": "SMOOTH",
+      "intensity": "subtle",
+      "targetRequired": false,
+      "bestUse": "Cross through frost",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 15,
+      "implemented": false
+    },
+    {
+      "id": "EVT_HERO_ENTER",
+      "category": "Hero",
+      "style": "premium-saas",
+      "duration": "HERO",
+      "intensity": "standard",
+      "targetRequired": false,
+      "bestUse": "Product hero in — long settle",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 16,
+      "implemented": false
+    },
+    {
+      "id": "EVT_HERO_HOLD",
+      "category": "Hero",
+      "style": "premium-saas",
+      "duration": "HERO",
+      "intensity": "subtle",
+      "targetRequired": false,
+      "bestUse": "Hold with micro drift",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 16,
+      "implemented": false
+    },
+    {
+      "id": "EVT_HERO_EXIT",
+      "category": "Hero",
+      "style": "premium-saas",
+      "duration": "SMOOTH",
+      "intensity": "standard",
+      "targetRequired": false,
+      "bestUse": "Hero out into product UI",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 16,
+      "implemented": false
+    },
+    {
+      "id": "EVT_HERO_ZOOM",
+      "category": "Hero",
+      "style": "premium-saas",
+      "duration": "HERO",
+      "intensity": "standard",
+      "targetRequired": true,
+      "bestUse": "Hero zoom to a feature",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 16,
+      "implemented": false
+    },
+    {
+      "id": "EVT_HERO_TITLE",
+      "category": "Hero",
+      "style": "premium-saas",
+      "duration": "SMOOTH",
+      "intensity": "subtle",
+      "targetRequired": false,
+      "bestUse": "Title lockup into UI",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 16,
+      "implemented": false
+    },
+    {
+      "id": "EVT_HERO_PRODUCT",
+      "category": "Hero",
+      "style": "premium-saas",
+      "duration": "HERO",
+      "intensity": "standard",
+      "targetRequired": false,
+      "bestUse": "Device / dashboard hero",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 16,
+      "implemented": false
+    },
+    {
+      "id": "EVT_MICRO_HOVER",
+      "category": "Micro",
+      "style": "premium-saas",
+      "duration": "MICRO",
+      "intensity": "subtle",
+      "targetRequired": false,
+      "bestUse": "Hover lift 1–2%",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 17,
+      "implemented": false
+    },
+    {
+      "id": "EVT_MICRO_PRESS",
+      "category": "Micro",
+      "style": "premium-saas",
+      "duration": "MICRO",
+      "intensity": "subtle",
+      "targetRequired": false,
+      "bestUse": "Click squash, then recover",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 17,
+      "implemented": false
+    },
+    {
+      "id": "EVT_MICRO_TOGGLE",
+      "category": "Micro",
+      "style": "premium-saas",
+      "duration": "MICRO",
+      "intensity": "subtle",
+      "targetRequired": false,
+      "bestUse": "Toggle thumb settle",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 17,
+      "implemented": false
+    },
+    {
+      "id": "EVT_MICRO_CHECK",
+      "category": "Micro",
+      "style": "premium-saas",
+      "duration": "MICRO",
+      "intensity": "subtle",
+      "targetRequired": false,
+      "bestUse": "Checkbox / check settle",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 17,
+      "implemented": false
+    },
+    {
+      "id": "EVT_MICRO_BADGE",
+      "category": "Micro",
+      "style": "premium-saas",
+      "duration": "FAST",
+      "intensity": "subtle",
+      "targetRequired": false,
+      "bestUse": "Badge pop, no bounce loop",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 17,
+      "implemented": false
+    },
+    {
+      "id": "EVT_MICRO_COUNTER",
+      "category": "Micro",
+      "style": "premium-saas",
+      "duration": "FAST",
+      "intensity": "subtle",
+      "targetRequired": false,
+      "bestUse": "KPI digit change",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 17,
+      "implemented": false
+    },
+    {
+      "id": "EVT_MICRO_FOCUS",
+      "category": "Micro",
+      "style": "premium-saas",
+      "duration": "MICRO",
+      "intensity": "subtle",
+      "targetRequired": false,
+      "bestUse": "Focus ring / field focus",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 17,
+      "implemented": false
+    },
+    {
+      "id": "EVT_MICRO_SNAP",
+      "category": "Micro",
+      "style": "premium-saas",
+      "duration": "MICRO",
+      "intensity": "standard",
+      "targetRequired": false,
+      "bestUse": "Snap into grid / alignment",
+      "aspectRatios": [
+        "16:9",
+        "9:16",
+        "1:1",
+        "4:5"
+      ],
+      "sfx": [],
+      "phase": 17,
+      "implemented": false
+    }
+  ]
+}
