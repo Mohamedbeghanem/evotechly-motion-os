@@ -55,7 +55,7 @@ P1 KEEP ID rows (all **OWNED**, implemented):
 | Verdict | **KEEP** |
 | Score | **96** (20+25+15+15+10+10+1) — vendor risk n/a, tiny “we must not drift JSX” residual |
 | Downloaded? | N/A — already in repo (`core/transitions`, catalog, `ae/Evotechly Transitions.jsx`) |
-| Notes | `sourceType: native`, `commercialUse: true`. Full UI Push family (Phase 2) + UI-Slide card family (Phase 3) + Scale-Zoom (Phase 4) + **Shared-Element (Phase 12)**. Other families catalog-only. |
+| Notes | `sourceType: native`, `commercialUse: true`. Full UI Push family (Phase 2) + UI-Slide card family (Phase 3) + Scale-Zoom (Phase 4) + Shared-Element (Phase 12) + **Overlay-Modal (Phase 9)**. Other families catalog-only. |
 
 Phase 3 KEEP ID rows (all **OWNED**, implemented):
 
@@ -70,6 +70,10 @@ Phase 4 KEEP ID rows (all **OWNED**, implemented):
 Phase 12 KEEP ID rows (all **OWNED**, implemented):
 
 - Shared: `EVT_SHARED_CARD`, `EVT_SHARED_IMAGE`, `EVT_MATCH_CUT`, `EVT_MORPH_BOUNDS`, `EVT_HERO_TO_DETAIL`, `EVT_LIST_TO_DETAIL`
+
+Phase 9 KEEP ID rows (all **OWNED**, implemented):
+
+- Overlay: `EVT_MODAL_IN`, `EVT_MODAL_OUT`, `EVT_SHEET_UP`, `EVT_SHEET_DOWN`, `EVT_OVERLAY_DIM`, `EVT_POPOVER_IN`, `EVT_TOAST_IN`
 
 ### Lucide curated SVGs
 
@@ -231,7 +235,7 @@ Phase 12 KEEP ID rows (all **OWNED**, implemented):
 | ID | Verdict | Score | On disk in P0? |
 |---|---|---|---|
 | P1 native text / UI / cursor | KEEP | 95 | Yes (`core/assets` + registry) |
-| Transition Kit native (Push + Slide + Zoom + Shared Card) | KEEP | 96 | Yes (Motion OS) |
+| Transition Kit native (Push + Slide + Zoom + Shared + Overlay) | KEEP | 96 | Yes (Motion OS) |
 | Lucide curated | KEEP | 92 | Yes (`ThirdParty/lucide`) |
 | Phosphor / Heroicons | REBUILD | 88 | No |
 | Mixkit Free SFX | KEEP local / REJECT zip | 74 | No |

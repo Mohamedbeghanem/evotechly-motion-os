@@ -8,6 +8,7 @@ const uiPush = require("./uiPush");
 const uiSlide = require("./uiSlide");
 const scaleZoom = require("./scaleZoom");
 const sharedElement = require("./sharedElement");
+const overlayModal = require("./overlayModal");
 const engine = require("./engine");
 const registry = require("./registry");
 
@@ -15,10 +16,13 @@ module.exports = Object.assign({}, easing, timing, target, control, uiPush, engi
   uiSlide: uiSlide,
   scaleZoom: scaleZoom,
   sharedElement: sharedElement,
+  overlayModal: overlayModal,
   UI_SLIDE_IDS: uiSlide.UI_SLIDE_IDS,
   SCALE_ZOOM_IDS: scaleZoom.SCALE_ZOOM_IDS,
   SHARED_ELEMENT_IDS: sharedElement.SHARED_ELEMENT_IDS,
+  OVERLAY_MODAL_IDS: overlayModal.OVERLAY_MODAL_IDS,
   isUiSlideId: uiSlide.isUiSlideId,
   isScaleZoomId: scaleZoom.isScaleZoomId,
-  isSharedElementId: sharedElement.isSharedElementId
+  isSharedElementId: sharedElement.isSharedElementId,
+  isOverlayModalId: overlayModal.isOverlayModalId
 });

@@ -27,6 +27,16 @@ const NATIVE_SHARED = [
   { id: "EVT_LIST_TO_DETAIL", name: "List to Detail", implemented: true, phase: 12, bestUse: "Row expands into detail pane" }
 ];
 
+const NATIVE_OVERLAY = [
+  { id: "EVT_MODAL_IN", name: "Modal In", implemented: true, phase: 9, bestUse: "Dialog present + dim" },
+  { id: "EVT_MODAL_OUT", name: "Modal Out", implemented: true, phase: 9, bestUse: "Dialog dismiss" },
+  { id: "EVT_SHEET_UP", name: "Sheet Up", implemented: true, phase: 9, bestUse: "Modal sheet from bottom" },
+  { id: "EVT_SHEET_DOWN", name: "Sheet Down", implemented: true, phase: 9, bestUse: "Sheet dismiss" },
+  { id: "EVT_OVERLAY_DIM", name: "Overlay Dim", implemented: true, phase: 9, bestUse: "Dim plate only" },
+  { id: "EVT_POPOVER_IN", name: "Popover In", implemented: true, phase: 9, bestUse: "Popover from a target" },
+  { id: "EVT_TOAST_IN", name: "Toast In", implemented: true, phase: 9, bestUse: "Toast from edge, then settle" }
+];
+
 const NATIVE_SLIDE = [
   { id: "EVT_SLIDE_CARD_LEFT", name: "Slide Card Left", implemented: true, phase: 3, bestUse: "Single card enters from right" },
   { id: "EVT_SLIDE_CARD_RIGHT", name: "Slide Card Right", implemented: true, phase: 3, bestUse: "Single card enters from left" },
@@ -143,6 +153,13 @@ function nativeSharedRow(row) {
   return nativeKitRow(row, "sharedElement.js");
 }
 
+function nativeOverlayRow(row) {
+  const rec = nativeKitRow(row, "overlayModal.js");
+  rec.category = "Modals-Overlays";
+  rec.folder = "07_Modals-Overlays";
+  return rec;
+}
+
 function otherNativeRow(row) {
   return {
     id: row.id,
@@ -204,7 +221,7 @@ const registry = {
   style: "premium-saas",
   schemaVersion: 1,
   note:
-    "P1 native text / UI / cursor + Transition Kit Phase 12 Shared-Element (plus Phase 2–4 UI Push / UI-Slide / Scale-Zoom). sourceType native, commercialUse true. No AEJuice / Motion Bro / Bento binaries.",
+    "P1 native text / UI / cursor + Transition Kit Phase 9 Overlay-Modal (plus Phase 2–4 UI Push / UI-Slide / Scale-Zoom and Phase 12 Shared-Element). sourceType native, commercialUse true. No AEJuice / Motion Bro / Bento binaries.",
   fields: {
     id: "EVT_* unique pack id",
     sourceType: "native | thirdParty",
@@ -216,6 +233,7 @@ const registry = {
     .concat(NATIVE_SLIDE.map(nativeSlideRow))
     .concat(NATIVE_ZOOM.map(nativeZoomRow))
     .concat(NATIVE_SHARED.map(nativeSharedRow))
+    .concat(NATIVE_OVERLAY.map(nativeOverlayRow))
     .concat(OTHER_NATIVE.map(otherNativeRow))
     .concat(P1_NATIVE.map(otherNativeRow))
     .concat(lucideRows())

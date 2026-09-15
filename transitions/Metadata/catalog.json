@@ -1,5 +1,5 @@
 {
-  "version": "phase-12",
+  "version": "phase-9",
   "style": "premium-saas",
   "aspectRatios": [
     "16:9",
@@ -8,7 +8,7 @@
     "4:5"
   ],
   "generated": "transitions/Metadata/catalog.json",
-  "note": "Phase 12 implements the Shared-Element family (plus Phase 2–4 UI Push / UI-Slide / Scale-Zoom). Other rows are metadata for later phases and AI pairing.",
+  "note": "Phase 9 implements the Overlay-Modal family (plus Phase 2–4 UI Push / UI-Slide / Scale-Zoom and Phase 12 Shared-Element). Other rows are metadata for later phases and AI pairing.",
   "transitions": [
     {
       "id": "EVT_UI_PUSH_LEFT",
@@ -1107,9 +1107,12 @@
         "1:1",
         "4:5"
       ],
-      "sfx": [],
+      "sfx": [
+        "ui-soft-in"
+      ],
       "phase": 9,
-      "implemented": false
+      "implemented": true,
+      "name": "Modal In"
     },
     {
       "id": "EVT_MODAL_OUT",
@@ -1125,9 +1128,12 @@
         "1:1",
         "4:5"
       ],
-      "sfx": [],
+      "sfx": [
+        "ui-soft-in"
+      ],
       "phase": 9,
-      "implemented": false
+      "implemented": true,
+      "name": "Modal Out"
     },
     {
       "id": "EVT_SHEET_UP",
@@ -1143,9 +1149,12 @@
         "1:1",
         "4:5"
       ],
-      "sfx": [],
+      "sfx": [
+        "ui-whoosh-soft"
+      ],
       "phase": 9,
-      "implemented": false
+      "implemented": true,
+      "name": "Sheet Up"
     },
     {
       "id": "EVT_SHEET_DOWN",
@@ -1161,9 +1170,12 @@
         "1:1",
         "4:5"
       ],
-      "sfx": [],
+      "sfx": [
+        "ui-whoosh-soft"
+      ],
       "phase": 9,
-      "implemented": false
+      "implemented": true,
+      "name": "Sheet Down"
     },
     {
       "id": "EVT_OVERLAY_DIM",
@@ -1179,9 +1191,12 @@
         "1:1",
         "4:5"
       ],
-      "sfx": [],
+      "sfx": [
+        "ui-cross"
+      ],
       "phase": 9,
-      "implemented": false
+      "implemented": true,
+      "name": "Overlay Dim"
     },
     {
       "id": "EVT_POPOVER_IN",
@@ -1197,9 +1212,12 @@
         "1:1",
         "4:5"
       ],
-      "sfx": [],
+      "sfx": [
+        "ui-soft-in"
+      ],
       "phase": 9,
-      "implemented": false
+      "implemented": true,
+      "name": "Popover In"
     },
     {
       "id": "EVT_TOAST_IN",
@@ -1215,9 +1233,12 @@
         "1:1",
         "4:5"
       ],
-      "sfx": [],
+      "sfx": [
+        "ui-soft-in"
+      ],
       "phase": 9,
-      "implemented": false
+      "implemented": true,
+      "name": "Toast In"
     },
     {
       "id": "EVT_PAGE_PUSH",

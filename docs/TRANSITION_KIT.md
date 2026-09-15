@@ -2,7 +2,7 @@
 
 Premium SaaS screen-to-screen motion. Apple / Linear / Stripe / Raycast taste. Not a glitch pack.
 
-**Phase 0–4 and Phase 12** ship this document, the folder scaffold, a Node-testable engine, catalog metadata, and a companion ScriptUI panel. The full UI Push family, the UI-Slide card family, the Scale-Zoom family, and the **Shared-Element family** produce complete keyframe plans. Everything else is catalogued for later phases and AI pairing.
+**Phase 0–4, Phase 9, and Phase 12** ship this document, the folder scaffold, a Node-testable engine, catalog metadata, and a companion ScriptUI panel. The full UI Push family, the UI-Slide card family, the Scale-Zoom family, the Shared-Element family, and the **Overlay-Modal family** produce complete keyframe plans. Everything else is catalogued for later phases and AI pairing.
 
 This kit does **not** replace the v0.32 Motion tab transitions (shot-level Clean Push / Whip / Zoom Match). Those stay in `ae/Evotechly Motion OS.jsx` (~297 KB — never stub). This kit is UI-to-UI: dashboard → card → analytics.
 
@@ -23,7 +23,7 @@ This kit does **not** replace the v0.32 Motion tab transitions (shot-level Clean
 
 **CI cannot open After Effects.** Plans are deterministic JSON. Visual taste is an editor soak, same as the rest of Motion OS.
 
-**ExtendScript cannot `require` Node.** `core/transitions/*.js` is the source of truth for numbers and tests. `ae/Evotechly Transitions.jsx` mirrors the UI Push, UI-Slide, Scale-Zoom, and Shared-Element constants and apply math. If they drift, fix Node first, then the JSX.
+**ExtendScript cannot `require` Node.** `core/transitions/*.js` is the source of truth for numbers and tests. `ae/Evotechly Transitions.jsx` mirrors the UI Push, UI-Slide, Scale-Zoom, Shared-Element, and Overlay-Modal constants and apply math. If they drift, fix Node first, then the JSX.
 
 **Progress slider** is reserved. Phase 1 keys are time-based. Driving the whole transition from `Progress` (0–100) is an Expressions-folder job in a later phase.
 
@@ -116,7 +116,7 @@ Folder names under `transitions/`. Letters are A=01 … P=16.
 | E / 05 | Mask-Reveal | `05_Mask-Reveal/` | 6 | catalog |
 | F / 06 | Blur-Focus | `06_Blur-Focus/` | 7 | catalog |
 | G / 07 | Depth-Parallax | `07_Depth-Parallax/` | 8 | catalog |
-| H / 08 | Overlay-Modal | `08_Overlay-Modal/` | 9 | catalog |
+| H / 08 | Overlay-Modal | `08_Overlay-Modal/` | 9 | **7 IDs implemented (Phase 9)** |
 | I / 09 | Page-Screen | `09_Page-Screen/` | 10 | catalog |
 | J / 10 | Wipe-Split | `10_Wipe-Split/` | 11 | catalog |
 | K / 11 | Shared-Element | `11_Shared-Element/` | 12 | **6 IDs implemented (Phase 12)** |
@@ -171,6 +171,20 @@ Position + independent scale. No mesh warp. EvoCRM: list row, hero, image, or ca
 
 Plans: `core/transitions/sharedElement.js`. Morph math: `planBoundsMorph` in `target.js`.
 
+### Phase 9 implemented IDs (Overlay-Modal family)
+
+Dim plate + scale/opacity present. EvoCRM dialogs — not charts or devices.
+
+- `EVT_MODAL_IN` — **Modal In**. Incoming 92→100 pop; outgoing stays and dims to 36. `EVT_DIALOG_IN` aliases this ID.
+- `EVT_MODAL_OUT` — **Modal Out**. Dialog scale-dismisses 100→92; content recovers from the dim.
+- `EVT_SHEET_UP` — **Sheet Up**. Reuses UI-Slide sheet math (0.42 of height). Bottom sheet present; dashboard stays.
+- `EVT_SHEET_DOWN` — **Sheet Down**. Sheet dismisses with the same travel; content recovers.
+- `EVT_OVERLAY_DIM` — **Overlay Dim**. Dim plate only — incoming fades to 42; outgoing stays.
+- `EVT_POPOVER_IN` — **Popover In**. Target-aware: incoming pops from `fromBounds` toward dest (`planBoundsMorph`). Default is a toolbar control → popover.
+- `EVT_TOAST_IN` — **Toast In**. Short edge travel (8% of axis), then settle. Default from the top.
+
+Plans: `core/transitions/overlayModal.js`. Sheet math: `uiSlide.planSheetUp`. Popover morph: `planBoundsMorph` in `target.js`.
+
 ### Phase 1–2 implemented IDs (UI Push family)
 
 - `EVT_UI_PUSH_LEFT` / `RIGHT` / `UP` / `DOWN` — **UI Push Left/Right/Up/Down**. Outgoing travels on axis; incoming enters from the opposite edge; anticipate opposite; settle overshoot capped.
@@ -218,6 +232,12 @@ Suggested prompt → ID mapping (later Phase 18):
 | “list row to detail”, “open this row” | `EVT_LIST_TO_DETAIL` |
 | “pop the card” | `EVT_SCALE_POP` |
 | “modal”, “dialog” | `EVT_MODAL_IN` |
+| “dismiss the dialog” | `EVT_MODAL_OUT` |
+| “bottom sheet”, “modal sheet” | `EVT_SHEET_UP` |
+| “dismiss the sheet” | `EVT_SHEET_DOWN` |
+| “dim the page”, “scrim” | `EVT_OVERLAY_DIM` |
+| “popover”, “from this button” | `EVT_POPOVER_IN` |
+| “toast”, “snackbar” | `EVT_TOAST_IN` |
 | “quiet”, “calm”, “expensive” | `SMOOTH` + `premium-smooth` or `soft-ui` |
 | “snappy”, “product” | `FAST` + `fast-product` |
 | “glitch / RGB / explode / spin” | **Refuse.** No such IDs. |
@@ -249,7 +269,8 @@ Catalog `sfx: []` (or a short list of hook ids) is metadata for a future sound p
 | `core/transitions/uiPush.js` | UI Push family keyframe plans |
 | `core/transitions/uiSlide.js` | UI-Slide card family keyframe plans |
 | `core/transitions/scaleZoom.js` | Scale-Zoom family keyframe plans |
-| `core/transitions/sharedElement.js` | Shared Card bounds-match plan |
+| `core/transitions/sharedElement.js` | Shared-Element bounds-match plans |
+| `core/transitions/overlayModal.js` | Overlay-Modal dialog / sheet / dim / popover / toast |
 | `core/transitions/registry.js` | Catalog load / filter |
 | `transitions/Metadata/catalog.json` | Every planned `EVT_*` |
 | `ae/Evotechly Transitions.jsx` | Companion panel |
@@ -278,11 +299,11 @@ Do not: RGB split, glitch, lens flares, explosions, 360 spins, bounce loops, com
 
 1. AE is not in CI. Green tests ≠ soaked comps.
 2. JSX is a mirror, not a `require`.
-3. UI Push (15) + UI-Slide card family (8) implemented. Other catalog rows are metadata.
+3. UI Push (15) + UI-Slide (8) + Scale-Zoom (8) + Shared-Element (6) + Overlay-Modal (7) implemented. Other catalog rows are metadata.
 4. No `.ffx`, `.aep`, or vendored plugins.
 5. No SFX audio.
-6. Target zoom is math; target-required IDs are not applied in Phase 3.
-7. Shared-element morph will be bounds, not True Comp or mesh.
+6. Target zoom and popover bounds are math; JSX apply reads selected-layer bounds.
+7. Shared-element morph is bounds, not True Comp or mesh.
 8. Glass is native frost, not refraction.
 9. Does not rewrite or stub `ae/Evotechly Motion OS.jsx`.
 10. Progress-as-driver is not wired.
