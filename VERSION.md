@@ -16,6 +16,10 @@ Architecture + core engine on top of Ultimate 2.0.0. Does not stub the 297 KB v0
 
 **Limitations:** AE cannot run in CI. JSX mirrors Node numbers. Non–UI-Push catalog IDs are metadata. No `.ffx` / `.aep` / SFX audio / vendor plugins.
 
+## SaaS Assets Pack — P0 (scaffold)
+
+Source discovery + license audit + folder tree under `Evotechly-SaaS-Assets/` (registry schema, MANUAL downloads, optional Lucide ISC/MIT icons). No AEJuice/Motion Bro packs downloaded. Pointer: [docs/SAAS_ASSETS_P0.md](docs/SAAS_ASSETS_P0.md).
+
 
 ## Shipped on 2.0.0
 
