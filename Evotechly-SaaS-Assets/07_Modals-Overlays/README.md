@@ -1,6 +1,6 @@
 # Modals and overlays (`07_Modals-Overlays`)
 
-Dialog in/out, dimmer, sheet, popover. Quiet overshoot. Overlay-Modal family is Transition Kit Phase 9 metadata today.
+Dialog in/out, dimmer, sheet, popover. Quiet overshoot. Overlay-Modal family is Transition Kit Phase 9 — **implemented**.
 
 ## Intended contents (P0 = docs only)
 
@@ -8,14 +8,15 @@ Nothing binary ships in this folder in P0. P1 fills **EvotechlyNative** generato
 
 ## EVT_ naming examples
 
-- `EVT_MODAL_IN` — planned
-- `EVT_MODAL_OUT` — planned
-- `EVT_SHEET_UP` — planned
-- `EVT_DIMMER_FADE` — planned
+- `EVT_MODAL_IN` — already owned (Phase 9 Overlay-Modal)
+- `EVT_MODAL_OUT` — already owned
+- `EVT_SHEET_UP` / `EVT_SHEET_DOWN` — already owned
+- `EVT_OVERLAY_DIM` — already owned
+- `EVT_POPOVER_IN` / `EVT_TOAST_IN` — already owned
 
 ## Native path
 
-transitions catalog Overlay-Modal IDs + Hub glassPanel for frost behind modal.
+`core/transitions/overlayModal.js` + Transitions tab apply. Hub `glassPanel` remains the frost behind a modal.
 
 ## Third-party path
 

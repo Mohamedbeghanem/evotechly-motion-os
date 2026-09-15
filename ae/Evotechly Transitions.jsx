@@ -1,10 +1,10 @@
 #target aftereffects
 /*
-  Evotechly Transitions — companion ScriptUI (Transition Kit Phase 12 Shared-Element + SaaS Assets P1).
+  Evotechly Transitions — companion ScriptUI (Transition Kit Phase 9 Overlay-Modal + Phase 12 Shared-Element + SaaS Assets P1).
   Window → Evotechly Transitions.
   Tabs: Transitions / Text / UI / Cursor.
   Numbers mirrored from core/transitions/*.js and core/assets/*.js — Node is source of truth.
-  ExtendScript cannot require Node. Apply UI Push + UI-Slide + Scale-Zoom + Shared-Element and P1 native assets here.
+  ExtendScript cannot require Node. Apply UI Push + UI-Slide + Scale-Zoom + Shared-Element + Overlay-Modal and P1 native assets here.
   Native AE only. No .ffx / .aep / vendor plugins.
   Does not replace Evotechly Motion OS v0.32 (~297 KB).
 */
@@ -55,7 +55,14 @@
     EVT_MATCH_CUT: 1,
     EVT_MORPH_BOUNDS: 1,
     EVT_HERO_TO_DETAIL: 1,
-    EVT_LIST_TO_DETAIL: 1
+    EVT_LIST_TO_DETAIL: 1,
+    EVT_MODAL_IN: 1,
+    EVT_MODAL_OUT: 1,
+    EVT_SHEET_UP: 1,
+    EVT_SHEET_DOWN: 1,
+    EVT_OVERLAY_DIM: 1,
+    EVT_POPOVER_IN: 1,
+    EVT_TOAST_IN: 1
   };
   /* influence pairs match core/transitions/easing.js + polish.js */
   var EASE = {
@@ -125,13 +132,13 @@
     { id: "EVT_PARALLAX_Y", category: "Depth-Parallax", duration: "STANDARD", intensity: "subtle", implemented: false, phase: 8, bestUse: "Vertical parallax, small travel" },
     { id: "EVT_DEPTH_STACK", category: "Depth-Parallax", duration: "SMOOTH", intensity: "standard", implemented: false, phase: 8, bestUse: "Card stack depth sort" },
     { id: "EVT_DEPTH_CARD", category: "Depth-Parallax", duration: "STANDARD", intensity: "subtle", implemented: false, phase: 8, bestUse: "One card lifts off a grid" },
-    { id: "EVT_MODAL_IN", category: "Overlay-Modal", duration: "STANDARD", intensity: "standard", implemented: false, phase: 9, bestUse: "Dialog present + dim" },
-    { id: "EVT_MODAL_OUT", category: "Overlay-Modal", duration: "FAST", intensity: "standard", implemented: false, phase: 9, bestUse: "Dialog dismiss" },
-    { id: "EVT_SHEET_UP", category: "Overlay-Modal", duration: "STANDARD", intensity: "standard", implemented: false, phase: 9, bestUse: "Modal sheet from bottom" },
-    { id: "EVT_SHEET_DOWN", category: "Overlay-Modal", duration: "FAST", intensity: "standard", implemented: false, phase: 9, bestUse: "Sheet dismiss" },
-    { id: "EVT_OVERLAY_DIM", category: "Overlay-Modal", duration: "FAST", intensity: "subtle", implemented: false, phase: 9, bestUse: "Dim plate only" },
-    { id: "EVT_POPOVER_IN", category: "Overlay-Modal", duration: "FAST", intensity: "subtle", implemented: false, phase: 9, bestUse: "Popover from a target" },
-    { id: "EVT_TOAST_IN", category: "Overlay-Modal", duration: "FAST", intensity: "subtle", implemented: false, phase: 9, bestUse: "Toast from edge, then settle" },
+    { id: "EVT_MODAL_IN", name: "Modal In", category: "Overlay-Modal", duration: "STANDARD", intensity: "standard", implemented: true, phase: 9, bestUse: "Dialog present + dim" },
+    { id: "EVT_MODAL_OUT", name: "Modal Out", category: "Overlay-Modal", duration: "FAST", intensity: "standard", implemented: true, phase: 9, bestUse: "Dialog dismiss" },
+    { id: "EVT_SHEET_UP", name: "Sheet Up", category: "Overlay-Modal", duration: "STANDARD", intensity: "standard", implemented: true, phase: 9, bestUse: "Modal sheet from bottom" },
+    { id: "EVT_SHEET_DOWN", name: "Sheet Down", category: "Overlay-Modal", duration: "FAST", intensity: "standard", implemented: true, phase: 9, bestUse: "Sheet dismiss" },
+    { id: "EVT_OVERLAY_DIM", name: "Overlay Dim", category: "Overlay-Modal", duration: "FAST", intensity: "subtle", implemented: true, phase: 9, bestUse: "Dim plate only" },
+    { id: "EVT_POPOVER_IN", name: "Popover In", category: "Overlay-Modal", duration: "FAST", intensity: "subtle", implemented: true, phase: 9, bestUse: "Popover from a target" },
+    { id: "EVT_TOAST_IN", name: "Toast In", category: "Overlay-Modal", duration: "FAST", intensity: "subtle", implemented: true, phase: 9, bestUse: "Toast from edge, then settle" },
     { id: "EVT_PAGE_PUSH", category: "Page-Screen", duration: "STANDARD", intensity: "standard", implemented: false, phase: 10, bestUse: "Full-page push using UI Push math" },
     { id: "EVT_PAGE_FADE", category: "Page-Screen", duration: "SMOOTH", intensity: "subtle", implemented: false, phase: 10, bestUse: "Full-page fade" },
     { id: "EVT_SCREEN_SWAP", category: "Page-Screen", duration: "STANDARD", intensity: "standard", implemented: false, phase: 10, bestUse: "Replace screen, keep app chrome" },
@@ -889,20 +896,28 @@
   function defaultListDetailBounds() {
     return { l: 720, t: 80, r: 1840, b: 1000 };
   }
+  function defaultPopoverTargetBounds() {
+    return { l: 1280, t: 200, r: 1440, b: 248 };
+  }
+  function defaultPopoverDestBounds() {
+    return { l: 1120, t: 260, r: 1600, b: 540 };
+  }
   function defaultFromBoundsForId(id) {
     if (id === "EVT_SHARED_IMAGE") return defaultImageBounds();
     if (id === "EVT_HERO_TO_DETAIL") return defaultHeroBounds();
     if (id === "EVT_LIST_TO_DETAIL") return defaultListRowBounds();
+    if (id === "EVT_POPOVER_IN") return defaultPopoverTargetBounds();
     return defaultCardBounds();
   }
   function defaultToBoundsForId(id) {
     if (id === "EVT_SHARED_IMAGE") return defaultGalleryBounds();
     if (id === "EVT_HERO_TO_DETAIL") return defaultHeroDetailBounds();
     if (id === "EVT_LIST_TO_DETAIL") return defaultListDetailBounds();
+    if (id === "EVT_POPOVER_IN") return defaultPopoverDestBounds();
     return defaultDetailBounds();
   }
   function defaultLayerBoundsForId(id) {
-    if (id === "EVT_SHARED_CARD" || id === "EVT_SHARED_IMAGE" || id === "EVT_MATCH_CUT" || id === "EVT_MORPH_BOUNDS" || id === "EVT_HERO_TO_DETAIL" || id === "EVT_LIST_TO_DETAIL") {
+    if (id === "EVT_SHARED_CARD" || id === "EVT_SHARED_IMAGE" || id === "EVT_MATCH_CUT" || id === "EVT_MORPH_BOUNDS" || id === "EVT_HERO_TO_DETAIL" || id === "EVT_LIST_TO_DETAIL" || id === "EVT_POPOVER_IN") {
       return defaultFromBoundsForId(id);
     }
     return defaultTargetBounds();
@@ -1587,6 +1602,130 @@
   function planListToDetail(frames, fps, comp, target) {
     return planSharedMorphJs(frames, fps, target, "EVT_LIST_TO_DETAIL", { antiTravel: 0.04, antiScale: 100.8, midTravel: 0.5, midOutScale: 0.5, midOutOpacity: 32, midOutBlur: 1, outEndOpacity: 0, outEndBlur: 2, inStartOpacity: 0, inStartBlur: 2, inMidTravel: 0.16, inMidScale: 0.7, inMidOpacity: 80, inMidBlur: 1, settleOver: 0.12, settleScale: 100.4 }, 3);
   }
+  function planModalIn(frames, fps) {
+    var ph = phaseFrames(frames);
+    return {
+      outgoing: [
+        key(ph.start, fps, 0, 0, 100, 100, 0, "anticipate"),
+        key(ph.anticipate, fps, 0, 0, 99.8, 100, 0, "action"),
+        key(ph.mid, fps, 0, 0, 99.2, 58, 2, "crossover"),
+        key(ph.end, fps, 0, 0, 98.6, 36, 3, "done")
+      ],
+      incoming: [
+        key(ph.start, fps, 0, 0, 92, 0, 2, "anticipate"),
+        key(ph.mid, fps, 0, 0, mixScale(92, 100, 60), 84, 0, "crossover"),
+        key(ph.settle, fps, 0, 0, 100.4, 100, 0, "settle"),
+        key(ph.end, fps, 0, 0, 100, 100, 0, "done")
+      ],
+      phases: ph
+    };
+  }
+  function planModalOut(frames, fps) {
+    var ph = phaseFrames(frames, "snap");
+    return {
+      outgoing: [
+        key(ph.start, fps, 0, 0, 100, 100, 0, "anticipate"),
+        key(ph.anticipate, fps, 0, 0, 100.4, 100, 0, "action"),
+        key(ph.mid, fps, 0, 0, 96, 40, 1, "crossover"),
+        key(ph.end, fps, 0, 0, 92, 0, 2, "done")
+      ],
+      incoming: [
+        key(ph.start, fps, 0, 0, 98.6, 36, 3, "anticipate"),
+        key(ph.mid, fps, 0, 0, 99.4, 78, 1, "crossover"),
+        key(ph.settle, fps, 0, 0, 100.2, 100, 0, "settle"),
+        key(ph.end, fps, 0, 0, 100, 100, 0, "done")
+      ],
+      phases: ph
+    };
+  }
+  function planOverlaySheetUp(dir, frames, fps, comp) {
+    return planSheetUp(dir, frames, fps, comp);
+  }
+  function planOverlaySheetDown(dir, frames, fps, comp) {
+    var ph = phaseFrames(frames, "snap");
+    var distance = travelDistance(dir, comp, 100, 100) * 0.42;
+    var anti = anticipatePx(distance);
+    var over = overshootPx(distance, 3);
+    var a = axisOf(dir);
+    return {
+      outgoing: [
+        key(ph.start, fps, 0, 0, 100, 100, 0, "anticipate"),
+        key(ph.anticipate, fps, -a.x * anti * 0.25, -a.y * anti * 0.25, 100.1, 100, 0, "action"),
+        key(ph.mid, fps, a.x * distance * 0.45, a.y * distance * 0.45, 99.6, 52, 1, "crossover"),
+        key(ph.end, fps, a.x * distance, a.y * distance, 99, 0, 2, "done")
+      ],
+      incoming: [
+        key(ph.start, fps, 0, -8, 97.8, 64, 3, "anticipate"),
+        key(ph.mid, fps, 0, -4, 99, 82, 1, "crossover"),
+        key(ph.settle, fps, a.x * over * 0.3, a.y * over * 0.3, 100.1, 100, 0, "settle"),
+        key(ph.end, fps, 0, 0, 100, 100, 0, "done")
+      ],
+      phases: ph
+    };
+  }
+  function planOverlayDim(frames, fps) {
+    var ph = phaseFrames(frames, "snap");
+    return {
+      outgoing: [
+        key(ph.start, fps, 0, 0, 100, 100, 0, "anticipate"),
+        key(ph.anticipate, fps, 0, 0, 100, 100, 0, "action"),
+        key(ph.mid, fps, 0, 0, 99.6, 88, 1, "crossover"),
+        key(ph.end, fps, 0, 0, 99.4, 78, 2, "done")
+      ],
+      incoming: [
+        key(ph.start, fps, 0, 0, 100, 0, 0, "anticipate"),
+        key(ph.mid, fps, 0, 0, 100, 22, 0, "crossover"),
+        key(ph.settle, fps, 0, 0, 100, 40, 0, "settle"),
+        key(ph.end, fps, 0, 0, 100, 42, 0, "done")
+      ],
+      phases: ph
+    };
+  }
+  function planPopoverIn(frames, fps, comp, target) {
+    var ph = phaseFrames(frames, "snap");
+    var morph = planBoundsMorphJs((target && target.layerBounds) || defaultPopoverTargetBounds(), (target && target.destBounds) || defaultPopoverDestBounds());
+    var dx = morph.valid ? morph.dx : 0;
+    var dy = morph.valid ? morph.dy : 0;
+    var over = overshootPx(Math.max(Math.abs(dx), Math.abs(dy), 24), 2);
+    return {
+      outgoing: [
+        key(ph.start, fps, 0, 0, 100, 100, 0, "anticipate"),
+        key(ph.anticipate, fps, 0, 0, 99.8, 100, 0, "action"),
+        key(ph.mid, fps, 0, 0, 99.4, 72, 1, "crossover"),
+        key(ph.end, fps, 0, 0, 99, 58, 2, "done")
+      ],
+      incoming: [
+        key(ph.start, fps, r4(-dx), r4(-dy), 88, 0, 2, "anticipate"),
+        key(ph.mid, fps, r4(-dx * 0.22), r4(-dy * 0.22), mixScale(88, 100, 60), 82, 0, "crossover"),
+        key(ph.settle, fps, r4(dx === 0 ? 0 : (dx > 0 ? over : -over) * 0.12), r4(dy === 0 ? 0 : (dy > 0 ? over : -over) * 0.12), 100.3, 100, 0, "settle"),
+        key(ph.end, fps, 0, 0, 100, 100, 0, "done")
+      ],
+      phases: ph
+    };
+  }
+  function planToastIn(dir, frames, fps, comp) {
+    var ph = phaseFrames(frames, "snap");
+    var distance = travelDistance(dir, comp, 100, 100) * 0.08;
+    var anti = anticipatePx(distance);
+    var over = overshootPx(distance, 3);
+    var a = axisOf(dir);
+    return {
+      outgoing: [
+        key(ph.start, fps, 0, 0, 100, 100, 0, "anticipate"),
+        key(ph.anticipate, fps, 0, 0, 100, 100, 0, "action"),
+        key(ph.mid, fps, 0, 0, 100, 100, 0, "crossover"),
+        key(ph.end, fps, 0, 0, 100, 100, 0, "done")
+      ],
+      incoming: [
+        key(ph.start, fps, -a.x * distance, -a.y * distance, 96, 0, 1, "anticipate"),
+        key(ph.anticipate, fps, -a.x * distance + a.x * anti * 0.2, -a.y * distance + a.y * anti * 0.2, 97.2, 12, 1, "action"),
+        key(ph.mid, fps, -a.x * distance * 0.2, -a.y * distance * 0.2, 99.2, 86, 0, "crossover"),
+        key(ph.settle, fps, a.x * over, a.y * over, 100.3, 100, 0, "settle"),
+        key(ph.end, fps, 0, 0, 100, 100, 0, "done")
+      ],
+      phases: ph
+    };
+  }
   function planForId(id, dir, frames, fps, comp, target) {
     if (id === "EVT_UI_PUSH_SCALE") return planScale(frames, fps);
     if (id === "EVT_UI_PUSH_DEPTH") return planDepth(frames, fps);
@@ -1620,6 +1759,13 @@
     if (id === "EVT_MORPH_BOUNDS") return planMorphBounds(frames, fps, comp, target);
     if (id === "EVT_HERO_TO_DETAIL") return planHeroToDetail(frames, fps, comp, target);
     if (id === "EVT_LIST_TO_DETAIL") return planListToDetail(frames, fps, comp, target);
+    if (id === "EVT_MODAL_IN") return planModalIn(frames, fps);
+    if (id === "EVT_MODAL_OUT") return planModalOut(frames, fps);
+    if (id === "EVT_SHEET_UP") return planOverlaySheetUp(dir, frames, fps, comp);
+    if (id === "EVT_SHEET_DOWN") return planOverlaySheetDown(dir, frames, fps, comp);
+    if (id === "EVT_OVERLAY_DIM") return planOverlayDim(frames, fps);
+    if (id === "EVT_POPOVER_IN") return planPopoverIn(frames, fps, comp, target);
+    if (id === "EVT_TOAST_IN") return planToastIn(dir, frames, fps, comp);
     return planDirectional(dir, frames, fps, comp);
   }
   function defaultDirForId(id) {
@@ -1629,7 +1775,8 @@
     if (id === "EVT_UI_PUSH_PANEL") return "right";
     if (id === "EVT_SLIDE_CARD_RIGHT") return "right";
     if (id === "EVT_SLIDE_PANEL_IN" || id === "EVT_SLIDE_PANEL_OUT") return "right";
-    if (id === "EVT_SLIDE_SHEET_UP") return "up";
+    if (id === "EVT_SLIDE_SHEET_UP" || id === "EVT_SHEET_UP") return "up";
+    if (id === "EVT_SHEET_DOWN" || id === "EVT_TOAST_IN") return "down";
     return "left";
   }
   function remapId(id, dir) {
@@ -1662,7 +1809,7 @@
     id = remapId(row.id, dir);
     row = findCatalog(id) || row;
     if (!row.implemented) {
-      alert(row.id + " is catalogued for Phase " + row.phase + ".\nPhase 12 applies Shared-Element (plus UI Push / UI-Slide / Scale-Zoom).\nSee docs/TRANSITION_PHASES.md.");
+      alert(row.id + " is catalogued for Phase " + row.phase + ".\nPhase 9 applies Overlay-Modal (plus UI Push / UI-Slide / Scale-Zoom / Shared-Element).\nSee docs/TRANSITION_PHASES.md.");
       return;
     }
     if (sel.length < 2) { alert("Select outgoing, then incoming (two layers)."); return; }

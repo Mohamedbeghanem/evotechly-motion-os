@@ -154,10 +154,14 @@ test("every implemented ID produces a deterministic complete plan", function () 
   const uiSlide = require("../core/transitions/uiSlide");
   const scaleZoom = require("../core/transitions/scaleZoom");
   const sharedElement = require("../core/transitions/sharedElement");
+  const overlayModal = require("../core/transitions/overlayModal");
   const ids = engine.IMPLEMENTED_IDS.slice();
   assert.deepEqual(
     ids,
-    uiPush.UI_PUSH_IDS.concat(uiSlide.UI_SLIDE_IDS).concat(scaleZoom.SCALE_ZOOM_IDS).concat(sharedElement.SHARED_ELEMENT_IDS)
+    uiPush.UI_PUSH_IDS.concat(uiSlide.UI_SLIDE_IDS)
+      .concat(scaleZoom.SCALE_ZOOM_IDS)
+      .concat(sharedElement.SHARED_ELEMENT_IDS)
+      .concat(overlayModal.OVERLAY_MODAL_IDS)
   );
   assert.deepEqual(ids, [
     "EVT_UI_PUSH_LEFT",
@@ -196,7 +200,14 @@ test("every implemented ID produces a deterministic complete plan", function () 
     "EVT_MATCH_CUT",
     "EVT_MORPH_BOUNDS",
     "EVT_HERO_TO_DETAIL",
-    "EVT_LIST_TO_DETAIL"
+    "EVT_LIST_TO_DETAIL",
+    "EVT_MODAL_IN",
+    "EVT_MODAL_OUT",
+    "EVT_SHEET_UP",
+    "EVT_SHEET_DOWN",
+    "EVT_OVERLAY_DIM",
+    "EVT_POPOVER_IN",
+    "EVT_TOAST_IN"
   ]);
   ids.forEach(function (id) {
     const opts = {
@@ -227,13 +238,15 @@ test("every implemented ID produces a deterministic complete plan", function () 
     assert.ok(a.anatomy.action);
     assert.ok(a.anatomy.crossover);
     assert.ok(a.anatomy.settle);
-    const name = sharedElement.isSharedElementId(id)
-      ? sharedElement.displayName(id)
-      : scaleZoom.isScaleZoomId(id)
-        ? scaleZoom.displayName(id)
-        : uiSlide.isUiSlideId(id)
-          ? uiSlide.displayName(id)
-          : uiPush.displayName(id);
+    const name = overlayModal.isOverlayModalId(id)
+      ? overlayModal.displayName(id)
+      : sharedElement.isSharedElementId(id)
+        ? sharedElement.displayName(id)
+        : scaleZoom.isScaleZoomId(id)
+          ? scaleZoom.displayName(id)
+          : uiSlide.isUiSlideId(id)
+            ? uiSlide.displayName(id)
+            : uiPush.displayName(id);
     assert.equal(a.name, name);
     assert.ok(a.outgoing.keys.length >= 3, id + " outgoing keys");
     assert.ok(a.incoming.keys.length >= 3, id + " incoming keys");
@@ -643,6 +656,115 @@ test("Shared Image / Match Cut / Morph Bounds / Hero / List are position+scale o
   assert.deepEqual(custom.morph.scale, [283.3333, 255.5556]);
 });
 
+test("Overlay-Modal family dims the plate and presents with scale/opacity", function () {
+  const overlayModal = require("../core/transitions/overlayModal");
+  const modalIn = engine.applyTransitionPlan({ id: "EVT_MODAL_IN", durationFrames: 16, fps: 30 });
+  const modalAlias = engine.applyTransitionPlan({ id: "EVT_DIALOG_IN", durationFrames: 16, fps: 30 });
+  const modalOut = engine.applyTransitionPlan({ id: "EVT_MODAL_OUT", durationFrames: 16, fps: 30 });
+  const sheet = engine.applyTransitionPlan({ id: "EVT_SHEET_UP", durationFrames: 16, fps: 30 });
+  const slideSheet = engine.applyTransitionPlan({ id: "EVT_SLIDE_SHEET_UP", durationFrames: 16, fps: 30 });
+  const sheetDown = engine.applyTransitionPlan({ id: "EVT_SHEET_DOWN", durationFrames: 16, fps: 30 });
+  const dim = engine.applyTransitionPlan({ id: "EVT_OVERLAY_DIM", durationFrames: 16, fps: 30 });
+  const popover = engine.applyTransitionPlan({ id: "EVT_POPOVER_IN", durationFrames: 16, fps: 30 });
+  const toast = engine.applyTransitionPlan({ id: "EVT_TOAST_IN", durationFrames: 16, fps: 30 });
+
+  assert.equal(modalIn.category, "Overlay-Modal");
+  assert.equal(modalIn.name, "Modal In");
+  assert.equal(modalIn.travel.overlay, true);
+  assert.equal(modalIn.travel.dim, true);
+  assert.equal(modalIn.travel.modal, true);
+  assert.equal(modalIn.travel.present, true);
+  assert.equal(modalIn.travel.distance, 0);
+  assert.equal(modalIn.incoming.keys[0].scale[0], 92);
+  assert.equal(modalIn.incoming.keys[0].opacity, 0);
+  assert.equal(modalIn.incoming.keys[1].scale[0], 96.8);
+  assert.equal(modalIn.incoming.keys[3].scale[0], 100);
+  assert.equal(modalIn.incoming.keys[3].opacity, 100);
+  assert.equal(modalIn.outgoing.keys[3].opacity, 36);
+  assert.equal(modalIn.outgoing.keys[3].scale[0], 98.6);
+  assert.equal(modalIn.outgoing.keys[0].x, 0);
+  assert.deepEqual(modalAlias, modalIn);
+
+  assert.equal(modalOut.name, "Modal Out");
+  assert.equal(modalOut.travel.dismiss, true);
+  assert.equal(modalOut.outgoing.keys[3].scale[0], 92);
+  assert.equal(modalOut.outgoing.keys[3].opacity, 0);
+  assert.equal(modalOut.incoming.keys[0].opacity, 36);
+  assert.equal(modalOut.incoming.keys[3].opacity, 100);
+
+  assert.equal(sheet.category, "Overlay-Modal");
+  assert.equal(sheet.name, "Sheet Up");
+  assert.equal(sheet.direction, "up");
+  assert.equal(sheet.travel.sheet, true);
+  assert.equal(sheet.travel.overlay, true);
+  assert.equal(sheet.travel.distance, 453.6);
+  assert.equal(sheet.incoming.keys[0].y, 453.6);
+  assert.equal(sheet.outgoing.keys[3].y, -8);
+  assert.equal(sheet.outgoing.keys[3].opacity, 64);
+  assert.equal(sheet.travel.distance, slideSheet.travel.distance);
+  assert.equal(sheet.incoming.keys[0].y, slideSheet.incoming.keys[0].y);
+
+  assert.equal(sheetDown.name, "Sheet Down");
+  assert.equal(sheetDown.direction, "down");
+  assert.equal(sheetDown.travel.dismiss, true);
+  assert.equal(sheetDown.travel.distance, 453.6);
+  assert.equal(sheetDown.outgoing.keys[3].y, 453.6);
+  assert.equal(sheetDown.outgoing.keys[3].opacity, 0);
+  assert.equal(sheetDown.incoming.keys[0].y, -8);
+  assert.equal(sheetDown.incoming.keys[0].opacity, 64);
+  assert.equal(sheetDown.incoming.keys[3].y, 0);
+  assert.equal(sheetDown.incoming.keys[3].opacity, 100);
+
+  assert.equal(dim.name, "Overlay Dim");
+  assert.equal(dim.travel.dim, true);
+  assert.equal(dim.travel.outgoingStays, true);
+  assert.equal(dim.incoming.keys[0].opacity, 0);
+  assert.equal(dim.incoming.keys[3].opacity, 42);
+  assert.equal(dim.outgoing.keys[3].opacity, 78);
+  assert.equal(dim.incoming.keys[0].x, 0);
+
+  assert.equal(popover.name, "Popover In");
+  assert.equal(popover.travel.popover, true);
+  assert.equal(popover.travel.targetAware, true);
+  assert.equal(popover.morph.valid, true);
+  assert.deepEqual(popover.morph.positionDelta, [0, 176]);
+  assert.equal(popover.incoming.keys[0].x, 0);
+  assert.equal(popover.incoming.keys[0].y, -176);
+  assert.equal(popover.incoming.keys[0].scale[0], 88);
+  assert.equal(popover.incoming.keys[0].opacity, 0);
+  assert.equal(popover.incoming.keys[3].x, 0);
+  assert.equal(popover.incoming.keys[3].y, 0);
+  assert.equal(popover.incoming.keys[3].scale[0], 100);
+  assert.equal(popover.incoming.keys[3].opacity, 100);
+  assert.ok(popover.outgoing.keys[3].opacity < 100);
+
+  const customPopover = engine.applyTransitionPlan({
+    id: "EVT_POPOVER_IN",
+    durationFrames: 16,
+    fps: 30,
+    target: {
+      layerBounds: { l: 240, t: 300, r: 720, b: 660 },
+      destBounds: { l: 280, t: 80, r: 1640, b: 1000 }
+    }
+  });
+  assert.deepEqual(customPopover.morph.positionDelta, [480, 60]);
+  assert.equal(customPopover.incoming.keys[0].x, -480);
+  assert.equal(customPopover.incoming.keys[0].y, -60);
+
+  assert.equal(toast.name, "Toast In");
+  assert.equal(toast.direction, "down");
+  assert.equal(toast.travel.toast, true);
+  assert.equal(toast.travel.outgoingStays, true);
+  assert.equal(toast.travel.distance, 86.4);
+  assert.equal(toast.incoming.keys[0].y, -86.4);
+  assert.equal(toast.incoming.keys[0].opacity, 0);
+  assert.equal(toast.incoming.keys[toast.incoming.keys.length - 1].y, 0);
+  assert.equal(toast.incoming.keys[toast.incoming.keys.length - 1].opacity, 100);
+  assert.equal(toast.outgoing.keys[3].opacity, 100);
+  assert.equal(overlayModal.TOAST_TRAVEL_RATIO, 0.08);
+  assert.equal(overlayModal.MODAL_POP_START, 92);
+});
+
 test("unimplemented catalog IDs return a safe stub plan", function () {
   const plan = engine.applyTransitionPlan({ id: "EVT_MICRO_HOVER" });
   assert.equal(plan.implemented, false);
@@ -655,6 +777,7 @@ test("catalog has unique EVT_ IDs and implemented flags for shipped families", f
   const uiSlide = require("../core/transitions/uiSlide");
   const scaleZoom = require("../core/transitions/scaleZoom");
   const sharedElement = require("../core/transitions/sharedElement");
+  const overlayModal = require("../core/transitions/overlayModal");
   const list = registry.loadCatalog();
   assert.ok(list.length >= 90);
   assert.deepEqual(registry.uniqueIdErrors(), []);
@@ -667,7 +790,7 @@ test("catalog has unique EVT_ IDs and implemented flags for shipped families", f
     set[id] = true;
   });
   const implemented = registry.listImplemented();
-  assert.equal(implemented.length, 37);
+  assert.equal(implemented.length, 44);
   implemented.forEach(function (row) {
     assert.equal(row.implemented, true);
     assert.equal(row.style, "premium-saas");
@@ -680,6 +803,9 @@ test("catalog has unique EVT_ IDs and implemented flags for shipped families", f
     } else if (row.category === "Shared-Element") {
       assert.equal(row.phase, 12);
       assert.equal(row.name, sharedElement.displayName(row.id));
+    } else if (row.category === "Overlay-Modal") {
+      assert.equal(row.phase, 9);
+      assert.equal(row.name, overlayModal.displayName(row.id));
     } else {
       assert.equal(row.category, "UI-Push");
       assert.ok(uiPush.PHASE1_IDS.indexOf(row.id) !== -1 ? row.phase === 1 : row.phase === 2, row.id + " phase");
@@ -715,6 +841,14 @@ test("catalog has unique EVT_ IDs and implemented flags for shipped families", f
   assert.equal(registry.getById("EVT_MORPH_BOUNDS").name, "Morph Bounds");
   assert.equal(registry.getById("EVT_HERO_TO_DETAIL").name, "Hero to Detail");
   assert.equal(registry.getById("EVT_LIST_TO_DETAIL").name, "List to Detail");
+  assert.equal(registry.getById("EVT_MODAL_IN").implemented, true);
+  assert.equal(registry.getById("EVT_MODAL_IN").name, "Modal In");
+  assert.equal(registry.getById("EVT_MODAL_OUT").name, "Modal Out");
+  assert.equal(registry.getById("EVT_SHEET_UP").name, "Sheet Up");
+  assert.equal(registry.getById("EVT_SHEET_DOWN").name, "Sheet Down");
+  assert.equal(registry.getById("EVT_OVERLAY_DIM").name, "Overlay Dim");
+  assert.equal(registry.getById("EVT_POPOVER_IN").name, "Popover In");
+  assert.equal(registry.getById("EVT_TOAST_IN").name, "Toast In");
   assert.equal(registry.filterCatalog({ query: "micro", category: "Micro" }).length, 8);
   assert.equal(registry.filterCatalog({ query: "dashboard push", category: "UI-Push" }).length, 1);
   assert.equal(registry.filterCatalog({ query: "split panel", category: "UI-Push" })[0].id, "EVT_UI_PUSH_SPLIT");
@@ -727,6 +861,10 @@ test("catalog has unique EVT_ IDs and implemented flags for shipped families", f
   assert.equal(registry.filterCatalog({ query: "shared card", category: "Shared-Element" })[0].id, "EVT_SHARED_CARD");
   assert.equal(registry.filterCatalog({ query: "list to detail", category: "Shared-Element" })[0].id, "EVT_LIST_TO_DETAIL");
   assert.equal(registry.filterCatalog({ implemented: true, category: "Shared-Element" }).length, 6);
+  assert.equal(registry.listByCategory("Overlay-Modal").length, 7);
+  assert.equal(registry.filterCatalog({ query: "modal in", category: "Overlay-Modal" })[0].id, "EVT_MODAL_IN");
+  assert.equal(registry.filterCatalog({ query: "popover", category: "Overlay-Modal" })[0].id, "EVT_POPOVER_IN");
+  assert.equal(registry.filterCatalog({ implemented: true, category: "Overlay-Modal" }).length, 7);
 });
 
 test("demo storyboard is a dashboard→card→analytics sequence", function () {
@@ -779,6 +917,13 @@ test("JSX companion embeds UI Push IDs and mirrored constants", function () {
   assert.ok(jsx.indexOf("function planMorphBounds") !== -1);
   assert.ok(jsx.indexOf("function planHeroToDetail") !== -1);
   assert.ok(jsx.indexOf("function planListToDetail") !== -1);
+  assert.ok(jsx.indexOf("function planModalIn") !== -1);
+  assert.ok(jsx.indexOf("function planModalOut") !== -1);
+  assert.ok(jsx.indexOf("function planOverlaySheetUp") !== -1);
+  assert.ok(jsx.indexOf("function planOverlaySheetDown") !== -1);
+  assert.ok(jsx.indexOf("function planOverlayDim") !== -1);
+  assert.ok(jsx.indexOf("function planPopoverIn") !== -1);
+  assert.ok(jsx.indexOf("function planToastIn") !== -1);
   assert.ok(jsx.indexOf("function planSharedMorphJs") !== -1);
   assert.ok(jsx.indexOf("function planTargetZoomJs") !== -1);
   assert.ok(jsx.indexOf("Panel Push") !== -1);
@@ -796,6 +941,12 @@ test("JSX companion embeds UI Push IDs and mirrored constants", function () {
   assert.ok(jsx.indexOf("Morph Bounds") !== -1);
   assert.ok(jsx.indexOf("Hero to Detail") !== -1);
   assert.ok(jsx.indexOf("List to Detail") !== -1);
+  assert.ok(jsx.indexOf("Modal In") !== -1);
+  assert.ok(jsx.indexOf("Modal Out") !== -1);
+  assert.ok(jsx.indexOf("Sheet Up") !== -1);
+  assert.ok(jsx.indexOf("Overlay Dim") !== -1);
+  assert.ok(jsx.indexOf("Popover In") !== -1);
+  assert.ok(jsx.indexOf("Toast In") !== -1);
   assert.ok(/#target aftereffects/.test(jsx));
   assert.ok(jsx.indexOf("does not replace") !== -1);
   registry.catalogIds().forEach(function (id) {

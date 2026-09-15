@@ -2,7 +2,7 @@
 
 /**
  * Transition Kit engine — deterministic plans.
- * Node is source of truth. JSX mirrors UI Push / UI-Slide / Scale-Zoom / Shared-Element numbers.
+ * Node is source of truth. JSX mirrors UI Push / UI-Slide / Scale-Zoom / Shared-Element / Overlay-Modal numbers.
  * Native AE only. No .ffx / .aep / vendor plugins.
  */
 
@@ -15,10 +15,12 @@ const uiPush = require("./uiPush");
 const uiSlide = require("./uiSlide");
 const scaleZoom = require("./scaleZoom");
 const sharedElement = require("./sharedElement");
+const overlayModal = require("./overlayModal");
 
 const IMPLEMENTED_IDS = uiPush.UI_PUSH_IDS.concat(uiSlide.UI_SLIDE_IDS)
   .concat(scaleZoom.SCALE_ZOOM_IDS)
-  .concat(sharedElement.SHARED_ELEMENT_IDS);
+  .concat(sharedElement.SHARED_ELEMENT_IDS)
+  .concat(overlayModal.OVERLAY_MODAL_IDS);
 const ANATOMY = uiPush.ANATOMY;
 const STYLE = "premium-saas";
 const DEFAULT_COMP = { w: 1920, h: 1080, fps: DEFAULT_FPS };
@@ -38,6 +40,8 @@ function layerRest(layer) {
 }
 
 function normalizeId(id) {
+  const overlay = overlayModal.resolveId(id);
+  if (overlayModal.isOverlayModalId(overlay)) return overlay;
   const shared = sharedElement.resolveId(id);
   if (sharedElement.isSharedElementId(shared)) return shared;
   const zoom = scaleZoom.resolveId(id);
@@ -48,6 +52,7 @@ function normalizeId(id) {
 }
 
 function defaultDirectionForId(id) {
+  if (overlayModal.DEFAULT_DIRECTION_BY_ID[id]) return overlayModal.DEFAULT_DIRECTION_BY_ID[id];
   if (uiSlide.DEFAULT_DIRECTION_BY_ID[id]) return uiSlide.DEFAULT_DIRECTION_BY_ID[id];
   if (uiPush.DEFAULT_DIRECTION_BY_ID[id]) return uiPush.DEFAULT_DIRECTION_BY_ID[id];
   return "left";
@@ -55,6 +60,7 @@ function defaultDirectionForId(id) {
 
 function defaultGroupForId(id) {
   return (
+    overlayModal.DEFAULT_GROUP_BY_ID[id] ||
     sharedElement.DEFAULT_GROUP_BY_ID[id] ||
     scaleZoom.DEFAULT_GROUP_BY_ID[id] ||
     uiSlide.DEFAULT_GROUP_BY_ID[id] ||
@@ -64,6 +70,7 @@ function defaultGroupForId(id) {
 }
 
 function defaultOvershootForId(id) {
+  if (overlayModal.DEFAULT_OVERSHOOT_BY_ID[id] != null) return overlayModal.DEFAULT_OVERSHOOT_BY_ID[id];
   if (sharedElement.DEFAULT_OVERSHOOT_BY_ID[id] != null) return sharedElement.DEFAULT_OVERSHOOT_BY_ID[id];
   if (scaleZoom.DEFAULT_OVERSHOOT_BY_ID[id] != null) return scaleZoom.DEFAULT_OVERSHOOT_BY_ID[id];
   if (uiSlide.DEFAULT_OVERSHOOT_BY_ID[id] != null) return uiSlide.DEFAULT_OVERSHOOT_BY_ID[id];
@@ -72,6 +79,7 @@ function defaultOvershootForId(id) {
 }
 
 function familyCategory(id) {
+  if (overlayModal.isOverlayModalId(id)) return "Overlay-Modal";
   if (sharedElement.isSharedElementId(id)) return "Shared-Element";
   if (scaleZoom.isScaleZoomId(id)) return "Scale-Zoom";
   if (uiSlide.isUiSlideId(id)) return "UI-Slide";
@@ -80,6 +88,7 @@ function familyCategory(id) {
 }
 
 function familyDisplayName(id) {
+  if (overlayModal.isOverlayModalId(id)) return overlayModal.displayName(id);
   if (sharedElement.isSharedElementId(id)) return sharedElement.displayName(id);
   if (scaleZoom.isScaleZoomId(id)) return scaleZoom.displayName(id);
   if (uiSlide.isUiSlideId(id)) return uiSlide.displayName(id);
@@ -87,7 +96,12 @@ function familyDisplayName(id) {
 }
 
 function familyPhaseProfile(id) {
-  return uiPush.PHASE_PROFILE[id] || scaleZoom.PHASE_PROFILE[id] || sharedElement.PHASE_PROFILE[id];
+  return (
+    overlayModal.PHASE_PROFILE[id] ||
+    uiPush.PHASE_PROFILE[id] ||
+    scaleZoom.PHASE_PROFILE[id] ||
+    sharedElement.PHASE_PROFILE[id]
+  );
 }
 
 function normalizePushDirection(value, id) {
@@ -204,7 +218,7 @@ function applyTransitionPlan(opts) {
     layers: [],
     outgoing: uiPush.emptyLayer(outgoingName, "outgoing", outgoingRest),
     incoming: uiPush.emptyLayer(incomingName, "incoming", incomingRest),
-    note: "Native AE keyframes. Node plan is source of truth. JSX mirrors UI Push, UI-Slide, Scale-Zoom, and Shared-Element."
+    note: "Native AE keyframes. Node plan is source of truth. JSX mirrors UI Push, UI-Slide, Scale-Zoom, Shared-Element, and Overlay-Modal."
   };
 
   if (opts.target && opts.target.layerBounds) {
@@ -240,7 +254,8 @@ function applyTransitionPlan(opts) {
   };
 
   let built;
-  if (uiSlide.isUiSlideId(id)) built = uiSlide.plan(id, ctx);
+  if (overlayModal.isOverlayModalId(id)) built = overlayModal.plan(id, ctx);
+  else if (uiSlide.isUiSlideId(id)) built = uiSlide.plan(id, ctx);
   else if (scaleZoom.isScaleZoomId(id)) built = scaleZoom.plan(id, ctx);
   else if (sharedElement.isSharedElementId(id)) built = sharedElement.plan(id, ctx);
   else built = uiPush.plan(id, ctx);

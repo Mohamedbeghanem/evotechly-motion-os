@@ -1,6 +1,6 @@
 # Transition Kit — phase roadmap
 
-Status after this PR: **Phase 0–4 and Phase 12 are done.** Shared-Element is the full bounds-match family (not mesh). Later phases are catalogued, not implemented.
+Status after this PR: **Phase 0–4, Phase 9, and Phase 12 are done.** Overlay-Modal is the EvoCRM dialog family (dim + scale/opacity present). Shared-Element is the full bounds-match family (not mesh). Later phases are catalogued, not implemented.
 
 | Phase | Job | Status |
 |---|---|---|
@@ -13,7 +13,7 @@ Status after this PR: **Phase 0–4 and Phase 12 are done.** Shared-Element is t
 | 6 | Mask-Reveal family (native masks, no plugins) | planned |
 | 7 | Blur-Focus family | planned |
 | 8 | Depth-Parallax family | planned |
-| 9 | Overlay-Modal family | planned |
+| **9** | Overlay-Modal family (modal / sheet / dim / popover / toast) | **done** |
 | 10 | Page-Screen family | planned |
 | 11 | Wipe-Split family (soft mattes / native gradient wipe) | planned |
 | **12** | Shared-Element family (bounds match, not mesh) | **done** |
@@ -79,6 +79,17 @@ Status after this PR: **Phase 0–4 and Phase 12 are done.** Shared-Element is t
 - JSX mirrors apply math in `ae/Evotechly Transitions.jsx` Transitions tab
 - Registry: native `sourceType` rows, `commercialUse: true`
 - Tests: deterministic plans, unique IDs, implemented flags, axis / scale math
+- Charts / device plates still deferred to P2b
+
+## Phase 9 — done
+
+- `core/transitions/overlayModal.js` — `EVT_MODAL_IN` / `MODAL_OUT` / `SHEET_UP` / `SHEET_DOWN` / `OVERLAY_DIM` / `POPOVER_IN` / `TOAST_IN`
+- Dim plate + scale/opacity present. Sheet reuses UI-Slide sheet math. Popover is target-aware (`planBoundsMorph`)
+- EvoCRM paths: dialog, bottom sheet, dimmer, popover from a control, toast from the edge
+- Catalog `implemented:true` + names on all 7 Overlay-Modal IDs (`phase: 9`)
+- JSX mirrors apply math in `ae/Evotechly Transitions.jsx` Transitions tab
+- Registry: native `sourceType` rows, `commercialUse: true`
+- Tests: deterministic plans, unique IDs, implemented flags, dim / sheet / popover math
 - Charts / device plates still deferred to P2b
 
 ## What “done” means later

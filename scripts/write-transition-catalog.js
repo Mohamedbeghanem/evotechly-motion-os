@@ -99,14 +99,14 @@ const transitions = [
   row("EVT_DEPTH_STACK", "Depth-Parallax", "SMOOTH", "standard", false, "Card stack depth sort", 8, false, []),
   row("EVT_DEPTH_CARD", "Depth-Parallax", "STANDARD", "subtle", false, "One card lifts off a grid", 8, false, []),
 
-  // 08 Overlay-Modal
-  row("EVT_MODAL_IN", "Overlay-Modal", "STANDARD", "standard", false, "Dialog present + dim", 9, false, []),
-  row("EVT_MODAL_OUT", "Overlay-Modal", "FAST", "standard", false, "Dialog dismiss", 9, false, []),
-  row("EVT_SHEET_UP", "Overlay-Modal", "STANDARD", "standard", false, "Modal sheet from bottom", 9, false, []),
-  row("EVT_SHEET_DOWN", "Overlay-Modal", "FAST", "standard", false, "Sheet dismiss", 9, false, []),
-  row("EVT_OVERLAY_DIM", "Overlay-Modal", "FAST", "subtle", false, "Dim plate only", 9, false, []),
-  row("EVT_POPOVER_IN", "Overlay-Modal", "FAST", "subtle", true, "Popover from a target", 9, false, []),
-  row("EVT_TOAST_IN", "Overlay-Modal", "FAST", "subtle", false, "Toast from edge, then settle", 9, false, []),
+  // 08 Overlay-Modal — Phase 9
+  row("EVT_MODAL_IN", "Overlay-Modal", "STANDARD", "standard", false, "Dialog present + dim", 9, true, ["ui-soft-in"], "Modal In"),
+  row("EVT_MODAL_OUT", "Overlay-Modal", "FAST", "standard", false, "Dialog dismiss", 9, true, ["ui-soft-in"], "Modal Out"),
+  row("EVT_SHEET_UP", "Overlay-Modal", "STANDARD", "standard", false, "Modal sheet from bottom", 9, true, ["ui-whoosh-soft"], "Sheet Up"),
+  row("EVT_SHEET_DOWN", "Overlay-Modal", "FAST", "standard", false, "Sheet dismiss", 9, true, ["ui-whoosh-soft"], "Sheet Down"),
+  row("EVT_OVERLAY_DIM", "Overlay-Modal", "FAST", "subtle", false, "Dim plate only", 9, true, ["ui-cross"], "Overlay Dim"),
+  row("EVT_POPOVER_IN", "Overlay-Modal", "FAST", "subtle", true, "Popover from a target", 9, true, ["ui-soft-in"], "Popover In"),
+  row("EVT_TOAST_IN", "Overlay-Modal", "FAST", "subtle", false, "Toast from edge, then settle", 9, true, ["ui-soft-in"], "Toast In"),
 
   // 09 Page-Screen
   row("EVT_PAGE_PUSH", "Page-Screen", "STANDARD", "standard", false, "Full-page push using UI Push math", 10, false, []),
@@ -176,11 +176,11 @@ const transitions = [
 ];
 
 const out = {
-  version: "phase-12",
+  version: "phase-9",
   style: STYLE,
   aspectRatios: ASPECT,
   generated: "transitions/Metadata/catalog.json",
-  note: "Phase 12 implements the Shared-Element family (plus Phase 2–4 UI Push / UI-Slide / Scale-Zoom). Other rows are metadata for later phases and AI pairing.",
+  note: "Phase 9 implements the Overlay-Modal family (plus Phase 2–4 UI Push / UI-Slide / Scale-Zoom and Phase 12 Shared-Element). Other rows are metadata for later phases and AI pairing.",
   transitions: transitions
 };
 
