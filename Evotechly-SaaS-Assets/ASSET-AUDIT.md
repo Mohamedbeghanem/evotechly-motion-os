@@ -55,7 +55,7 @@ P1 KEEP ID rows (all **OWNED**, implemented):
 | Verdict | **KEEP** |
 | Score | **96** (20+25+15+15+10+10+1) — vendor risk n/a, tiny “we must not drift JSX” residual |
 | Downloaded? | N/A — already in repo (`core/transitions`, catalog, `ae/Evotechly Transitions.jsx`) |
-| Notes | `sourceType: native`, `commercialUse: true`. Full UI Push family (Phase 2) + UI-Slide card family (Phase 3) + **Scale-Zoom (Phase 4)** + **`EVT_SHARED_CARD`**. Other families catalog-only. |
+| Notes | `sourceType: native`, `commercialUse: true`. Full UI Push family (Phase 2) + UI-Slide card family (Phase 3) + Scale-Zoom (Phase 4) + **Shared-Element (Phase 12)**. Other families catalog-only. |
 
 Phase 3 KEEP ID rows (all **OWNED**, implemented):
 
@@ -66,6 +66,10 @@ Phase 4 KEEP ID rows (all **OWNED**, implemented):
 - Zoom: `EVT_ZOOM_IN`, `EVT_ZOOM_OUT`, `EVT_ZOOM_TARGET`, `EVT_ZOOM_MATCH`
 - Scale: `EVT_SCALE_POP`, `EVT_SCALE_BREATHE`, `EVT_SCALE_PUNCH`, `EVT_SCALE_SETTLE`
 - Shared: `EVT_SHARED_CARD`
+
+Phase 12 KEEP ID rows (all **OWNED**, implemented):
+
+- Shared: `EVT_SHARED_CARD`, `EVT_SHARED_IMAGE`, `EVT_MATCH_CUT`, `EVT_MORPH_BOUNDS`, `EVT_HERO_TO_DETAIL`, `EVT_LIST_TO_DETAIL`
 
 ### Lucide curated SVGs
 

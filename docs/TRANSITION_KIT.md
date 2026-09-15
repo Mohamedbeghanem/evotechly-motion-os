@@ -2,7 +2,7 @@
 
 Premium SaaS screen-to-screen motion. Apple / Linear / Stripe / Raycast taste. Not a glitch pack.
 
-**Phase 0–4** ships this document, the folder scaffold, a Node-testable engine, catalog metadata, and a companion ScriptUI panel. The full UI Push family, the UI-Slide card family, the Scale-Zoom family, and `EVT_SHARED_CARD` produce complete keyframe plans. Everything else is catalogued for later phases and AI pairing.
+**Phase 0–4 and Phase 12** ship this document, the folder scaffold, a Node-testable engine, catalog metadata, and a companion ScriptUI panel. The full UI Push family, the UI-Slide card family, the Scale-Zoom family, and the **Shared-Element family** produce complete keyframe plans. Everything else is catalogued for later phases and AI pairing.
 
 This kit does **not** replace the v0.32 Motion tab transitions (shot-level Clean Push / Whip / Zoom Match). Those stay in `ae/Evotechly Motion OS.jsx` (~297 KB — never stub). This kit is UI-to-UI: dashboard → card → analytics.
 
@@ -15,7 +15,7 @@ This kit does **not** replace the v0.32 Motion tab transitions (shot-level Clean
 | Shy control null + Slider Controls | Yes | Plan + JSX wiring |
 | Target-frame zoom math | Yes (pure math) | **Implemented** — `planTargetZoom` + JSX apply |
 | Rounded mask expand / iris | Yes (masks) | Catalog only (Phase 6) |
-| Shared-element “morph” | Partial | **`EVT_SHARED_CARD` implemented** — bounds match (pos+scale), not mesh warp |
+| Shared-element “morph” | Partial | **Phase 12 family implemented** — bounds match (pos+scale), not mesh warp |
 | True glass refraction | No (without a plugin) | Native frost only; Liquid Glass stays companion |
 | SFX | Markers only | Metadata hooks — **no audio files** |
 | `.ffx` / `.aep` presets | Out of scope | Never checked in. AE cannot run in CI |
@@ -23,7 +23,7 @@ This kit does **not** replace the v0.32 Motion tab transitions (shot-level Clean
 
 **CI cannot open After Effects.** Plans are deterministic JSON. Visual taste is an editor soak, same as the rest of Motion OS.
 
-**ExtendScript cannot `require` Node.** `core/transitions/*.js` is the source of truth for numbers and tests. `ae/Evotechly Transitions.jsx` mirrors the UI Push, UI-Slide, Scale-Zoom, and Shared Card constants and apply math. If they drift, fix Node first, then the JSX.
+**ExtendScript cannot `require` Node.** `core/transitions/*.js` is the source of truth for numbers and tests. `ae/Evotechly Transitions.jsx` mirrors the UI Push, UI-Slide, Scale-Zoom, and Shared-Element constants and apply math. If they drift, fix Node first, then the JSX.
 
 **Progress slider** is reserved. Phase 1 keys are time-based. Driving the whole transition from `Progress` (0–100) is an Expressions-folder job in a later phase.
 
@@ -119,7 +119,7 @@ Folder names under `transitions/`. Letters are A=01 … P=16.
 | H / 08 | Overlay-Modal | `08_Overlay-Modal/` | 9 | catalog |
 | I / 09 | Page-Screen | `09_Page-Screen/` | 10 | catalog |
 | J / 10 | Wipe-Split | `10_Wipe-Split/` | 11 | catalog |
-| K / 11 | Shared-Element | `11_Shared-Element/` | 12 | **`EVT_SHARED_CARD` implemented**; rest catalog |
+| K / 11 | Shared-Element | `11_Shared-Element/` | 12 | **6 IDs implemented (Phase 12)** |
 | L / 12 | Stagger-Cascade | `12_Stagger-Cascade/` | 13 | catalog |
 | M / 13 | Camera-Dolly | `13_Camera-Dolly/` | 14 | catalog |
 | N / 14 | Glass-Frost | `14_Glass-Frost/` | 15 | catalog |
@@ -157,6 +157,19 @@ Opacity + transform. No mesh warp. EvoCRM: after a card slide, zoom or bounds-ma
 - `EVT_SHARED_CARD` — **Shared Card**. Card bounds morph to detail: position + independent scale. Not mesh. `EVT_CARD_TO_DETAIL` aliases this ID.
 
 Plans: `core/transitions/scaleZoom.js`, `core/transitions/sharedElement.js`. Math: `planTargetZoom`, `planBoundsMorph` in `target.js`.
+
+### Phase 12 implemented IDs (Shared-Element family)
+
+Position + independent scale. No mesh warp. EvoCRM: list row, hero, image, or card opens into detail.
+
+- `EVT_SHARED_CARD` — **Shared Card**. Card bounds morph to detail. `EVT_CARD_TO_DETAIL` aliases this ID.
+- `EVT_SHARED_IMAGE` — **Shared Image**. Image hero → gallery. Quieter anticipate, both plates stay more visible at crossover.
+- `EVT_MATCH_CUT` — **Match Cut**. Fast: outgoing travels to dest then cuts; incoming appears at rest. No settle overshoot.
+- `EVT_MORPH_BOUNDS` — **Morph Bounds**. Pure rect interpolation (both visible at mid). No anticipate lift.
+- `EVT_HERO_TO_DETAIL` — **Hero to Detail**. Marketing hero shrinks into app UI.
+- `EVT_LIST_TO_DETAIL` — **List to Detail**. Wide/short row expands into the detail pane.
+
+Plans: `core/transitions/sharedElement.js`. Morph math: `planBoundsMorph` in `target.js`.
 
 ### Phase 1–2 implemented IDs (UI Push family)
 
@@ -198,6 +211,11 @@ Suggested prompt → ID mapping (later Phase 18):
 | “zoom in”, “scale into” | `EVT_ZOOM_IN` |
 | “zoom out”, “pull back” | `EVT_ZOOM_OUT` |
 | “open this card into detail”, “shared element” | `EVT_SHARED_CARD` |
+| “image to gallery”, “shared image” | `EVT_SHARED_IMAGE` |
+| “match cut” | `EVT_MATCH_CUT` |
+| “morph the rect”, “bounds morph” | `EVT_MORPH_BOUNDS` |
+| “hero into the app”, “hero to detail” | `EVT_HERO_TO_DETAIL` |
+| “list row to detail”, “open this row” | `EVT_LIST_TO_DETAIL` |
 | “pop the card” | `EVT_SCALE_POP` |
 | “modal”, “dialog” | `EVT_MODAL_IN` |
 | “quiet”, “calm”, “expensive” | `SMOOTH` + `premium-smooth` or `soft-ui` |

@@ -1,5 +1,5 @@
 {
-  "version": "phase-4",
+  "version": "phase-12",
   "style": "premium-saas",
   "aspectRatios": [
     "16:9",
@@ -8,7 +8,7 @@
     "4:5"
   ],
   "generated": "transitions/Metadata/catalog.json",
-  "note": "Phase 4 implements Scale-Zoom plus EVT_SHARED_CARD (plus Phase 2–3 UI Push / UI-Slide). Other rows are metadata for later phases and AI pairing.",
+  "note": "Phase 12 implements the Shared-Element family (plus Phase 2–4 UI Push / UI-Slide / Scale-Zoom). Other rows are metadata for later phases and AI pairing.",
   "transitions": [
     {
       "id": "EVT_UI_PUSH_LEFT",
@@ -1470,9 +1470,12 @@
         "1:1",
         "4:5"
       ],
-      "sfx": [],
+      "sfx": [
+        "ui-whoosh-soft"
+      ],
       "phase": 12,
-      "implemented": false
+      "implemented": true,
+      "name": "Shared Image"
     },
     {
       "id": "EVT_MATCH_CUT",
@@ -1488,9 +1491,12 @@
         "1:1",
         "4:5"
       ],
-      "sfx": [],
+      "sfx": [
+        "ui-cross"
+      ],
       "phase": 12,
-      "implemented": false
+      "implemented": true,
+      "name": "Match Cut"
     },
     {
       "id": "EVT_MORPH_BOUNDS",
@@ -1506,9 +1512,12 @@
         "1:1",
         "4:5"
       ],
-      "sfx": [],
+      "sfx": [
+        "ui-cross"
+      ],
       "phase": 12,
-      "implemented": false
+      "implemented": true,
+      "name": "Morph Bounds"
     },
     {
       "id": "EVT_HERO_TO_DETAIL",
@@ -1524,9 +1533,12 @@
         "1:1",
         "4:5"
       ],
-      "sfx": [],
+      "sfx": [
+        "ui-whoosh-soft"
+      ],
       "phase": 12,
-      "implemented": false
+      "implemented": true,
+      "name": "Hero to Detail"
     },
     {
       "id": "EVT_LIST_TO_DETAIL",
@@ -1542,9 +1554,12 @@
         "1:1",
         "4:5"
       ],
-      "sfx": [],
+      "sfx": [
+        "ui-whoosh-soft"
+      ],
       "phase": 12,
-      "implemented": false
+      "implemented": true,
+      "name": "List to Detail"
     },
     {
       "id": "EVT_STAGGER_CARDS",

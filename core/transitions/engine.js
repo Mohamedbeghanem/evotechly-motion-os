@@ -2,7 +2,7 @@
 
 /**
  * Transition Kit engine — deterministic plans.
- * Node is source of truth. JSX mirrors UI Push / UI-Slide / Scale-Zoom numbers.
+ * Node is source of truth. JSX mirrors UI Push / UI-Slide / Scale-Zoom / Shared-Element numbers.
  * Native AE only. No .ffx / .aep / vendor plugins.
  */
 
@@ -87,7 +87,7 @@ function familyDisplayName(id) {
 }
 
 function familyPhaseProfile(id) {
-  return uiPush.PHASE_PROFILE[id] || scaleZoom.PHASE_PROFILE[id];
+  return uiPush.PHASE_PROFILE[id] || scaleZoom.PHASE_PROFILE[id] || sharedElement.PHASE_PROFILE[id];
 }
 
 function normalizePushDirection(value, id) {
@@ -204,7 +204,7 @@ function applyTransitionPlan(opts) {
     layers: [],
     outgoing: uiPush.emptyLayer(outgoingName, "outgoing", outgoingRest),
     incoming: uiPush.emptyLayer(incomingName, "incoming", incomingRest),
-    note: "Native AE keyframes. Node plan is source of truth. JSX mirrors UI Push, UI-Slide, Scale-Zoom, and Shared Card."
+    note: "Native AE keyframes. Node plan is source of truth. JSX mirrors UI Push, UI-Slide, Scale-Zoom, and Shared-Element."
   };
 
   if (opts.target && opts.target.layerBounds) {

@@ -124,13 +124,13 @@ const transitions = [
   row("EVT_WIPE_GRADIENT", "Wipe-Split", "SMOOTH", "subtle", false, "Native gradient wipe, Apple ease", 11, false, []),
   row("EVT_SPLIT_REVEAL", "Wipe-Split", "SMOOTH", "subtle", false, "Center split, incoming in the gap", 11, false, []),
 
-  // 11 Shared-Element
+  // 11 Shared-Element — Phase 12
   row("EVT_SHARED_CARD", "Shared-Element", "SMOOTH", "standard", true, "Card bounds morph to detail", 12, true, ["ui-whoosh-soft"], "Shared Card"),
-  row("EVT_SHARED_IMAGE", "Shared-Element", "SMOOTH", "standard", true, "Image hero → gallery", 12, false, []),
-  row("EVT_MATCH_CUT", "Shared-Element", "FAST", "subtle", true, "Match position/scale, cut the rest", 12, false, []),
-  row("EVT_MORPH_BOUNDS", "Shared-Element", "STANDARD", "standard", true, "Rect morph only (no mesh)", 12, false, []),
-  row("EVT_HERO_TO_DETAIL", "Shared-Element", "SMOOTH", "standard", true, "Marketing hero into app UI", 12, false, []),
-  row("EVT_LIST_TO_DETAIL", "Shared-Element", "STANDARD", "standard", true, "Row expands into detail pane", 12, false, []),
+  row("EVT_SHARED_IMAGE", "Shared-Element", "SMOOTH", "standard", true, "Image hero → gallery", 12, true, ["ui-whoosh-soft"], "Shared Image"),
+  row("EVT_MATCH_CUT", "Shared-Element", "FAST", "subtle", true, "Match position/scale, cut the rest", 12, true, ["ui-cross"], "Match Cut"),
+  row("EVT_MORPH_BOUNDS", "Shared-Element", "STANDARD", "standard", true, "Rect morph only (no mesh)", 12, true, ["ui-cross"], "Morph Bounds"),
+  row("EVT_HERO_TO_DETAIL", "Shared-Element", "SMOOTH", "standard", true, "Marketing hero into app UI", 12, true, ["ui-whoosh-soft"], "Hero to Detail"),
+  row("EVT_LIST_TO_DETAIL", "Shared-Element", "STANDARD", "standard", true, "Row expands into detail pane", 12, true, ["ui-whoosh-soft"], "List to Detail"),
 
   // 12 Stagger-Cascade
   row("EVT_STAGGER_CARDS", "Stagger-Cascade", "STANDARD", "subtle", false, "Card row stagger in", 13, false, []),
@@ -176,11 +176,11 @@ const transitions = [
 ];
 
 const out = {
-  version: "phase-4",
+  version: "phase-12",
   style: STYLE,
   aspectRatios: ASPECT,
   generated: "transitions/Metadata/catalog.json",
-  note: "Phase 4 implements Scale-Zoom plus EVT_SHARED_CARD (plus Phase 2–3 UI Push / UI-Slide). Other rows are metadata for later phases and AI pairing.",
+  note: "Phase 12 implements the Shared-Element family (plus Phase 2–4 UI Push / UI-Slide / Scale-Zoom). Other rows are metadata for later phases and AI pairing.",
   transitions: transitions
 };
 
