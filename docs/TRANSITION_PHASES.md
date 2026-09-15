@@ -1,6 +1,6 @@
 # Transition Kit — phase roadmap
 
-Status after this PR: **Phase 0–4, Phase 9, Phase 10, and Phase 12 are done.** Page-Screen is the EvoCRM IA family (dashboard → page, forward/back, tab content). Overlay-Modal is the dialog family. Shared-Element is the full bounds-match family (not mesh). Later phases are catalogued, not implemented.
+Status after this PR: **Phase 0–4, Phase 9, Phase 10, Phase 12, and Phase 13 are done.** Stagger-Cascade is the EvoCRM list/table-row family (deal pipeline, contacts, activity). Page-Screen is the IA family (dashboard → page, forward/back, tab content). Overlay-Modal is the dialog family. Shared-Element is the full bounds-match family (not mesh). Later phases are catalogued, not implemented. Crossfade stays catalog-only — `PAGE_FADE` / `TAB_CROSS` already own dissolves.
 
 | Phase | Job | Status |
 |---|---|---|
@@ -17,7 +17,7 @@ Status after this PR: **Phase 0–4, Phase 9, Phase 10, and Phase 12 are done.**
 | **10** | Page-Screen family (page push / fade / screen swap / nav / tab) | **done** |
 | 11 | Wipe-Split family (soft mattes / native gradient wipe) | planned |
 | **12** | Shared-Element family (bounds match, not mesh) | **done** |
-| 13 | Stagger-Cascade family (reuse `staggerReveal` numbers where they fit) | planned |
+| **13** | Stagger-Cascade family (reuse `staggerReveal` numbers where they fit) | **done** |
 | 14 | Camera-Dolly family (plate push/pull — not a 3D camera rig) | planned |
 | 15 | Glass-Frost family (native frost; no Liquid Glass binary) | planned |
 | 16 | Hero family + apply `transitions/Examples/demo-storyboard.json` | planned |
@@ -80,6 +80,17 @@ Status after this PR: **Phase 0–4, Phase 9, Phase 10, and Phase 12 are done.**
 - Registry: native `sourceType` rows, `commercialUse: true`
 - Tests: deterministic plans, unique IDs, implemented flags, axis / scale math
 - Charts / device plates still deferred to P2b
+
+## Phase 13 — done
+
+- `core/transitions/staggerCascade.js` — `EVT_STAGGER_CARDS` / `STAGGER_LIST` / `CASCADE_IN` / `CASCADE_OUT` / `STAGGER_FADE` / `WAVE_SOFT`
+- Reuses `saasDemo.STAGGER` offset (3f), travel (16px), and hold (0.2s). Wave uses a 4-frame soft delay. Fade is opacity-only. No bounce / overshoot
+- EvoCRM paths: deal pipeline cards, contacts list, activity rows, tree / nav cascade
+- Catalog `implemented:true` + names on all 6 Stagger-Cascade IDs (`phase: 13`)
+- JSX mirrors apply math in `ae/Evotechly Transitions.jsx` Transitions tab (2+ selected rows, top = first)
+- Registry: native `sourceType` rows, `commercialUse: true`
+- Tests: deterministic plans, unique IDs, implemented flags, offset / travel / opacity-only math
+- Charts / device plates still deferred to P2b. Crossfade stays catalog-only
 
 ## Phase 10 — done
 

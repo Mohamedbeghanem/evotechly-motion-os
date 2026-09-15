@@ -2,19 +2,19 @@
 
 **Product tag:** Ultimate **v2.0.0** on current `main`.
 
-## Transition Kit — Phase 0–4 + Phase 9–10 + Phase 12
+## Transition Kit — Phase 0–4 + Phase 9–10 + Phase 12–13
 
 Architecture + core engine on top of Ultimate 2.0.0. Does not stub the 297 KB v0.32 panel. Does not bump the 2.0.0 tag.
 
-- Docs: `docs/TRANSITION_KIT.md`, `docs/TRANSITION_PHASES.md` (phases 0–4, **Phase 9**, **Phase 10**, and **Phase 12** **done**)
-- Engine: `core/transitions/` — easing, timing, target zoom, bounds morph, control null, `applyTransitionPlan`, `uiPush.js`, `uiSlide.js`, `scaleZoom.js`, `sharedElement.js`, `overlayModal.js`, `pageScreen.js`
+- Docs: `docs/TRANSITION_KIT.md`, `docs/TRANSITION_PHASES.md` (phases 0–4, **Phase 9**, **Phase 10**, **Phase 12**, and **Phase 13** **done**)
+- Engine: `core/transitions/` — easing, timing, target zoom, bounds morph, control null, `applyTransitionPlan`, `uiPush.js`, `uiSlide.js`, `scaleZoom.js`, `sharedElement.js`, `overlayModal.js`, `pageScreen.js`, `staggerCascade.js`
 - Catalog: `transitions/Metadata/catalog.json` — unique `EVT_*` IDs, families A–16
-- Implemented plans: full UI Push family (15 IDs) + UI-Slide card family (8 IDs) + Scale-Zoom (8 IDs) + Shared-Element (6 IDs) + Overlay-Modal (7 IDs) + **Page-Screen (6 IDs)** — page push/fade, screen swap (chrome stay), nav forward/back, tab cross
+- Implemented plans: full UI Push family (15 IDs) + UI-Slide card family (8 IDs) + Scale-Zoom (8 IDs) + Shared-Element (6 IDs) + Overlay-Modal (7 IDs) + Page-Screen (6 IDs) + **Stagger-Cascade (6 IDs)** — card/list stagger, tree cascade in/out, opacity-only fade, soft delay wave
 - Companion: `ae/Evotechly Transitions.jsx` — Window → Evotechly Transitions (install beside Hub)
 - Tests: `tests/transitions-engine.test.js`
 - Demo sequence (data only): `transitions/Examples/demo-storyboard.json` (apply in Phase 16)
 
-**Limitations:** AE cannot run in CI. JSX mirrors Node numbers. Later families (Crossfade, Mask-Reveal, Blur-Focus, Depth-Parallax, Wipe-Split, and later) are metadata. No `.ffx` / `.aep` / SFX audio / vendor plugins. Charts / device plates are P2b.
+**Limitations:** AE cannot run in CI. JSX mirrors Node numbers. Later families (Crossfade, Mask-Reveal, Blur-Focus, Depth-Parallax, Wipe-Split, and later) are metadata. No `.ffx` / `.aep` / SFX audio / vendor plugins. Charts / device plates are P2b. Crossfade stays catalog-only — `PAGE_FADE` / `TAB_CROSS` already own dissolves.
 
 ## SaaS Assets Pack — P1 (native generators)
 

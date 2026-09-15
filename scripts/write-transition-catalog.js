@@ -132,13 +132,13 @@ const transitions = [
   row("EVT_HERO_TO_DETAIL", "Shared-Element", "SMOOTH", "standard", true, "Marketing hero into app UI", 12, true, ["ui-whoosh-soft"], "Hero to Detail"),
   row("EVT_LIST_TO_DETAIL", "Shared-Element", "STANDARD", "standard", true, "Row expands into detail pane", 12, true, ["ui-whoosh-soft"], "List to Detail"),
 
-  // 12 Stagger-Cascade
-  row("EVT_STAGGER_CARDS", "Stagger-Cascade", "STANDARD", "subtle", false, "Card row stagger in", 13, false, []),
-  row("EVT_STAGGER_LIST", "Stagger-Cascade", "STANDARD", "subtle", false, "List rows cascade", 13, false, []),
-  row("EVT_CASCADE_IN", "Stagger-Cascade", "SMOOTH", "subtle", false, "Tree / nav cascade in", 13, false, []),
-  row("EVT_CASCADE_OUT", "Stagger-Cascade", "FAST", "subtle", false, "Cascade out", 13, false, []),
-  row("EVT_STAGGER_FADE", "Stagger-Cascade", "STANDARD", "subtle", false, "Opacity-only stagger", 13, false, []),
-  row("EVT_WAVE_SOFT", "Stagger-Cascade", "SMOOTH", "subtle", false, "Soft delay wave, no bounce", 13, false, []),
+  // 12 Stagger-Cascade — Phase 13
+  row("EVT_STAGGER_CARDS", "Stagger-Cascade", "STANDARD", "subtle", false, "Card row stagger in", 13, true, ["ui-soft-in"], "Stagger Cards"),
+  row("EVT_STAGGER_LIST", "Stagger-Cascade", "STANDARD", "subtle", false, "List rows cascade", 13, true, ["ui-soft-in"], "Stagger List"),
+  row("EVT_CASCADE_IN", "Stagger-Cascade", "SMOOTH", "subtle", false, "Tree / nav cascade in", 13, true, ["ui-soft-in"], "Cascade In"),
+  row("EVT_CASCADE_OUT", "Stagger-Cascade", "FAST", "subtle", false, "Cascade out", 13, true, ["ui-soft-in"], "Cascade Out"),
+  row("EVT_STAGGER_FADE", "Stagger-Cascade", "STANDARD", "subtle", false, "Opacity-only stagger", 13, true, ["ui-cross"], "Stagger Fade"),
+  row("EVT_WAVE_SOFT", "Stagger-Cascade", "SMOOTH", "subtle", false, "Soft delay wave, no bounce", 13, true, ["ui-soft-in"], "Wave Soft"),
 
   // 13 Camera-Dolly
   row("EVT_CAM_DOLLY_IN", "Camera-Dolly", "SMOOTH", "subtle", false, "Slow push on the UI plate", 14, false, []),
@@ -176,11 +176,11 @@ const transitions = [
 ];
 
 const out = {
-  version: "phase-10",
+  version: "phase-13",
   style: STYLE,
   aspectRatios: ASPECT,
   generated: "transitions/Metadata/catalog.json",
-  note: "Phase 10 implements the Page-Screen family (plus Phase 2–4 UI Push / UI-Slide / Scale-Zoom, Phase 9 Overlay-Modal, and Phase 12 Shared-Element). Other rows are metadata for later phases and AI pairing.",
+  note: "Phase 13 implements the Stagger-Cascade family (plus Phase 2–4 UI Push / UI-Slide / Scale-Zoom, Phase 9 Overlay-Modal, Phase 10 Page-Screen, and Phase 12 Shared-Element). Other rows are metadata for later phases and AI pairing.",
   transitions: transitions
 };
 

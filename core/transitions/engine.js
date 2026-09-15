@@ -2,7 +2,7 @@
 
 /**
  * Transition Kit engine — deterministic plans.
- * Node is source of truth. JSX mirrors UI Push / UI-Slide / Scale-Zoom / Shared-Element / Overlay-Modal / Page-Screen numbers.
+ * Node is source of truth. JSX mirrors UI Push / UI-Slide / Scale-Zoom / Shared-Element / Overlay-Modal / Page-Screen / Stagger-Cascade numbers.
  * Native AE only. No .ffx / .aep / vendor plugins.
  */
 
@@ -17,12 +17,14 @@ const scaleZoom = require("./scaleZoom");
 const sharedElement = require("./sharedElement");
 const overlayModal = require("./overlayModal");
 const pageScreen = require("./pageScreen");
+const staggerCascade = require("./staggerCascade");
 
 const IMPLEMENTED_IDS = uiPush.UI_PUSH_IDS.concat(uiSlide.UI_SLIDE_IDS)
   .concat(scaleZoom.SCALE_ZOOM_IDS)
   .concat(sharedElement.SHARED_ELEMENT_IDS)
   .concat(overlayModal.OVERLAY_MODAL_IDS)
-  .concat(pageScreen.PAGE_SCREEN_IDS);
+  .concat(pageScreen.PAGE_SCREEN_IDS)
+  .concat(staggerCascade.STAGGER_CASCADE_IDS);
 const ANATOMY = uiPush.ANATOMY;
 const STYLE = "premium-saas";
 const DEFAULT_COMP = { w: 1920, h: 1080, fps: DEFAULT_FPS };
@@ -42,6 +44,8 @@ function layerRest(layer) {
 }
 
 function normalizeId(id) {
+  const stagger = staggerCascade.resolveId(id);
+  if (staggerCascade.isStaggerCascadeId(stagger)) return stagger;
   const page = pageScreen.resolveId(id);
   if (pageScreen.isPageScreenId(page)) return page;
   const overlay = overlayModal.resolveId(id);
@@ -56,6 +60,7 @@ function normalizeId(id) {
 }
 
 function defaultDirectionForId(id) {
+  if (staggerCascade.DEFAULT_DIRECTION_BY_ID[id]) return staggerCascade.DEFAULT_DIRECTION_BY_ID[id];
   if (pageScreen.DEFAULT_DIRECTION_BY_ID[id]) return pageScreen.DEFAULT_DIRECTION_BY_ID[id];
   if (overlayModal.DEFAULT_DIRECTION_BY_ID[id]) return overlayModal.DEFAULT_DIRECTION_BY_ID[id];
   if (uiSlide.DEFAULT_DIRECTION_BY_ID[id]) return uiSlide.DEFAULT_DIRECTION_BY_ID[id];
@@ -65,6 +70,7 @@ function defaultDirectionForId(id) {
 
 function defaultGroupForId(id) {
   return (
+    staggerCascade.DEFAULT_GROUP_BY_ID[id] ||
     pageScreen.DEFAULT_GROUP_BY_ID[id] ||
     overlayModal.DEFAULT_GROUP_BY_ID[id] ||
     sharedElement.DEFAULT_GROUP_BY_ID[id] ||
@@ -76,6 +82,7 @@ function defaultGroupForId(id) {
 }
 
 function defaultOvershootForId(id) {
+  if (staggerCascade.DEFAULT_OVERSHOOT_BY_ID[id] != null) return staggerCascade.DEFAULT_OVERSHOOT_BY_ID[id];
   if (pageScreen.DEFAULT_OVERSHOOT_BY_ID[id] != null) return pageScreen.DEFAULT_OVERSHOOT_BY_ID[id];
   if (overlayModal.DEFAULT_OVERSHOOT_BY_ID[id] != null) return overlayModal.DEFAULT_OVERSHOOT_BY_ID[id];
   if (sharedElement.DEFAULT_OVERSHOOT_BY_ID[id] != null) return sharedElement.DEFAULT_OVERSHOOT_BY_ID[id];
@@ -86,6 +93,7 @@ function defaultOvershootForId(id) {
 }
 
 function familyCategory(id) {
+  if (staggerCascade.isStaggerCascadeId(id)) return "Stagger-Cascade";
   if (pageScreen.isPageScreenId(id)) return "Page-Screen";
   if (overlayModal.isOverlayModalId(id)) return "Overlay-Modal";
   if (sharedElement.isSharedElementId(id)) return "Shared-Element";
@@ -96,6 +104,7 @@ function familyCategory(id) {
 }
 
 function familyDisplayName(id) {
+  if (staggerCascade.isStaggerCascadeId(id)) return staggerCascade.displayName(id);
   if (pageScreen.isPageScreenId(id)) return pageScreen.displayName(id);
   if (overlayModal.isOverlayModalId(id)) return overlayModal.displayName(id);
   if (sharedElement.isSharedElementId(id)) return sharedElement.displayName(id);
@@ -106,6 +115,7 @@ function familyDisplayName(id) {
 
 function familyPhaseProfile(id) {
   return (
+    staggerCascade.PHASE_PROFILE[id] ||
     pageScreen.PHASE_PROFILE[id] ||
     overlayModal.PHASE_PROFILE[id] ||
     uiPush.PHASE_PROFILE[id] ||
@@ -200,7 +210,20 @@ function applyTransitionPlan(opts) {
     sliders: {
       Strength: strength,
       Distance: distancePct,
-      Overshoot: overshoot
+      Overshoot: overshoot,
+      Stagger: staggerCascade.isStaggerCascadeId(id)
+        ? Math.round(
+            clamp(
+              opts.offsetFrames != null
+                ? opts.offsetFrames
+                : opts.stagger != null
+                  ? opts.stagger
+                  : staggerCascade.offsetForId(id),
+              0,
+              120
+            )
+          )
+        : 3
     }
   });
 
@@ -228,7 +251,7 @@ function applyTransitionPlan(opts) {
     layers: [],
     outgoing: uiPush.emptyLayer(outgoingName, "outgoing", outgoingRest),
     incoming: uiPush.emptyLayer(incomingName, "incoming", incomingRest),
-    note: "Native AE keyframes. Node plan is source of truth. JSX mirrors UI Push, UI-Slide, Scale-Zoom, Shared-Element, Overlay-Modal, and Page-Screen."
+    note: "Native AE keyframes. Node plan is source of truth. JSX mirrors UI Push, UI-Slide, Scale-Zoom, Shared-Element, Overlay-Modal, Page-Screen, and Stagger-Cascade."
   };
 
   if (opts.target && opts.target.layerBounds) {
@@ -260,11 +283,27 @@ function applyTransitionPlan(opts) {
     id: id,
     strength: strength,
     comp: comp,
-    target: opts.target
+    target: opts.target,
+    offsetFrames: staggerCascade.isStaggerCascadeId(id)
+      ? Math.round(
+          clamp(
+            opts.offsetFrames != null
+              ? opts.offsetFrames
+              : opts.stagger != null
+                ? opts.stagger
+                : staggerCascade.offsetForId(id),
+            0,
+            120
+          )
+        )
+      : undefined,
+    staggerCount: opts.staggerCount || opts.itemCount,
+    layers: opts.layers || opts.items
   };
 
   let built;
-  if (pageScreen.isPageScreenId(id)) built = pageScreen.plan(id, ctx);
+  if (staggerCascade.isStaggerCascadeId(id)) built = staggerCascade.plan(id, ctx);
+  else if (pageScreen.isPageScreenId(id)) built = pageScreen.plan(id, ctx);
   else if (overlayModal.isOverlayModalId(id)) built = overlayModal.plan(id, ctx);
   else if (uiSlide.isUiSlideId(id)) built = uiSlide.plan(id, ctx);
   else if (scaleZoom.isScaleZoomId(id)) built = scaleZoom.plan(id, ctx);
@@ -275,6 +314,7 @@ function applyTransitionPlan(opts) {
   shared.travel = built.travel;
   if (built.target) shared.target = built.target;
   if (built.morph) shared.morph = built.morph;
+  if (built.stagger) shared.stagger = built.stagger;
   shared.layers = [built.outgoing, built.incoming];
   shared.description =
     "Apply " +

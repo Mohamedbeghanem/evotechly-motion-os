@@ -16,6 +16,7 @@ Nothing binary ships in this folder in P0. P1 fills **EvotechlyNative** generato
 - `EVT_SHARED_CARD` / `EVT_SHARED_IMAGE` / `EVT_MATCH_CUT` / `EVT_MORPH_BOUNDS` / `EVT_HERO_TO_DETAIL` / `EVT_LIST_TO_DETAIL` — already owned (Phase 12 Shared-Element, bounds-match only)
 - `EVT_MODAL_IN` / `EVT_MODAL_OUT` / `EVT_SHEET_UP` / `EVT_SHEET_DOWN` / `EVT_OVERLAY_DIM` / `EVT_POPOVER_IN` / `EVT_TOAST_IN` — already owned (Phase 9 Overlay-Modal)
 - `EVT_PAGE_PUSH` / `EVT_PAGE_FADE` / `EVT_SCREEN_SWAP` / `EVT_NAV_FORWARD` / `EVT_NAV_BACK` / `EVT_TAB_CROSS` — already owned (Phase 10 Page-Screen)
+- `EVT_STAGGER_CARDS` / `EVT_STAGGER_LIST` / `EVT_CASCADE_IN` / `EVT_CASCADE_OUT` / `EVT_STAGGER_FADE` / `EVT_WAVE_SOFT` — already owned (Phase 13 Stagger-Cascade)
 - `EVT_XFADE_SOFT` — catalog only until Transition Kit Phase 5
 
 ## Native path

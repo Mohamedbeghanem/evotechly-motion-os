@@ -2,7 +2,7 @@
 
 Premium SaaS screen-to-screen motion. Apple / Linear / Stripe / Raycast taste. Not a glitch pack.
 
-**Phase 0–4, Phase 9–10, and Phase 12** ship this document, the folder scaffold, a Node-testable engine, catalog metadata, and a companion ScriptUI panel. The full UI Push family, the UI-Slide card family, the Scale-Zoom family, the Shared-Element family, the Overlay-Modal family, and the **Page-Screen family** produce complete keyframe plans. Everything else is catalogued for later phases and AI pairing.
+**Phase 0–4, Phase 9–10, and Phase 12–13** ship this document, the folder scaffold, a Node-testable engine, catalog metadata, and a companion ScriptUI panel. The full UI Push family, the UI-Slide card family, the Scale-Zoom family, the Shared-Element family, the Overlay-Modal family, the Page-Screen family, and the **Stagger-Cascade family** produce complete keyframe plans. Everything else is catalogued for later phases and AI pairing.
 
 This kit does **not** replace the v0.32 Motion tab transitions (shot-level Clean Push / Whip / Zoom Match). Those stay in `ae/Evotechly Motion OS.jsx` (~297 KB — never stub). This kit is UI-to-UI: dashboard → card → analytics.
 
@@ -23,7 +23,7 @@ This kit does **not** replace the v0.32 Motion tab transitions (shot-level Clean
 
 **CI cannot open After Effects.** Plans are deterministic JSON. Visual taste is an editor soak, same as the rest of Motion OS.
 
-**ExtendScript cannot `require` Node.** `core/transitions/*.js` is the source of truth for numbers and tests. `ae/Evotechly Transitions.jsx` mirrors the UI Push, UI-Slide, Scale-Zoom, Shared-Element, Overlay-Modal, and Page-Screen constants and apply math. If they drift, fix Node first, then the JSX.
+**ExtendScript cannot `require` Node.** `core/transitions/*.js` is the source of truth for numbers and tests. `ae/Evotechly Transitions.jsx` mirrors the UI Push, UI-Slide, Scale-Zoom, Shared-Element, Overlay-Modal, Page-Screen, and Stagger-Cascade constants and apply math. If they drift, fix Node first, then the JSX.
 
 **Progress slider** is reserved. Phase 1 keys are time-based. Driving the whole transition from `Progress` (0–100) is an Expressions-folder job in a later phase.
 
@@ -93,7 +93,7 @@ Shy guide null. JSX adds **Slider Control** effects (no custom Match Name plugin
 | Opacity | 100 | Global opacity bias |
 | CornerRadius | 12 | Mask family later |
 | MaskExpansion | 0 | Mask family later |
-| Stagger | 3 | Cascade family later |
+| Stagger | 3 | Cascade family offset (frames). Wave Soft uses 4 |
 | Settle | 20 | Percent of duration |
 | Easing | 0 | Index into easing IDs (metadata) |
 
@@ -120,7 +120,7 @@ Folder names under `transitions/`. Letters are A=01 … P=16.
 | I / 09 | Page-Screen | `09_Page-Screen/` | 10 | **6 IDs implemented (Phase 10)** |
 | J / 10 | Wipe-Split | `10_Wipe-Split/` | 11 | catalog |
 | K / 11 | Shared-Element | `11_Shared-Element/` | 12 | **6 IDs implemented (Phase 12)** |
-| L / 12 | Stagger-Cascade | `12_Stagger-Cascade/` | 13 | catalog |
+| L / 12 | Stagger-Cascade | `12_Stagger-Cascade/` | 13 | **6 IDs implemented (Phase 13)** |
 | M / 13 | Camera-Dolly | `13_Camera-Dolly/` | 14 | catalog |
 | N / 14 | Glass-Frost | `14_Glass-Frost/` | 15 | catalog |
 | O / 15 | Hero | `15_Hero/` | 16 | catalog + demo storyboard file |
@@ -198,6 +198,19 @@ EvoCRM IA — dashboard → page, stack forward/back, tab content. Not charts or
 
 Plans: `core/transitions/pageScreen.js`. Push math: `uiPush.planDirectionalPush`. Chrome-stay: `uiSlide.planCardSlide`.
 
+### Phase 13 implemented IDs (Stagger-Cascade family)
+
+EvoCRM list / table rows — deal pipeline, contacts, activity. Reuses `saasDemo.STAGGER` (offset 3f, travel 16px, hold 0.2s). No bounce.
+
+- `EVT_STAGGER_CARDS` — **Stagger Cards**. Card row stagger in (16px rise, 98→100). `EVT_STAGGER` aliases this ID.
+- `EVT_STAGGER_LIST` — **Stagger List**. List rows cascade (16px rise, scale stays 100). `EVT_LIST_STAGGER` aliases this ID.
+- `EVT_CASCADE_IN` — **Cascade In**. Tree / nav cascade in (12px, 97→100, SMOOTH). `EVT_CASCADE` aliases this ID.
+- `EVT_CASCADE_OUT` — **Cascade Out**. Cascade out (16px leave, FAST).
+- `EVT_STAGGER_FADE` — **Stagger Fade**. Opacity-only stagger. No travel.
+- `EVT_WAVE_SOFT` — **Wave Soft**. Soft 4-frame delay wave, no bounce. `EVT_WAVE` aliases this ID.
+
+Plans: `core/transitions/staggerCascade.js`. JSX apply: select 2+ row layers (top of selection = first).
+
 ### Phase 1–2 implemented IDs (UI Push family)
 
 - `EVT_UI_PUSH_LEFT` / `RIGHT` / `UP` / `DOWN` — **UI Push Left/Right/Up/Down**. Outgoing travels on axis; incoming enters from the opposite edge; anticipate opposite; settle overshoot capped.
@@ -257,6 +270,12 @@ Suggested prompt → ID mapping (later Phase 18):
 | “forward”, “deeper in the stack” | `EVT_NAV_FORWARD` |
 | “back”, “previous page” | `EVT_NAV_BACK` |
 | “tab change”, “tab content” | `EVT_TAB_CROSS` |
+| “stagger cards”, “pipeline cards” | `EVT_STAGGER_CARDS` |
+| “list rows”, “contacts cascade” | `EVT_STAGGER_LIST` |
+| “nav cascade”, “tree in” | `EVT_CASCADE_IN` |
+| “cascade out”, “collapse the tree” | `EVT_CASCADE_OUT` |
+| “fade the rows”, “opacity stagger” | `EVT_STAGGER_FADE` |
+| “soft wave”, “delay wave” | `EVT_WAVE_SOFT` |
 | “quiet”, “calm”, “expensive” | `SMOOTH` + `premium-smooth` or `soft-ui` |
 | “snappy”, “product” | `FAST` + `fast-product` |
 | “glitch / RGB / explode / spin” | **Refuse.** No such IDs. |
@@ -290,6 +309,8 @@ Catalog `sfx: []` (or a short list of hook ids) is metadata for a future sound p
 | `core/transitions/scaleZoom.js` | Scale-Zoom family keyframe plans |
 | `core/transitions/sharedElement.js` | Shared-Element bounds-match plans |
 | `core/transitions/overlayModal.js` | Overlay-Modal dialog / sheet / dim / popover / toast |
+| `core/transitions/pageScreen.js` | Page-Screen IA push / fade / nav / tab |
+| `core/transitions/staggerCascade.js` | Stagger-Cascade list / card / wave |
 | `core/transitions/registry.js` | Catalog load / filter |
 | `transitions/Metadata/catalog.json` | Every planned `EVT_*` |
 | `ae/Evotechly Transitions.jsx` | Companion panel |
@@ -303,7 +324,7 @@ Catalog `sfx: []` (or a short list of hook ids) is metadata for a future sound p
 
 Copy `ae/Evotechly Transitions.jsx` into **Scripts/ScriptUI Panels** next to Motion OS Hub. Restart AE. **Window → Evotechly Transitions**.
 
-1. Select outgoing, then incoming.
+1. Select outgoing, then incoming. For Stagger-Cascade, select 2+ row layers (top of selection = first).
 2. Filter the catalog. Pick a duration group and a direction.
 3. **Apply** — implemented IDs write keys + control null + SFX markers. Others alert the phase they belong to.
 
@@ -318,7 +339,7 @@ Do not: RGB split, glitch, lens flares, explosions, 360 spins, bounce loops, com
 
 1. AE is not in CI. Green tests ≠ soaked comps.
 2. JSX is a mirror, not a `require`.
-3. UI Push (15) + UI-Slide (8) + Scale-Zoom (8) + Shared-Element (6) + Overlay-Modal (7) implemented. Other catalog rows are metadata.
+3. UI Push (15) + UI-Slide (8) + Scale-Zoom (8) + Shared-Element (6) + Overlay-Modal (7) + Page-Screen (6) + Stagger-Cascade (6) implemented. Other catalog rows are metadata.
 4. No `.ffx`, `.aep`, or vendored plugins.
 5. No SFX audio.
 6. Target zoom and popover bounds are math; JSX apply reads selected-layer bounds.

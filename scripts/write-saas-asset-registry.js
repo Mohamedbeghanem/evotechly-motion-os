@@ -46,6 +46,15 @@ const NATIVE_PAGE = [
   { id: "EVT_TAB_CROSS", name: "Tab Cross", implemented: true, phase: 10, bestUse: "Tab content crossfade" }
 ];
 
+const NATIVE_STAGGER = [
+  { id: "EVT_STAGGER_CARDS", name: "Stagger Cards", implemented: true, phase: 13, bestUse: "Card row stagger in" },
+  { id: "EVT_STAGGER_LIST", name: "Stagger List", implemented: true, phase: 13, bestUse: "List rows cascade" },
+  { id: "EVT_CASCADE_IN", name: "Cascade In", implemented: true, phase: 13, bestUse: "Tree / nav cascade in" },
+  { id: "EVT_CASCADE_OUT", name: "Cascade Out", implemented: true, phase: 13, bestUse: "Cascade out" },
+  { id: "EVT_STAGGER_FADE", name: "Stagger Fade", implemented: true, phase: 13, bestUse: "Opacity-only stagger" },
+  { id: "EVT_WAVE_SOFT", name: "Wave Soft", implemented: true, phase: 13, bestUse: "Soft delay wave, no bounce" }
+];
+
 const NATIVE_SLIDE = [
   { id: "EVT_SLIDE_CARD_LEFT", name: "Slide Card Left", implemented: true, phase: 3, bestUse: "Single card enters from right" },
   { id: "EVT_SLIDE_CARD_RIGHT", name: "Slide Card Right", implemented: true, phase: 3, bestUse: "Single card enters from left" },
@@ -173,6 +182,10 @@ function nativePageRow(row) {
   return nativeKitRow(row, "pageScreen.js");
 }
 
+function nativeStaggerRow(row) {
+  return nativeKitRow(row, "staggerCascade.js");
+}
+
 function otherNativeRow(row) {
   return {
     id: row.id,
@@ -234,7 +247,7 @@ const registry = {
   style: "premium-saas",
   schemaVersion: 1,
   note:
-    "P1 native text / UI / cursor + Transition Kit Phase 10 Page-Screen (plus Phase 2–4 UI Push / UI-Slide / Scale-Zoom, Phase 9 Overlay-Modal, and Phase 12 Shared-Element). sourceType native, commercialUse true. No AEJuice / Motion Bro / Bento binaries.",
+    "P1 native text / UI / cursor + Transition Kit Phase 13 Stagger-Cascade (plus Phase 2–4 UI Push / UI-Slide / Scale-Zoom, Phase 9 Overlay-Modal, Phase 10 Page-Screen, and Phase 12 Shared-Element). sourceType native, commercialUse true. No AEJuice / Motion Bro / Bento binaries.",
   fields: {
     id: "EVT_* unique pack id",
     sourceType: "native | thirdParty",
@@ -248,6 +261,7 @@ const registry = {
     .concat(NATIVE_SHARED.map(nativeSharedRow))
     .concat(NATIVE_OVERLAY.map(nativeOverlayRow))
     .concat(NATIVE_PAGE.map(nativePageRow))
+    .concat(NATIVE_STAGGER.map(nativeStaggerRow))
     .concat(OTHER_NATIVE.map(otherNativeRow))
     .concat(P1_NATIVE.map(otherNativeRow))
     .concat(lucideRows())

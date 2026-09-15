@@ -156,6 +156,7 @@ test("every implemented ID produces a deterministic complete plan", function () 
   const sharedElement = require("../core/transitions/sharedElement");
   const overlayModal = require("../core/transitions/overlayModal");
   const pageScreen = require("../core/transitions/pageScreen");
+  const staggerCascade = require("../core/transitions/staggerCascade");
   const ids = engine.IMPLEMENTED_IDS.slice();
   assert.deepEqual(
     ids,
@@ -164,6 +165,7 @@ test("every implemented ID produces a deterministic complete plan", function () 
       .concat(sharedElement.SHARED_ELEMENT_IDS)
       .concat(overlayModal.OVERLAY_MODAL_IDS)
       .concat(pageScreen.PAGE_SCREEN_IDS)
+      .concat(staggerCascade.STAGGER_CASCADE_IDS)
   );
   assert.deepEqual(ids, [
     "EVT_UI_PUSH_LEFT",
@@ -215,7 +217,13 @@ test("every implemented ID produces a deterministic complete plan", function () 
     "EVT_SCREEN_SWAP",
     "EVT_NAV_FORWARD",
     "EVT_NAV_BACK",
-    "EVT_TAB_CROSS"
+    "EVT_TAB_CROSS",
+    "EVT_STAGGER_CARDS",
+    "EVT_STAGGER_LIST",
+    "EVT_CASCADE_IN",
+    "EVT_CASCADE_OUT",
+    "EVT_STAGGER_FADE",
+    "EVT_WAVE_SOFT"
   ]);
   ids.forEach(function (id) {
     const opts = {
@@ -246,7 +254,9 @@ test("every implemented ID produces a deterministic complete plan", function () 
     assert.ok(a.anatomy.action);
     assert.ok(a.anatomy.crossover);
     assert.ok(a.anatomy.settle);
-    const name = pageScreen.isPageScreenId(id)
+    const name = staggerCascade.isStaggerCascadeId(id)
+      ? staggerCascade.displayName(id)
+      : pageScreen.isPageScreenId(id)
       ? pageScreen.displayName(id)
       : overlayModal.isOverlayModalId(id)
         ? overlayModal.displayName(id)
@@ -870,6 +880,122 @@ test("Page-Screen family reuses UI Push, opacity fade, and chrome-stay slide", f
   assert.equal(tabDefault.group, "FAST");
 });
 
+test("Stagger-Cascade family reuses staggerReveal offset/travel and stays bounce-free", function () {
+  const staggerCascade = require("../core/transitions/staggerCascade");
+  const saasDemo = require("../core/saasDemo");
+  const cards = engine.applyTransitionPlan({ id: "EVT_STAGGER_CARDS", durationFrames: 16, fps: 30 });
+  const cardsAlias = engine.applyTransitionPlan({ id: "EVT_STAGGER", durationFrames: 16, fps: 30 });
+  const list = engine.applyTransitionPlan({ id: "EVT_STAGGER_LIST", durationFrames: 16, fps: 30 });
+  const cascadeIn = engine.applyTransitionPlan({ id: "EVT_CASCADE_IN", durationFrames: 16, fps: 30 });
+  const cascadeOut = engine.applyTransitionPlan({ id: "EVT_CASCADE_OUT", durationFrames: 16, fps: 30 });
+  const fade = engine.applyTransitionPlan({ id: "EVT_STAGGER_FADE", durationFrames: 16, fps: 30 });
+  const wave = engine.applyTransitionPlan({ id: "EVT_WAVE_SOFT", durationFrames: 16, fps: 30 });
+
+  assert.equal(staggerCascade.OFFSET_FRAMES, saasDemo.STAGGER.offsetFrames);
+  assert.equal(staggerCascade.TRAVEL_PX, saasDemo.STAGGER.travel);
+  assert.equal(staggerCascade.HOLD_SEC, saasDemo.STAGGER.hold);
+  assert.equal(staggerCascade.OFFSET_FRAMES, 3);
+  assert.equal(staggerCascade.TRAVEL_PX, 16);
+
+  assert.equal(cards.category, "Stagger-Cascade");
+  assert.equal(cards.name, "Stagger Cards");
+  assert.equal(cards.direction, "up");
+  assert.equal(cards.travel.stagger, true);
+  assert.equal(cards.travel.noBounce, true);
+  assert.equal(cards.travel.cards, true);
+  assert.equal(cards.travel.distance, 16);
+  assert.equal(cards.travel.offsetFrames, 3);
+  assert.equal(cards.stagger.offsetFrames, 3);
+  assert.equal(cards.stagger.itemCount, 4);
+  assert.equal(cards.stagger.items[1].delayFrames, 3);
+  assert.equal(cards.stagger.items[3].delayFrames, 9);
+  assert.equal(cards.outgoing.keys[0].y, 16);
+  assert.equal(cards.outgoing.keys[0].opacity, 0);
+  assert.equal(cards.outgoing.keys[0].scale[0], 98);
+  assert.equal(cards.outgoing.keys[cards.outgoing.keys.length - 1].y, 0);
+  assert.equal(cards.outgoing.keys[cards.outgoing.keys.length - 1].opacity, 100);
+  cards.outgoing.keys.forEach(function (k) {
+    assert.ok(k.y >= 0, "cards rise from below, no bounce below rest");
+    assert.equal(k.blur, 0);
+  });
+  cards.incoming.keys.forEach(function (k, i) {
+    assert.equal(k.frame, cards.outgoing.keys[i].frame + 3);
+    assert.equal(k.x, cards.outgoing.keys[i].x);
+    assert.equal(k.y, cards.outgoing.keys[i].y);
+    assert.equal(k.opacity, cards.outgoing.keys[i].opacity);
+  });
+  assert.deepEqual(cardsAlias.outgoing.keys, cards.outgoing.keys);
+  assert.equal(cardsAlias.id, "EVT_STAGGER_CARDS");
+
+  assert.equal(list.name, "Stagger List");
+  assert.equal(list.travel.list, true);
+  assert.equal(list.travel.distance, 16);
+  assert.equal(list.outgoing.keys[0].y, 16);
+  assert.equal(list.outgoing.keys[0].scale[0], 100);
+  assert.equal(engine.applyTransitionPlan({ id: "EVT_LIST_STAGGER", durationFrames: 16, fps: 30 }).id, "EVT_STAGGER_LIST");
+
+  assert.equal(cascadeIn.name, "Cascade In");
+  assert.equal(cascadeIn.travel.cascadeIn, true);
+  assert.equal(cascadeIn.travel.distance, staggerCascade.CASCADE_IN_TRAVEL_PX);
+  assert.equal(cascadeIn.outgoing.keys[0].y, 12);
+  assert.equal(cascadeIn.outgoing.keys[0].scale[0], 97);
+  const cascadeDefault = engine.applyTransitionPlan({ id: "EVT_CASCADE_IN", fps: 30 });
+  assert.equal(cascadeDefault.group, "SMOOTH");
+  assert.equal(engine.applyTransitionPlan({ id: "EVT_CASCADE", durationFrames: 16, fps: 30 }).id, "EVT_CASCADE_IN");
+
+  assert.equal(cascadeOut.name, "Cascade Out");
+  assert.equal(cascadeOut.direction, "down");
+  assert.equal(cascadeOut.travel.leave, true);
+  assert.equal(cascadeOut.travel.cascadeOut, true);
+  assert.equal(cascadeOut.outgoing.keys[0].opacity, 100);
+  assert.equal(cascadeOut.outgoing.keys[cascadeOut.outgoing.keys.length - 1].opacity, 0);
+  assert.equal(cascadeOut.outgoing.keys[cascadeOut.outgoing.keys.length - 1].y, 16);
+  const cascadeOutDefault = engine.applyTransitionPlan({ id: "EVT_CASCADE_OUT", fps: 30 });
+  assert.equal(cascadeOutDefault.group, "FAST");
+
+  assert.equal(fade.name, "Stagger Fade");
+  assert.equal(fade.travel.opacityOnly, true);
+  assert.equal(fade.travel.distance, 0);
+  fade.outgoing.keys.forEach(function (k) {
+    assert.equal(k.x, 0);
+    assert.equal(k.y, 0);
+    assert.equal(k.scale[0], 100);
+    assert.equal(k.blur, 0);
+  });
+  assert.equal(fade.outgoing.keys[0].opacity, 0);
+  assert.equal(fade.outgoing.keys[1].opacity, staggerCascade.FADE_IN_MID);
+  assert.equal(fade.outgoing.keys[fade.outgoing.keys.length - 1].opacity, 100);
+  fade.incoming.keys.forEach(function (k, i) {
+    assert.equal(k.frame, fade.outgoing.keys[i].frame + 3);
+    assert.equal(k.opacity, fade.outgoing.keys[i].opacity);
+  });
+
+  assert.equal(wave.name, "Wave Soft");
+  assert.equal(wave.travel.wave, true);
+  assert.equal(wave.travel.noBounce, true);
+  assert.equal(wave.travel.offsetFrames, 4);
+  assert.equal(wave.stagger.offsetFrames, 4);
+  assert.equal(wave.travel.distance, 16);
+  wave.outgoing.keys.forEach(function (k) {
+    assert.ok(k.y >= 0);
+  });
+  wave.incoming.keys.forEach(function (k, i) {
+    assert.equal(k.frame, wave.outgoing.keys[i].frame + 4);
+  });
+  const waveDefault = engine.applyTransitionPlan({ id: "EVT_WAVE_SOFT", fps: 30 });
+  assert.equal(waveDefault.group, "SMOOTH");
+  assert.equal(engine.applyTransitionPlan({ id: "EVT_WAVE", durationFrames: 16, fps: 30 }).id, "EVT_WAVE_SOFT");
+
+  const customOffset = engine.applyTransitionPlan({
+    id: "EVT_STAGGER_LIST",
+    durationFrames: 16,
+    fps: 30,
+    offsetFrames: 5
+  });
+  assert.equal(customOffset.stagger.offsetFrames, 5);
+  assert.equal(customOffset.incoming.keys[0].frame, customOffset.outgoing.keys[0].frame + 5);
+});
+
 test("unimplemented catalog IDs return a safe stub plan", function () {
   const plan = engine.applyTransitionPlan({ id: "EVT_MICRO_HOVER" });
   assert.equal(plan.implemented, false);
@@ -884,6 +1010,7 @@ test("catalog has unique EVT_ IDs and implemented flags for shipped families", f
   const sharedElement = require("../core/transitions/sharedElement");
   const overlayModal = require("../core/transitions/overlayModal");
   const pageScreen = require("../core/transitions/pageScreen");
+  const staggerCascade = require("../core/transitions/staggerCascade");
   const list = registry.loadCatalog();
   assert.ok(list.length >= 90);
   assert.deepEqual(registry.uniqueIdErrors(), []);
@@ -896,7 +1023,7 @@ test("catalog has unique EVT_ IDs and implemented flags for shipped families", f
     set[id] = true;
   });
   const implemented = registry.listImplemented();
-  assert.equal(implemented.length, 50);
+  assert.equal(implemented.length, 56);
   implemented.forEach(function (row) {
     assert.equal(row.implemented, true);
     assert.equal(row.style, "premium-saas");
@@ -915,6 +1042,9 @@ test("catalog has unique EVT_ IDs and implemented flags for shipped families", f
     } else if (row.category === "Page-Screen") {
       assert.equal(row.phase, 10);
       assert.equal(row.name, pageScreen.displayName(row.id));
+    } else if (row.category === "Stagger-Cascade") {
+      assert.equal(row.phase, 13);
+      assert.equal(row.name, staggerCascade.displayName(row.id));
     } else {
       assert.equal(row.category, "UI-Push");
       assert.ok(uiPush.PHASE1_IDS.indexOf(row.id) !== -1 ? row.phase === 1 : row.phase === 2, row.id + " phase");
@@ -985,6 +1115,17 @@ test("catalog has unique EVT_ IDs and implemented flags for shipped families", f
   assert.equal(registry.filterCatalog({ query: "page push", category: "Page-Screen" })[0].id, "EVT_PAGE_PUSH");
   assert.equal(registry.filterCatalog({ query: "nav back", category: "Page-Screen" })[0].id, "EVT_NAV_BACK");
   assert.equal(registry.filterCatalog({ implemented: true, category: "Page-Screen" }).length, 6);
+  assert.equal(registry.getById("EVT_STAGGER_CARDS").implemented, true);
+  assert.equal(registry.getById("EVT_STAGGER_CARDS").name, "Stagger Cards");
+  assert.equal(registry.getById("EVT_STAGGER_LIST").name, "Stagger List");
+  assert.equal(registry.getById("EVT_CASCADE_IN").name, "Cascade In");
+  assert.equal(registry.getById("EVT_CASCADE_OUT").name, "Cascade Out");
+  assert.equal(registry.getById("EVT_STAGGER_FADE").name, "Stagger Fade");
+  assert.equal(registry.getById("EVT_WAVE_SOFT").name, "Wave Soft");
+  assert.equal(registry.listByCategory("Stagger-Cascade").length, 6);
+  assert.equal(registry.filterCatalog({ query: "stagger cards", category: "Stagger-Cascade" })[0].id, "EVT_STAGGER_CARDS");
+  assert.equal(registry.filterCatalog({ query: "wave soft", category: "Stagger-Cascade" })[0].id, "EVT_WAVE_SOFT");
+  assert.equal(registry.filterCatalog({ implemented: true, category: "Stagger-Cascade" }).length, 6);
 });
 
 test("demo storyboard is a dashboard→card→analytics sequence", function () {
@@ -1046,6 +1187,13 @@ test("JSX companion embeds UI Push IDs and mirrored constants", function () {
   assert.ok(jsx.indexOf("function planToastIn") !== -1);
   assert.ok(jsx.indexOf("function planPageFade") !== -1);
   assert.ok(jsx.indexOf("function planTabCross") !== -1);
+  assert.ok(jsx.indexOf("function planStaggerCards") !== -1);
+  assert.ok(jsx.indexOf("function planStaggerList") !== -1);
+  assert.ok(jsx.indexOf("function planCascadeIn") !== -1);
+  assert.ok(jsx.indexOf("function planCascadeOut") !== -1);
+  assert.ok(jsx.indexOf("function planStaggerFade") !== -1);
+  assert.ok(jsx.indexOf("function planWaveSoft") !== -1);
+  assert.ok(jsx.indexOf("function shiftKeysJs") !== -1);
   assert.ok(jsx.indexOf("function planSharedMorphJs") !== -1);
   assert.ok(jsx.indexOf("function planTargetZoomJs") !== -1);
   assert.ok(jsx.indexOf("Panel Push") !== -1);
@@ -1075,6 +1223,12 @@ test("JSX companion embeds UI Push IDs and mirrored constants", function () {
   assert.ok(jsx.indexOf("Nav Forward") !== -1);
   assert.ok(jsx.indexOf("Nav Back") !== -1);
   assert.ok(jsx.indexOf("Tab Cross") !== -1);
+  assert.ok(jsx.indexOf("Stagger Cards") !== -1);
+  assert.ok(jsx.indexOf("Stagger List") !== -1);
+  assert.ok(jsx.indexOf("Cascade In") !== -1);
+  assert.ok(jsx.indexOf("Cascade Out") !== -1);
+  assert.ok(jsx.indexOf("Stagger Fade") !== -1);
+  assert.ok(jsx.indexOf("Wave Soft") !== -1);
   assert.ok(/#target aftereffects/.test(jsx));
   assert.ok(jsx.indexOf("does not replace") !== -1);
   registry.catalogIds().forEach(function (id) {
