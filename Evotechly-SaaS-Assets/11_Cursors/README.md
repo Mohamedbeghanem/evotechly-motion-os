@@ -2,9 +2,9 @@
 
 Pointer / hand / I-beam plus click squash. Shape layers only — no PNG cursor packs.
 
-## Intended contents (P0 = docs only)
+## Intended contents
 
-Nothing binary ships in this folder in P0. P1 fills **EvotechlyNative** generators and optional editor-local ThirdParty installs.
+P1 native cursor motion lives in `core/assets/cursorPack.js` (`EVT_CURSOR_MOVE` … `RIPPLE`). Styles stay pointer / hand / ibeam. Apply: Evotechly Transitions → **Cursor**.
 
 ## EVT_ naming examples
 

@@ -89,7 +89,7 @@ test("asset registry schema + native Transition Kit stubs", function () {
   const registry = JSON.parse(fs.readFileSync(REGISTRY_PATH, "utf8"));
   const schema = JSON.parse(fs.readFileSync(SCHEMA_PATH, "utf8"));
   assert.equal(registry.schemaVersion, 1);
-  assert.equal(registry.phase, "P0");
+  assert.ok(registry.phase === "P0" || registry.phase === "P1");
   assert.ok(Array.isArray(registry.assets));
   assert.ok(schema.$defs.asset);
 

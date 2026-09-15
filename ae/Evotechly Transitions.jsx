@@ -1,9 +1,10 @@
 #target aftereffects
 /*
-  Evotechly Transitions — companion ScriptUI (Transition Kit Phase 2).
+  Evotechly Transitions — companion ScriptUI (Transition Kit Phase 2 + SaaS Assets P1).
   Window → Evotechly Transitions.
-  Numbers mirrored from core/transitions/*.js — Node is source of truth.
-  ExtendScript cannot require Node. Apply the full UI Push family here.
+  Tabs: Transitions / Text / UI / Cursor.
+  Numbers mirrored from core/transitions/*.js and core/assets/*.js — Node is source of truth.
+  ExtendScript cannot require Node. Apply the full UI Push family and P1 native assets here.
   Native AE only. No .ffx / .aep / vendor plugins.
   Does not replace Evotechly Motion OS v0.32 (~297 KB).
 */
@@ -160,7 +161,111 @@
     { id: "EVT_MICRO_FOCUS", category: "Micro", duration: "MICRO", intensity: "subtle", implemented: false, phase: 17, bestUse: "Focus ring / field focus" },
     { id: "EVT_MICRO_SNAP", category: "Micro", duration: "MICRO", intensity: "standard", implemented: false, phase: 17, bestUse: "Snap into grid / alignment" }
   ];
+  var TEXT_CATALOG = [
+    { id: "EVT_TEXT_FADE_UP", name: "Text Fade Up", category: "Text", duration: "FAST", implemented: true, bestUse: "Quiet line in, 8–12 px lift" },
+    { id: "EVT_TEXT_FADE_DOWN", name: "Text Fade Down", category: "Text", duration: "FAST", implemented: true, bestUse: "Caption drop-in from above" },
+    { id: "EVT_TEXT_MASK_REVEAL", name: "Text Mask Reveal", category: "Text", duration: "STANDARD", implemented: true, bestUse: "Soft matte expand, no hard wipe" },
+    { id: "EVT_TEXT_WORD_REVEAL", name: "Word Reveal", category: "Text", duration: "STANDARD", implemented: true, bestUse: "Product sentence, word selector" },
+    { id: "EVT_TEXT_LINE_REVEAL", name: "Line Reveal", category: "Text", duration: "SMOOTH", implemented: true, bestUse: "Stacked headline, line selector" },
+    { id: "EVT_TEXT_CHAR_REVEAL", name: "Character Reveal", category: "Text", duration: "STANDARD", implemented: true, bestUse: "Restrained type-on, char selector" },
+    { id: "EVT_TEXT_BLUR_IN", name: "Text Blur In", category: "Text", duration: "STANDARD", implemented: true, bestUse: "Focus pull onto a title" },
+    { id: "EVT_TEXT_BLUR_OUT", name: "Text Blur Out", category: "Text", duration: "FAST", implemented: true, bestUse: "Title leaves into blur" },
+    { id: "EVT_TEXT_SCALE_IN", name: "Text Scale In", category: "Text", duration: "FAST", implemented: true, bestUse: "94→100 present, no pop bounce" },
+    { id: "EVT_TEXT_SLIDE_IN", name: "Text Slide In", category: "Text", duration: "FAST", implemented: true, bestUse: "Short lateral enter, 16–20 px" },
+    { id: "EVT_TEXT_TRACKING_REVEAL", name: "Tracking Reveal", category: "Text", duration: "SMOOTH", implemented: true, bestUse: "Tracking 28→0 with fade" },
+    { id: "EVT_TEXT_HEADLINE_REVEAL", name: "Headline Reveal", category: "Text", duration: "SMOOTH", implemented: true, bestUse: "Hero title: char + slight scale settle" },
+    { id: "EVT_TEXT_SUBTITLE_REVEAL", name: "Subtitle Reveal", category: "Text", duration: "FAST", implemented: true, bestUse: "Supporting line, word unit" },
+    { id: "EVT_TEXT_KINETIC_HEADLINE", name: "Kinetic Headline", category: "Text", duration: "SMOOTH", implemented: true, bestUse: "Restrained tracking + lift — not glitch" },
+    { id: "EVT_TEXT_SWAP", name: "Text Swap", category: "Text", duration: "STANDARD", implemented: true, bestUse: "Replace a label, outgoing up / incoming up" },
+    { id: "EVT_TEXT_NUMBER_COUNTER", name: "Number Counter", category: "Text", duration: "SMOOTH", implemented: true, bestUse: "KPI integer count-up" },
+    { id: "EVT_TEXT_PCT_COUNTER", name: "Percent Counter", category: "Text", duration: "SMOOTH", implemented: true, bestUse: "Conversion / growth %" },
+    { id: "EVT_TEXT_METRIC_COUNTER", name: "Metric Counter", category: "Text", duration: "SMOOTH", implemented: true, bestUse: "Prefixed SaaS metric ($12.4k)" }
+  ];
+  var UI_ELEMENTS = {
+    button: { x: 0, y: 6, enterScale: 98, hoverScale: 102, hoverY: -2, clickScale: 96, expandSy: 92 },
+    card: { x: 0, y: 12, enterScale: 97, hoverScale: 101.4, hoverY: -4, clickScale: 98.5, expandSy: 88 },
+    modal: { x: 0, y: 14, enterScale: 96, hoverScale: 100.6, hoverY: -2, clickScale: 98, expandSy: 86 },
+    tooltip: { x: 0, y: 4, enterScale: 98, hoverScale: 101, hoverY: -2, clickScale: 98, expandSy: 94 },
+    dropdown: { x: 0, y: -8, enterScale: 99, hoverScale: 100.4, hoverY: -1, clickScale: 99, expandSy: 72 },
+    sidebar: { x: 24, y: 0, enterScale: 100, hoverScale: 100.4, hoverY: 0, clickScale: 99, expandSy: 100 },
+    nav: { x: 0, y: 4, enterScale: 100, hoverScale: 100.8, hoverY: -1, clickScale: 98.5, expandSy: 100 },
+    tabs: { x: 0, y: 0, enterScale: 100, hoverScale: 100.6, hoverY: -1, clickScale: 98, expandSy: 100 },
+    row: { x: 8, y: 0, enterScale: 100, hoverScale: 100.5, hoverY: 0, clickScale: 99, expandSy: 100 },
+    metric: { x: 0, y: 8, enterScale: 96, hoverScale: 101.2, hoverY: -2, clickScale: 98, expandSy: 100 },
+    badge: { x: 0, y: 0, enterScale: 90, hoverScale: 104, hoverY: -1, clickScale: 94, expandSy: 100 },
+    notification: { x: 16, y: 0, enterScale: 98, hoverScale: 100.6, hoverY: 0, clickScale: 98, expandSy: 90 },
+    search: { x: 0, y: 0, enterScale: 98, hoverScale: 100.4, hoverY: 0, clickScale: 99, expandSy: 100 },
+    avatar: { x: 0, y: 0, enterScale: 94, hoverScale: 103, hoverY: -1, clickScale: 96, expandSy: 100 }
+  };
+  var UI_CATALOG = [
+    { id: "EVT_UI_BUTTON_ENTER", name: "Button Enter", element: "button", action: "enter", duration: "FAST" },
+    { id: "EVT_UI_BUTTON_EXIT", name: "Button Exit", element: "button", action: "exit", duration: "FAST" },
+    { id: "EVT_UI_BUTTON_HOVER", name: "Button Hover", element: "button", action: "hover", duration: "MICRO" },
+    { id: "EVT_UI_BUTTON_CLICK", name: "Button Click", element: "button", action: "click", duration: "FAST" },
+    { id: "EVT_UI_CARD_ENTER", name: "Card Enter", element: "card", action: "enter", duration: "STANDARD" },
+    { id: "EVT_UI_CARD_EXIT", name: "Card Exit", element: "card", action: "exit", duration: "STANDARD" },
+    { id: "EVT_UI_CARD_HOVER", name: "Card Hover", element: "card", action: "hover", duration: "MICRO" },
+    { id: "EVT_UI_CARD_CLICK", name: "Card Click", element: "card", action: "click", duration: "FAST" },
+    { id: "EVT_UI_CARD_EXPAND", name: "Card Expand", element: "card", action: "expand", duration: "STANDARD" },
+    { id: "EVT_UI_CARD_COLLAPSE", name: "Card Collapse", element: "card", action: "collapse", duration: "STANDARD" },
+    { id: "EVT_UI_MODAL_ENTER", name: "Modal Enter", element: "modal", action: "enter", duration: "STANDARD" },
+    { id: "EVT_UI_MODAL_EXIT", name: "Modal Exit", element: "modal", action: "exit", duration: "STANDARD" },
+    { id: "EVT_UI_MODAL_EXPAND", name: "Modal Expand", element: "modal", action: "expand", duration: "STANDARD" },
+    { id: "EVT_UI_MODAL_COLLAPSE", name: "Modal Collapse", element: "modal", action: "collapse", duration: "STANDARD" },
+    { id: "EVT_UI_TOOLTIP_ENTER", name: "Tooltip Enter", element: "tooltip", action: "enter", duration: "MICRO" },
+    { id: "EVT_UI_TOOLTIP_EXIT", name: "Tooltip Exit", element: "tooltip", action: "exit", duration: "MICRO" },
+    { id: "EVT_UI_TOOLTIP_HOVER", name: "Tooltip Hover", element: "tooltip", action: "hover", duration: "MICRO" },
+    { id: "EVT_UI_DROPDOWN_ENTER", name: "Dropdown Enter", element: "dropdown", action: "enter", duration: "FAST" },
+    { id: "EVT_UI_DROPDOWN_EXIT", name: "Dropdown Exit", element: "dropdown", action: "exit", duration: "FAST" },
+    { id: "EVT_UI_DROPDOWN_EXPAND", name: "Dropdown Expand", element: "dropdown", action: "expand", duration: "FAST" },
+    { id: "EVT_UI_DROPDOWN_COLLAPSE", name: "Dropdown Collapse", element: "dropdown", action: "collapse", duration: "FAST" },
+    { id: "EVT_UI_SIDEBAR_ENTER", name: "Sidebar Enter", element: "sidebar", action: "enter", duration: "STANDARD" },
+    { id: "EVT_UI_SIDEBAR_EXIT", name: "Sidebar Exit", element: "sidebar", action: "exit", duration: "STANDARD" },
+    { id: "EVT_UI_SIDEBAR_EXPAND", name: "Sidebar Expand", element: "sidebar", action: "expand", duration: "STANDARD" },
+    { id: "EVT_UI_SIDEBAR_COLLAPSE", name: "Sidebar Collapse", element: "sidebar", action: "collapse", duration: "STANDARD" },
+    { id: "EVT_UI_NAV_ENTER", name: "Nav Enter", element: "nav", action: "enter", duration: "FAST" },
+    { id: "EVT_UI_NAV_EXIT", name: "Nav Exit", element: "nav", action: "exit", duration: "FAST" },
+    { id: "EVT_UI_NAV_HOVER", name: "Nav Hover", element: "nav", action: "hover", duration: "MICRO" },
+    { id: "EVT_UI_TABS_ENTER", name: "Tabs Enter", element: "tabs", action: "enter", duration: "MICRO" },
+    { id: "EVT_UI_TABS_CLICK", name: "Tabs Click", element: "tabs", action: "click", duration: "MICRO" },
+    { id: "EVT_UI_ROW_ENTER", name: "Row Enter", element: "row", action: "enter", duration: "FAST" },
+    { id: "EVT_UI_ROW_EXIT", name: "Row Exit", element: "row", action: "exit", duration: "FAST" },
+    { id: "EVT_UI_ROW_HOVER", name: "Row Hover", element: "row", action: "hover", duration: "MICRO" },
+    { id: "EVT_UI_METRIC_ENTER", name: "Metric Enter", element: "metric", action: "enter", duration: "FAST" },
+    { id: "EVT_UI_METRIC_HOVER", name: "Metric Hover", element: "metric", action: "hover", duration: "MICRO" },
+    { id: "EVT_UI_BADGE_ENTER", name: "Badge Enter", element: "badge", action: "enter", duration: "MICRO" },
+    { id: "EVT_UI_BADGE_EXIT", name: "Badge Exit", element: "badge", action: "exit", duration: "MICRO" },
+    { id: "EVT_UI_NOTIFICATION_ENTER", name: "Notification Enter", element: "notification", action: "enter", duration: "FAST" },
+    { id: "EVT_UI_NOTIFICATION_EXIT", name: "Notification Exit", element: "notification", action: "exit", duration: "FAST" },
+    { id: "EVT_UI_SEARCH_ENTER", name: "Search Enter", element: "search", action: "enter", duration: "FAST" },
+    { id: "EVT_UI_SEARCH_EXPAND", name: "Search Expand", element: "search", action: "expand", duration: "FAST" },
+    { id: "EVT_UI_SEARCH_COLLAPSE", name: "Search Collapse", element: "search", action: "collapse", duration: "FAST" },
+    { id: "EVT_UI_AVATAR_ENTER", name: "Avatar Enter", element: "avatar", action: "enter", duration: "MICRO" },
+    { id: "EVT_UI_AVATAR_HOVER", name: "Avatar Hover", element: "avatar", action: "hover", duration: "MICRO" }
+  ];
+  var CURSOR_CATALOG = [
+    { id: "EVT_CURSOR_MOVE", name: "Cursor Move", duration: "STANDARD", bestUse: "Pointer travels start → end" },
+    { id: "EVT_CURSOR_CLICK", name: "Cursor Click", duration: "FAST", bestUse: "Move + single press dip" },
+    { id: "EVT_CURSOR_DBLCLICK", name: "Cursor Double Click", duration: "FAST", bestUse: "Two press dips, 6-frame gap" },
+    { id: "EVT_CURSOR_HOVER", name: "Cursor Hover", duration: "MICRO", bestUse: "Settle on target, 2% lift" },
+    { id: "EVT_CURSOR_DRAG", name: "Cursor Drag", duration: "STANDARD", bestUse: "Pressed scale while traveling" },
+    { id: "EVT_CURSOR_SWIPE", name: "Cursor Swipe", duration: "FAST", bestUse: "Short flick with quiet settle" },
+    { id: "EVT_CURSOR_SELECT", name: "Cursor Select", duration: "STANDARD", bestUse: "Down, drag range, up" },
+    { id: "EVT_CURSOR_RIPPLE", name: "Cursor Ripple", duration: "FAST", bestUse: "Optional click halo — opacity + scale only" }
+  ];
+  var iUi;
+  for (iUi = 0; iUi < UI_CATALOG.length; iUi++) {
+    UI_CATALOG[iUi].category = "UI";
+    UI_CATALOG[iUi].implemented = true;
+    UI_CATALOG[iUi].bestUse = UI_CATALOG[iUi].bestUse || (UI_CATALOG[iUi].element + " " + UI_CATALOG[iUi].action);
+  }
+  var iCur;
+  for (iCur = 0; iCur < CURSOR_CATALOG.length; iCur++) {
+    CURSOR_CATALOG[iCur].category = "Cursor";
+    CURSOR_CATALOG[iCur].implemented = true;
+  }
   var filtered = [];
+  var assetFiltered = [];
 
   function clamp(n, lo, hi) {
     n = Number(n);
@@ -360,6 +465,360 @@
     applyEase(sc, ease);
     applyEase(op, ease);
     setBlurKeys(layer, keys, t0, ease);
+  }
+  function assetPhaseFrames(d) {
+    d = Math.max(2, Math.round(d));
+    return {
+      start: 0,
+      mid: Math.min(Math.max(1, Math.round(d * 0.45)), d - 1),
+      settle: Math.min(Math.max(2, Math.round(d * 0.78)), d - 1),
+      end: d
+    };
+  }
+  function isTextLayer(layer) {
+    try { return layer instanceof TextLayer; } catch (e) { return false; }
+  }
+  function addTextAnimator(layer, name) {
+    var animators, anim;
+    animators = layer.property("ADBE Text Properties").property("ADBE Text Animators");
+    anim = animators.addProperty("ADBE Text Animator");
+    try { anim.name = name; } catch (e) {}
+    return anim;
+  }
+  function configureRangeEnd(anim, unit, keys, ease) {
+    var sel, endP, i;
+    try {
+      sel = anim.property("ADBE Text Selectors").property(1);
+      try { sel.property("ADBE Text Range Type2").setValue(unit); } catch (e0) {}
+      try { sel.property("ADBE Text Range Shape").setValue(2); } catch (e1) {}
+      try {
+        endP = sel.property("ADBE Text Range End 2");
+        if (!endP) endP = sel.property("End");
+        for (i = 0; i < keys.length; i++) endP.setValueAtTime(keys[i].t, keys[i].end);
+        applyEase(endP, ease);
+      } catch (e2) {}
+    } catch (e) {}
+    return sel;
+  }
+  function rangeUnit(unit) {
+    if (unit === "line") return 4;
+    if (unit === "word") return 3;
+    return 1;
+  }
+  function applyTextAnimator(layer, name, unit, travel, tracking, t0, dur, ease) {
+    var anim, props, op, pos, tr, keys;
+    anim = addTextAnimator(layer, name);
+    props = anim.property("ADBE Text Animator Properties");
+    try {
+      op = props.addProperty("ADBE Text Opacity");
+      op.setValue(0);
+    } catch (e0) {}
+    if (travel) {
+      try {
+        pos = props.addProperty("ADBE Text Position 3D");
+        if (!pos) pos = props.addProperty("ADBE Text Position");
+        pos.setValue([0, travel, 0]);
+      } catch (e1) {}
+    }
+    if (tracking) {
+      try {
+        tr = props.addProperty("ADBE Text Tracking Amount");
+        tr.setValue(tracking);
+      } catch (e2) {}
+    }
+    keys = [{ t: t0, end: 100 }, { t: t0 + dur, end: 0 }];
+    configureRangeEnd(anim, rangeUnit(unit), keys, ease);
+  }
+  function applyMaskReveal(layer, t0, frames, fps) {
+    var mask, exp, ph;
+    ph = assetPhaseFrames(frames);
+    try {
+      mask = layer.Masks.addProperty("ADBE Mask Atom");
+      mask.name = "EVO_TEXT_MASK";
+      try { mask.property("ADBE Mask Feather").setValue([8, 8]); } catch (e0) {}
+      exp = mask.property("ADBE Mask Offset");
+      if (!exp) exp = mask.property("Mask Expansion");
+      exp.setValueAtTime(t0, -72);
+      exp.setValueAtTime(t0 + secondsFromFrames(ph.mid, fps), -18);
+      exp.setValueAtTime(t0 + secondsFromFrames(ph.end, fps), 0);
+    } catch (e) {}
+  }
+  function applySourceText(layer, t0, frames, fps, fromVal, toVal, kind) {
+    var docProp, i, steps, u, n, text, t;
+    steps = 5;
+    try {
+      docProp = layer.property("ADBE Text Properties").property("ADBE Text Document");
+      for (i = 0; i <= steps; i++) {
+        u = i / steps;
+        n = fromVal + (toVal - fromVal) * u;
+        if (kind === "pct") text = Math.round(n) + "%";
+        else if (kind === "metric") text = "$" + n.toFixed(1) + "k";
+        else text = String(Math.round(n));
+        t = t0 + secondsFromFrames(Math.round(frames * u), fps);
+        try {
+          var doc = docProp.value;
+          doc.text = text;
+          docProp.setValueAtTime(t, doc);
+        } catch (e1) {}
+      }
+    } catch (e) {}
+  }
+  function planTextKeys(id, frames, fps) {
+    var ph = assetPhaseFrames(frames);
+    if (id === "EVT_TEXT_FADE_DOWN") {
+      return [
+        key(ph.start, fps, 0, -10, 100, 0, 0, "start"),
+        key(ph.mid, fps, 0, -2, 100, 82, 0, "mid"),
+        key(ph.end, fps, 0, 0, 100, 100, 0, "done")
+      ];
+    }
+    if (id === "EVT_TEXT_BLUR_IN") {
+      return [
+        key(ph.start, fps, 0, 4, 100.6, 0, 10, "start"),
+        key(ph.mid, fps, 0, 1, 100.2, 78, 3, "mid"),
+        key(ph.end, fps, 0, 0, 100, 100, 0, "done")
+      ];
+    }
+    if (id === "EVT_TEXT_BLUR_OUT") {
+      return [
+        key(ph.start, fps, 0, 0, 100, 100, 0, "start"),
+        key(ph.mid, fps, 0, -2, 99.4, 42, 5, "mid"),
+        key(ph.end, fps, 0, -6, 98.5, 0, 10, "done")
+      ];
+    }
+    if (id === "EVT_TEXT_SCALE_IN") {
+      return [
+        key(ph.start, fps, 0, 0, 94, 0, 0, "start"),
+        key(ph.mid, fps, 0, 0, 100.6, 88, 0, "mid"),
+        key(ph.end, fps, 0, 0, 100, 100, 0, "done")
+      ];
+    }
+    if (id === "EVT_TEXT_SLIDE_IN") {
+      return [
+        key(ph.start, fps, 18, 0, 100, 0, 0, "start"),
+        key(ph.mid, fps, 3, 0, 100, 86, 0, "mid"),
+        key(ph.end, fps, 0, 0, 100, 100, 0, "done")
+      ];
+    }
+    if (id === "EVT_TEXT_HEADLINE_REVEAL") {
+      return [
+        key(ph.start, fps, 0, 0, 102, 100, 0, "start"),
+        key(ph.settle, fps, 0, 0, 100.4, 100, 0, "settle"),
+        key(ph.end, fps, 0, 0, 100, 100, 0, "done")
+      ];
+    }
+    if (id === "EVT_TEXT_SUBTITLE_REVEAL") {
+      return [
+        key(ph.start, fps, 0, 4, 100, 0, 0, "start"),
+        key(ph.mid, fps, 0, 1, 100, 80, 0, "mid"),
+        key(ph.end, fps, 0, 0, 100, 100, 0, "done")
+      ];
+    }
+    if (id === "EVT_TEXT_KINETIC_HEADLINE") {
+      return [
+        key(ph.start, fps, 0, 6, 101.2, 100, 1, "start"),
+        key(ph.mid, fps, 0, 1, 100.4, 100, 0, "mid"),
+        key(ph.end, fps, 0, 0, 100, 100, 0, "done")
+      ];
+    }
+    return [
+      key(ph.start, fps, 0, 10, 100, 0, 0, "start"),
+      key(ph.mid, fps, 0, 2, 100, 82, 0, "mid"),
+      key(ph.end, fps, 0, 0, 100, 100, 0, "done")
+    ];
+  }
+  function planUiKeys(row, frames, fps) {
+    var ph = assetPhaseFrames(frames);
+    var el = UI_ELEMENTS[row.element] || UI_ELEMENTS.button;
+    var action = row.action;
+    if (action === "exit") {
+      return [
+        key(ph.start, fps, 0, 0, 100, 100, 0, "start"),
+        key(ph.mid, fps, el.x * 0.22, el.y * 0.22, el.enterScale + 1, 38, 0, "mid"),
+        key(ph.end, fps, el.x, el.y, el.enterScale, 0, 0, "done")
+      ];
+    }
+    if (action === "hover") {
+      return [
+        key(ph.start, fps, 0, 0, 100, 100, 0, "start"),
+        key(ph.end, fps, 0, el.hoverY, el.hoverScale, 100, 0, "done")
+      ];
+    }
+    if (action === "click") {
+      return [
+        key(ph.start, fps, 0, 0, 100, 100, 0, "start"),
+        key(ph.mid, fps, 0, 1, el.clickScale, 100, 0, "mid"),
+        key(ph.end, fps, 0, 0, 100, 100, 0, "done")
+      ];
+    }
+    if (action === "expand") {
+      return [
+        key(ph.start, fps, 0, 0, row.element === "search" ? 72 : 100, 0, 0, "start"),
+        key(ph.mid, fps, 0, 0, 100.4, 90, 0, "mid"),
+        key(ph.end, fps, 0, 0, 100, 100, 0, "done")
+      ];
+    }
+    if (action === "collapse") {
+      return [
+        key(ph.start, fps, 0, 0, 100, 100, 0, "start"),
+        key(ph.mid, fps, 0, 0, 100.2, 52, 0, "mid"),
+        key(ph.end, fps, 0, 0, row.element === "search" ? 72 : 100, 0, 0, "done")
+      ];
+    }
+    return [
+      key(ph.start, fps, el.x, el.y, el.enterScale, 0, 0, "start"),
+      key(ph.mid, fps, el.x * 0.18, el.y * 0.18, Math.min(100.5, el.enterScale + 3), 86, 0, "mid"),
+      key(ph.end, fps, 0, 0, 100, 100, 0, "done")
+    ];
+  }
+  function applyAssetLayer(layer, keys, t0, ease) {
+    applyLayerKeys(layer, keys, t0, ease);
+  }
+  function applyCursorMotion(layer, id, t0, frames, fps, ease) {
+    var pos = layer.property("ADBE Transform Group").property("ADBE Position");
+    var sc = layer.property("ADBE Transform Group").property("ADBE Scale");
+    var op = layer.property("ADBE Transform Group").property("ADBE Opacity");
+    var rest = pos.value;
+    var startP = rest;
+    var endP = [rest[0] + 220, rest[1] + 80];
+    var dur = secondsFromFrames(frames, fps);
+    var mid = t0 + dur * 0.5;
+    var press = 0.12;
+    var dip = 88;
+    if (id === "EVT_CURSOR_RIPPLE") {
+      endP = rest;
+    }
+    pos.setValueAtTime(t0, startP);
+    if (id === "EVT_CURSOR_SWIPE") {
+      pos.setValueAtTime(mid, [endP[0] + 12, endP[1]]);
+      pos.setValueAtTime(t0 + dur, endP);
+    } else if (id === "EVT_CURSOR_DRAG" || id === "EVT_CURSOR_SELECT") {
+      pos.setValueAtTime(t0 + dur * 0.12, startP);
+      pos.setValueAtTime(t0 + dur * 0.88, endP);
+      pos.setValueAtTime(t0 + dur, endP);
+    } else if (id === "EVT_CURSOR_HOVER") {
+      pos.setValueAtTime(t0 + dur * 0.7, endP);
+      pos.setValueAtTime(t0 + dur, endP);
+    } else {
+      pos.setValueAtTime(t0 + dur, endP);
+    }
+    if (id === "EVT_CURSOR_CLICK" || id === "EVT_CURSOR_RIPPLE") {
+      sc.setValueAtTime(t0 + dur * 0.72, [100, 100]);
+      sc.setValueAtTime(t0 + dur * 0.72 + press * 0.45, [dip, dip]);
+      sc.setValueAtTime(t0 + dur * 0.72 + press, [100, 100]);
+    } else if (id === "EVT_CURSOR_DBLCLICK") {
+      sc.setValueAtTime(t0 + dur * 0.55, [100, 100]);
+      sc.setValueAtTime(t0 + dur * 0.55 + press * 0.45, [dip, dip]);
+      sc.setValueAtTime(t0 + dur * 0.55 + press, [100, 100]);
+      sc.setValueAtTime(t0 + dur * 0.55 + press + 0.2, [100, 100]);
+      sc.setValueAtTime(t0 + dur * 0.55 + press + 0.2 + press * 0.45, [dip, dip]);
+      sc.setValueAtTime(t0 + dur * 0.55 + press + 0.2 + press, [100, 100]);
+    } else if (id === "EVT_CURSOR_DRAG" || id === "EVT_CURSOR_SELECT") {
+      sc.setValueAtTime(t0, [100, 100]);
+      sc.setValueAtTime(t0 + dur * 0.12, [dip, dip]);
+      sc.setValueAtTime(t0 + dur * 0.88, [dip, dip]);
+      sc.setValueAtTime(t0 + dur, [100, 100]);
+    } else if (id === "EVT_CURSOR_HOVER") {
+      sc.setValueAtTime(t0, [100, 100]);
+      sc.setValueAtTime(t0 + dur, [102, 102]);
+    } else if (id === "EVT_CURSOR_SWIPE") {
+      sc.setValueAtTime(t0, [100, 100]);
+      sc.setValueAtTime(mid, [96, 96]);
+      sc.setValueAtTime(t0 + dur, [100, 100]);
+    }
+    applyEase(pos, ease);
+    applyEase(sc, ease);
+    if (id === "EVT_CURSOR_RIPPLE") {
+      var ripple = layer.containingComp.layers.addShape();
+      ripple.name = "EVO_CURSOR_RIPPLE";
+      try { ripple.parent = layer; } catch (e0) {}
+      try { ripple.property("ADBE Transform Group").property("ADBE Position").setValue([0, 0]); } catch (e1) {}
+      var rsc = ripple.property("ADBE Transform Group").property("ADBE Scale");
+      var rop = ripple.property("ADBE Transform Group").property("ADBE Opacity");
+      rsc.setValueAtTime(t0, [20, 20]);
+      rsc.setValueAtTime(t0 + dur, [140, 140]);
+      rop.setValueAtTime(t0, 36);
+      rop.setValueAtTime(t0 + dur, 0);
+      applyEase(rsc, ease);
+      applyEase(rop, ease);
+    }
+  }
+  function runApplyAsset(tab, list, groupList, easeList) {
+    var comp = requireComp();
+    if (!comp) return;
+    var sel = selectedLayers(comp);
+    var catalog, row, id, group, frames, fps, ease, t0, undo, keys, ph;
+    catalog = tab === "Text" ? TEXT_CATALOG : tab === "UI" ? UI_CATALOG : CURSOR_CATALOG;
+    if (!list.selection) { alert("Select an asset in the list."); return; }
+    row = assetFiltered[list.selection.index];
+    if (!row) { alert("Select an asset in the list."); return; }
+    id = row.id;
+    if (sel.length < 1) { alert("Select a layer to apply " + id + "."); return; }
+    if (id === "EVT_TEXT_SWAP" && sel.length < 2) { alert("Select outgoing, then incoming text for Text Swap."); return; }
+    group = groupList.selection ? String(groupList.selection.text) : (row.duration || "STANDARD");
+    fps = comp.frameRate || DEFAULT_FPS;
+    frames = durationFrames(group, fps);
+    ease = id.indexOf("COUNTER") !== -1 ? "linear" : (EASING_IDS[easeList.selection ? easeList.selection.index : 0] || "premium-smooth");
+    t0 = comp.time;
+    ph = assetPhaseFrames(frames);
+    undo = "Evotechly Asset · " + id;
+    app.beginUndoGroup(undo);
+    try {
+      if (tab === "Text") {
+        if (id === "EVT_TEXT_SWAP") {
+          applyAssetLayer(sel[0], [
+            key(ph.start, fps, 0, 0, 100, 100, 0, "start"),
+            key(ph.mid, fps, 0, -6, 99.2, 40, 2, "mid"),
+            key(ph.end, fps, 0, -12, 98, 0, 4, "done")
+          ], t0, ease);
+          applyAssetLayer(sel[1], [
+            key(ph.start, fps, 0, 10, 100.6, 0, 4, "start"),
+            key(ph.mid, fps, 0, 2, 100.2, 72, 1, "mid"),
+            key(ph.end, fps, 0, 0, 100, 100, 0, "done")
+          ], t0, ease);
+        } else if (id === "EVT_TEXT_MASK_REVEAL") {
+          applyMaskReveal(sel[0], t0, frames, fps);
+        } else if (id === "EVT_TEXT_WORD_REVEAL" || id === "EVT_TEXT_LINE_REVEAL" || id === "EVT_TEXT_CHAR_REVEAL" || id === "EVT_TEXT_TRACKING_REVEAL" || id === "EVT_TEXT_HEADLINE_REVEAL" || id === "EVT_TEXT_SUBTITLE_REVEAL" || id === "EVT_TEXT_KINETIC_HEADLINE") {
+          if (!isTextLayer(sel[0])) { alert(id + " needs a text layer."); app.endUndoGroup(); return; }
+          var unit = id === "EVT_TEXT_WORD_REVEAL" || id === "EVT_TEXT_SUBTITLE_REVEAL" ? "word" : id === "EVT_TEXT_LINE_REVEAL" ? "line" : "char";
+          var travel = id === "EVT_TEXT_LINE_REVEAL" ? 10 : id === "EVT_TEXT_SUBTITLE_REVEAL" ? 6 : 8;
+          var tracking = id === "EVT_TEXT_TRACKING_REVEAL" ? 28 : id === "EVT_TEXT_KINETIC_HEADLINE" ? 18 : 0;
+          applyTextAnimator(sel[0], "EVO_TEXT", unit, travel, tracking, t0, secondsFromFrames(frames, fps), ease);
+          keys = planTextKeys(id, frames, fps);
+          if (id === "EVT_TEXT_HEADLINE_REVEAL" || id === "EVT_TEXT_SUBTITLE_REVEAL" || id === "EVT_TEXT_KINETIC_HEADLINE") applyAssetLayer(sel[0], keys, t0, ease);
+        } else if (id === "EVT_TEXT_NUMBER_COUNTER" || id === "EVT_TEXT_PCT_COUNTER" || id === "EVT_TEXT_METRIC_COUNTER") {
+          if (!isTextLayer(sel[0])) { alert(id + " needs a text layer."); app.endUndoGroup(); return; }
+          applySourceText(sel[0], t0, frames, fps, 0, id === "EVT_TEXT_PCT_COUNTER" ? 48 : id === "EVT_TEXT_METRIC_COUNTER" ? 12.4 : 124, id === "EVT_TEXT_PCT_COUNTER" ? "pct" : id === "EVT_TEXT_METRIC_COUNTER" ? "metric" : "number");
+          applyAssetLayer(sel[0], planTextKeys("EVT_TEXT_FADE_UP", frames, fps), t0, "linear");
+        } else {
+          applyAssetLayer(sel[0], planTextKeys(id, frames, fps), t0, ease);
+        }
+      } else if (tab === "UI") {
+        applyAssetLayer(sel[0], planUiKeys(row, frames, fps), t0, ease);
+      } else {
+        applyCursorMotion(sel[0], id, t0, frames, fps, ease);
+      }
+    } catch (err) {
+      alert(String(err));
+      app.endUndoGroup();
+      return;
+    }
+    app.endUndoGroup();
+    alert(undo + "\n" + frames + "f @" + Math.round(fps) + "fps · " + ease + " · " + STYLE);
+  }
+  function refreshAssetList(list, searchField, catalog) {
+    var q = String(searchField.text || "").toLowerCase();
+    var i, row, blob;
+    assetFiltered = [];
+    list.removeAll();
+    for (i = 0; i < catalog.length; i++) {
+      row = catalog[i];
+      blob = (row.id + " " + (row.name || "") + " " + (row.category || "") + " " + (row.bestUse || "") + " " + (row.element || "") + " " + (row.action || "")).toLowerCase();
+      if (q && blob.indexOf(q) === -1) continue;
+      assetFiltered.push(row);
+      list.add("item", "● " + (row.name || row.id));
+    }
+    if (assetFiltered.length) list.selection = 0;
   }
   function travelDistance(dir, comp, distancePct, strengthPct) {
     var axis = (dir === "up" || dir === "down") ? comp.height : comp.width;
@@ -729,12 +1188,13 @@
   function buildUI(thisObj) {
     var win = (thisObj instanceof Panel) ? thisObj : new Window("palette", "Evotechly Transitions", undefined, { resizeable: true });
     var intro, searchField, catList, list, g, groupList, dirList, easeList, foot, note;
+    var tabs, transTab, textTab, uiTab, curTab, textList, uiList, curList, activeTab;
     win.orientation = "column";
     win.alignChildren = ["fill", "top"];
     win.spacing = 8;
     win.margins = 10;
     win.add("statictext", undefined, "EVOTECHLY  ·  Transitions");
-    intro = win.add("statictext", undefined, "Phase 2 · full UI Push family. Catalog is searchable. Companion to Motion OS — does not replace v0.32. Node is source of truth; this panel mirrors apply numbers.", { multiline: true });
+    intro = win.add("statictext", undefined, "Phase 2 UI Push + P1 native Text / UI / Cursor. Catalog is searchable. Companion to Motion OS — does not replace v0.32. Node is source of truth; this panel mirrors apply numbers.", { multiline: true });
     intro.characters = 46;
 
     g = win.add("group");
@@ -744,8 +1204,32 @@
     catList = g.add("dropdownlist", undefined, CATEGORIES);
     catList.selection = 0;
 
-    list = win.add("listbox", undefined, []);
-    list.preferredSize = [340, 200];
+    tabs = win.add("tabbedpanel");
+    tabs.alignChildren = ["fill", "fill"];
+    transTab = tabs.add("tab", undefined, "Transitions");
+    textTab = tabs.add("tab", undefined, "Text");
+    uiTab = tabs.add("tab", undefined, "UI");
+    curTab = tabs.add("tab", undefined, "Cursor");
+    transTab.orientation = "column";
+    transTab.alignChildren = ["fill", "fill"];
+    textTab.orientation = "column";
+    textTab.alignChildren = ["fill", "fill"];
+    uiTab.orientation = "column";
+    uiTab.alignChildren = ["fill", "fill"];
+    curTab.orientation = "column";
+    curTab.alignChildren = ["fill", "fill"];
+    tabs.selection = transTab;
+    activeTab = "Transitions";
+
+    list = transTab.add("listbox", undefined, []);
+    list.preferredSize = [340, 180];
+
+    textList = textTab.add("listbox", undefined, []);
+    textList.preferredSize = [340, 200];
+    uiList = uiTab.add("listbox", undefined, []);
+    uiList.preferredSize = [340, 200];
+    curList = curTab.add("listbox", undefined, []);
+    curList.preferredSize = [340, 200];
 
     g = win.add("group");
     g.add("statictext", undefined, "Duration");
@@ -760,16 +1244,29 @@
     easeList = g.add("dropdownlist", undefined, ["premium-smooth", "apple-smooth", "fast-product", "soft-ui", "snappy", "elastic-micro"]);
     easeList.selection = 0;
 
-    win.add("button", undefined, "Apply").onClick = function () { runApply(list, groupList, dirList, easeList); };
+    win.add("button", undefined, "Apply").onClick = function () {
+      if (activeTab === "Transitions") runApply(list, groupList, dirList, easeList);
+      else if (activeTab === "Text") runApplyAsset("Text", textList, groupList, easeList);
+      else if (activeTab === "UI") runApplyAsset("UI", uiList, groupList, easeList);
+      else runApplyAsset("Cursor", curList, groupList, easeList);
+    };
 
-    note = win.add("statictext", undefined, "Select outgoing, then incoming. ● = UI Push apply. ○ = later phase. Control null: EVOTECHLY_TRANSITION_CONTROL. SFX = markers only.", { multiline: true });
+    note = win.add("statictext", undefined, "Transitions: select outgoing, then incoming. Text / UI / Cursor: select the target layer (Swap needs two). ● = apply. Native only — no vendor packs.", { multiline: true });
     note.characters = 46;
 
-    foot = win.add("statictext", undefined, "Install: Scripts/ScriptUI Panels next to Motion OS Hub. Docs: TRANSITION_KIT.md · TRANSITION_PHASES.md.", { multiline: true });
+    foot = win.add("statictext", undefined, "Install: Scripts/ScriptUI Panels next to Motion OS Hub. Docs: TRANSITION_KIT.md · P1_NATIVE.md.", { multiline: true });
     foot.characters = 46;
 
     function onFilter() { refreshList(list, searchField, catList); }
-    searchField.onChanging = onFilter;
+    function onAssetFilter() {
+      if (activeTab === "Text") refreshAssetList(textList, searchField, TEXT_CATALOG);
+      else if (activeTab === "UI") refreshAssetList(uiList, searchField, UI_CATALOG);
+      else if (activeTab === "Cursor") refreshAssetList(curList, searchField, CURSOR_CATALOG);
+    }
+    searchField.onChanging = function () {
+      if (activeTab === "Transitions") onFilter();
+      else onAssetFilter();
+    };
     catList.onChange = onFilter;
     list.onChange = function () {
       var row = list.selection ? filtered[list.selection.index] : null;
@@ -778,7 +1275,16 @@
       d = defaultDirForId(row.id);
       dirList.selection = DIRS.indexOf(d);
     };
+    tabs.onChange = function () {
+      var title = tabs.selection ? String(tabs.selection.text) : "Transitions";
+      activeTab = title;
+      if (activeTab === "Transitions") onFilter();
+      else onAssetFilter();
+    };
     refreshList(list, searchField, catList);
+    refreshAssetList(textList, searchField, TEXT_CATALOG);
+    refreshAssetList(uiList, searchField, UI_CATALOG);
+    refreshAssetList(curList, searchField, CURSOR_CATALOG);
     if (list.selection) list.onChange();
 
     win.onResizing = win.onResize = function () { this.layout.resize(); };

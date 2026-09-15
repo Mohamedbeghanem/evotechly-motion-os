@@ -1,8 +1,8 @@
-# Evotechly SaaS Assets Pack — P0
+# Evotechly SaaS Assets Pack — P1
 
 Source discovery + license audit + library scaffold. **No pirated packs. No fake downloads.**
 
-This pack will later register with the [Transition Kit](../docs/TRANSITION_KIT.md) (`core/transitions` + `ae/Evotechly Transitions.jsx`). P0 ships folders, honest legal docs, an empty-capable registry schema, and an optional curated Lucide icon set (ISC / Feather MIT).
+P1 ships native text / UI / cursor generators (`core/assets/`) and apply tabs on [Evotechly Transitions](../ae/Evotechly Transitions.jsx). P0 folders, legal docs, registry schema, and Lucide icons stay. See [Documentation/P1_NATIVE.md](Documentation/P1_NATIVE.md).
 
 ## What P0 is not
 
@@ -34,6 +34,6 @@ This pack will later register with the [Transition Kit](../docs/TRANSITION_KIT.m
 
 ## Next
 
-P1 = execute `MANUAL-DOWNLOADS.md` on an editor machine (do not commit forbidden files) + start native transition / text / UI generators that emit Transition Kit IDs.
+P2 = charts / devices **or** Transition Kit Phase 3 Card family (recommended next for EvoCRM). Still no AEJuice / Motion Bro / Bento in git.
 
-Motion OS pointer: [docs/SAAS_ASSETS_P0.md](../docs/SAAS_ASSETS_P0.md).
+Motion OS pointer: [docs/SAAS_ASSETS_P1.md](../docs/SAAS_ASSETS_P1.md).

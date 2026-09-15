@@ -2,9 +2,9 @@
 
 Product-taste text: flowing reveal, coloured keyword, typewriter, fade/scale/slide. Not kinetic-glitch packs.
 
-## Intended contents (P0 = docs only)
+## Intended contents
 
-Nothing binary ships in this folder in P0. P1 fills **EvotechlyNative** generators and optional editor-local ThirdParty installs.
+P1 native generators live in `core/assets/textAnimations.js` (18 IDs). Nothing binary ships in this folder. Apply: Evotechly Transitions → **Text**.
 
 ## EVT_ naming examples
 

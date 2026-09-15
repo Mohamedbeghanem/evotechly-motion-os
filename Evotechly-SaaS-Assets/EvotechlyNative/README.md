@@ -20,4 +20,6 @@ This folder is a **policy + pointer**, not a second copy of `core/transitions`.
 
 Implemented Transition Kit IDs are registered in `../Metadata/asset-registry.json` as `sourceType: "native"`, `commercialUse: true`, `transitionKitPath: "core/transitions"`.
 
-P1 starts generators that write into this tree (and/or `core/`) instead of vendoring companions we already rebuilt (UI presets, text reveal, caption style, cursor, glass frost).
+## P1
+
+Generators live in `core/assets/` (text / UI micro / cursor). This folder holds policy plus `lucide-shape-recipes.json` (untested AE import). Apply: **Window → Evotechly Transitions** → Text / UI / Cursor.
