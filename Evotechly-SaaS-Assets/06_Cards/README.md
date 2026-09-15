@@ -12,13 +12,14 @@ Nothing binary ships in this folder in P0. P1 fills **EvotechlyNative** generato
 - `EVT_SLIDE_STACK` / `EVT_SLIDE_PEEK` — already owned (Transition Kit Phase 3)
 - `EVT_SHARED_CARD` / `EVT_SHARED_IMAGE` / `EVT_LIST_TO_DETAIL` — already owned (Phase 12 Shared-Element, bounds-match, not mesh)
 - `EVT_STAGGER_CARDS` / `EVT_STAGGER_LIST` / `EVT_WAVE_SOFT` — already owned (Phase 13 Stagger-Cascade)
+- `EVT_MASK_CIRCLE` / `EVT_MASK_RECT` / `EVT_REVEAL_IRIS` — already owned (Phase 6 Mask-Reveal, native AE masks)
 - `EVT_ZOOM_IN` / `EVT_SCALE_POP` / `EVT_SCALE_SETTLE` — already owned (Transition Kit Phase 4)
 - `EVT_UI_PUSH_SCALE` — already owned
 - `EVT_CARD_LIFT` — planned (P2b / later)
 
 ## Native path
 
-Reuse UI-Slide card family (`core/transitions/uiSlide.js`) + Scale-Zoom + Shared-Element (`scaleZoom.js`, `sharedElement.js`) + UI Push + Scale / Cover.
+Reuse UI-Slide card family (`core/transitions/uiSlide.js`) + Scale-Zoom + Shared-Element (`scaleZoom.js`, `sharedElement.js`) + UI Push + Scale / Cover + Mask-Reveal (`maskReveal.js`).
 
 ## Third-party path
 

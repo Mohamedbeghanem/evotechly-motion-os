@@ -2,7 +2,7 @@
 
 /**
  * Transition Kit engine — deterministic plans.
- * Node is source of truth. JSX mirrors UI Push / UI-Slide / Scale-Zoom / Shared-Element / Overlay-Modal / Page-Screen / Stagger-Cascade numbers.
+ * Node is source of truth. JSX mirrors UI Push / UI-Slide / Scale-Zoom / Shared-Element / Overlay-Modal / Page-Screen / Stagger-Cascade / Mask-Reveal numbers.
  * Native AE only. No .ffx / .aep / vendor plugins.
  */
 
@@ -18,13 +18,15 @@ const sharedElement = require("./sharedElement");
 const overlayModal = require("./overlayModal");
 const pageScreen = require("./pageScreen");
 const staggerCascade = require("./staggerCascade");
+const maskReveal = require("./maskReveal");
 
 const IMPLEMENTED_IDS = uiPush.UI_PUSH_IDS.concat(uiSlide.UI_SLIDE_IDS)
   .concat(scaleZoom.SCALE_ZOOM_IDS)
   .concat(sharedElement.SHARED_ELEMENT_IDS)
   .concat(overlayModal.OVERLAY_MODAL_IDS)
   .concat(pageScreen.PAGE_SCREEN_IDS)
-  .concat(staggerCascade.STAGGER_CASCADE_IDS);
+  .concat(staggerCascade.STAGGER_CASCADE_IDS)
+  .concat(maskReveal.MASK_REVEAL_IDS);
 const ANATOMY = uiPush.ANATOMY;
 const STYLE = "premium-saas";
 const DEFAULT_COMP = { w: 1920, h: 1080, fps: DEFAULT_FPS };
@@ -44,6 +46,8 @@ function layerRest(layer) {
 }
 
 function normalizeId(id) {
+  const mask = maskReveal.resolveId(id);
+  if (maskReveal.isMaskRevealId(mask)) return mask;
   const stagger = staggerCascade.resolveId(id);
   if (staggerCascade.isStaggerCascadeId(stagger)) return stagger;
   const page = pageScreen.resolveId(id);
@@ -60,6 +64,7 @@ function normalizeId(id) {
 }
 
 function defaultDirectionForId(id) {
+  if (maskReveal.DEFAULT_DIRECTION_BY_ID[id]) return maskReveal.DEFAULT_DIRECTION_BY_ID[id];
   if (staggerCascade.DEFAULT_DIRECTION_BY_ID[id]) return staggerCascade.DEFAULT_DIRECTION_BY_ID[id];
   if (pageScreen.DEFAULT_DIRECTION_BY_ID[id]) return pageScreen.DEFAULT_DIRECTION_BY_ID[id];
   if (overlayModal.DEFAULT_DIRECTION_BY_ID[id]) return overlayModal.DEFAULT_DIRECTION_BY_ID[id];
@@ -70,6 +75,7 @@ function defaultDirectionForId(id) {
 
 function defaultGroupForId(id) {
   return (
+    maskReveal.DEFAULT_GROUP_BY_ID[id] ||
     staggerCascade.DEFAULT_GROUP_BY_ID[id] ||
     pageScreen.DEFAULT_GROUP_BY_ID[id] ||
     overlayModal.DEFAULT_GROUP_BY_ID[id] ||
@@ -82,6 +88,7 @@ function defaultGroupForId(id) {
 }
 
 function defaultOvershootForId(id) {
+  if (maskReveal.DEFAULT_OVERSHOOT_BY_ID[id] != null) return maskReveal.DEFAULT_OVERSHOOT_BY_ID[id];
   if (staggerCascade.DEFAULT_OVERSHOOT_BY_ID[id] != null) return staggerCascade.DEFAULT_OVERSHOOT_BY_ID[id];
   if (pageScreen.DEFAULT_OVERSHOOT_BY_ID[id] != null) return pageScreen.DEFAULT_OVERSHOOT_BY_ID[id];
   if (overlayModal.DEFAULT_OVERSHOOT_BY_ID[id] != null) return overlayModal.DEFAULT_OVERSHOOT_BY_ID[id];
@@ -93,6 +100,7 @@ function defaultOvershootForId(id) {
 }
 
 function familyCategory(id) {
+  if (maskReveal.isMaskRevealId(id)) return "Mask-Reveal";
   if (staggerCascade.isStaggerCascadeId(id)) return "Stagger-Cascade";
   if (pageScreen.isPageScreenId(id)) return "Page-Screen";
   if (overlayModal.isOverlayModalId(id)) return "Overlay-Modal";
@@ -104,6 +112,7 @@ function familyCategory(id) {
 }
 
 function familyDisplayName(id) {
+  if (maskReveal.isMaskRevealId(id)) return maskReveal.displayName(id);
   if (staggerCascade.isStaggerCascadeId(id)) return staggerCascade.displayName(id);
   if (pageScreen.isPageScreenId(id)) return pageScreen.displayName(id);
   if (overlayModal.isOverlayModalId(id)) return overlayModal.displayName(id);
@@ -115,6 +124,7 @@ function familyDisplayName(id) {
 
 function familyPhaseProfile(id) {
   return (
+    maskReveal.PHASE_PROFILE[id] ||
     staggerCascade.PHASE_PROFILE[id] ||
     pageScreen.PHASE_PROFILE[id] ||
     overlayModal.PHASE_PROFILE[id] ||
@@ -251,7 +261,7 @@ function applyTransitionPlan(opts) {
     layers: [],
     outgoing: uiPush.emptyLayer(outgoingName, "outgoing", outgoingRest),
     incoming: uiPush.emptyLayer(incomingName, "incoming", incomingRest),
-    note: "Native AE keyframes. Node plan is source of truth. JSX mirrors UI Push, UI-Slide, Scale-Zoom, Shared-Element, Overlay-Modal, Page-Screen, and Stagger-Cascade."
+    note: "Native AE keyframes. Node plan is source of truth. JSX mirrors UI Push, UI-Slide, Scale-Zoom, Shared-Element, Overlay-Modal, Page-Screen, Stagger-Cascade, and Mask-Reveal."
   };
 
   if (opts.target && opts.target.layerBounds) {
@@ -302,7 +312,8 @@ function applyTransitionPlan(opts) {
   };
 
   let built;
-  if (staggerCascade.isStaggerCascadeId(id)) built = staggerCascade.plan(id, ctx);
+  if (maskReveal.isMaskRevealId(id)) built = maskReveal.plan(id, ctx);
+  else if (staggerCascade.isStaggerCascadeId(id)) built = staggerCascade.plan(id, ctx);
   else if (pageScreen.isPageScreenId(id)) built = pageScreen.plan(id, ctx);
   else if (overlayModal.isOverlayModalId(id)) built = overlayModal.plan(id, ctx);
   else if (uiSlide.isUiSlideId(id)) built = uiSlide.plan(id, ctx);
@@ -315,6 +326,7 @@ function applyTransitionPlan(opts) {
   if (built.target) shared.target = built.target;
   if (built.morph) shared.morph = built.morph;
   if (built.stagger) shared.stagger = built.stagger;
+  if (built.mask) shared.mask = built.mask;
   shared.layers = [built.outgoing, built.incoming];
   shared.description =
     "Apply " +

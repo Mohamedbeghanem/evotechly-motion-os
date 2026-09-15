@@ -75,13 +75,13 @@ const transitions = [
   row("EVT_DISSOLVE_UI", "Crossfade", "STANDARD", "subtle", false, "UI plate dissolve, keep chrome", 5, false, []),
   row("EVT_DISSOLVE_COLOR", "Crossfade", "STANDARD", "subtle", false, "Tinted dissolve, one brand color", 5, false, []),
 
-  // 05 Mask-Reveal
-  row("EVT_MASK_CIRCLE", "Mask-Reveal", "STANDARD", "standard", true, "Soft circular reveal on a card", 6, false, []),
-  row("EVT_MASK_RECT", "Mask-Reveal", "STANDARD", "standard", false, "Rounded-rect expand", 6, false, []),
-  row("EVT_MASK_SOFT_EDGE", "Mask-Reveal", "SMOOTH", "subtle", false, "Feathered matte, no hard wipe", 6, false, []),
-  row("EVT_MASK_EXPAND", "Mask-Reveal", "STANDARD", "standard", false, "Mask expansion from center", 6, false, []),
-  row("EVT_REVEAL_IRIS", "Mask-Reveal", "SMOOTH", "subtle", true, "Quiet iris on a screenshot", 6, false, []),
-  row("EVT_REVEAL_WIPE_SOFT", "Mask-Reveal", "STANDARD", "subtle", false, "Soft directional matte, not a bar wipe", 6, false, []),
+  // 05 Mask-Reveal — Phase 6
+  row("EVT_MASK_CIRCLE", "Mask-Reveal", "STANDARD", "standard", true, "Soft circular reveal on a card", 6, true, ["ui-soft-in"], "Mask Circle"),
+  row("EVT_MASK_RECT", "Mask-Reveal", "STANDARD", "standard", false, "Rounded-rect expand", 6, true, ["ui-soft-in"], "Mask Rect"),
+  row("EVT_MASK_SOFT_EDGE", "Mask-Reveal", "SMOOTH", "subtle", false, "Feathered matte, no hard wipe", 6, true, ["ui-cross"], "Mask Soft Edge"),
+  row("EVT_MASK_EXPAND", "Mask-Reveal", "STANDARD", "standard", false, "Mask expansion from center", 6, true, ["ui-soft-in"], "Mask Expand"),
+  row("EVT_REVEAL_IRIS", "Mask-Reveal", "SMOOTH", "subtle", true, "Quiet iris on a screenshot", 6, true, ["ui-soft-in"], "Reveal Iris"),
+  row("EVT_REVEAL_WIPE_SOFT", "Mask-Reveal", "STANDARD", "subtle", false, "Soft directional matte, not a bar wipe", 6, true, ["ui-cross"], "Reveal Wipe Soft"),
 
   // 06 Blur-Focus
   row("EVT_BLUR_FOCUS", "Blur-Focus", "STANDARD", "subtle", false, "Outgoing blurs as incoming sharpens", 7, false, []),
@@ -176,11 +176,11 @@ const transitions = [
 ];
 
 const out = {
-  version: "phase-13",
+  version: "phase-6",
   style: STYLE,
   aspectRatios: ASPECT,
   generated: "transitions/Metadata/catalog.json",
-  note: "Phase 13 implements the Stagger-Cascade family (plus Phase 2–4 UI Push / UI-Slide / Scale-Zoom, Phase 9 Overlay-Modal, Phase 10 Page-Screen, and Phase 12 Shared-Element). Other rows are metadata for later phases and AI pairing.",
+  note: "Phase 6 implements the Mask-Reveal family (plus Phase 2–4 UI Push / UI-Slide / Scale-Zoom, Phase 9 Overlay-Modal, Phase 10 Page-Screen, Phase 12 Shared-Element, and Phase 13 Stagger-Cascade). Crossfade stays catalog-only. Other rows are metadata for later phases and AI pairing.",
   transitions: transitions
 };
 

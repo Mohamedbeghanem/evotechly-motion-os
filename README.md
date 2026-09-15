@@ -15,7 +15,7 @@ Copy `ae/Evotechly Motion OS.jsx`, `ae/SaaS Demo Tools.jsx`, `ae/Caption Style T
 - **Window > Evotechly Motion OS** — v0.32 Reliability (Figma roles, Motion, Polish, Person, Captions, Recipes).
 - **Window > SaaS Demo Tools / Motion OS Hub** — Home (Seed), SaaS (cursor, depth, stagger, UI presets, carousel, glass, wipe, hover, flowing text, coloured reveal), Kit Hub (official URLs only). See [docs/SAAS_DEMO_KIT.md](docs/SAAS_DEMO_KIT.md). Does not replace the v0.32 panel.
 - **Window > Caption Style Tools** — P1c keyword color + in/out presets (separate companion). See [docs/CAPTION_STYLE.md](docs/CAPTION_STYLE.md).
-- **Window > Evotechly Transitions** — Transition Kit (UI Push through Stagger-Cascade) plus P1 Text / UI / Cursor and P2b Charts tabs. See [docs/TRANSITION_KIT.md](docs/TRANSITION_KIT.md), [docs/SAAS_ASSETS_P1.md](docs/SAAS_ASSETS_P1.md), and [docs/SAAS_ASSETS_P2B.md](docs/SAAS_ASSETS_P2B.md). Does not replace the v0.32 panel.
+- **Window > Evotechly Transitions** — Transition Kit (UI Push through Mask-Reveal / Stagger-Cascade) plus P1 Text / UI / Cursor and P2b Charts tabs. See [docs/TRANSITION_KIT.md](docs/TRANSITION_KIT.md), [docs/SAAS_ASSETS_P1.md](docs/SAAS_ASSETS_P1.md), and [docs/SAAS_ASSETS_P2B.md](docs/SAAS_ASSETS_P2B.md). Does not replace the v0.32 panel.
 
 Name layers `Title`, `Card 1`, `CTA`, `Screenshot`, `Cursor`, `Caption`. Motion tab: Style / Direction / Shot / Scan / Apply / Fit footage. Optional companions: [docs/EDITOR_FREE_KIT.md](docs/EDITOR_FREE_KIT.md) (not bundled). Caption pack: `assets/` + `examples/captions/`.
 
