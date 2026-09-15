@@ -1,6 +1,6 @@
 # Transition Kit — phase roadmap
 
-Status after this PR: **Phase 0–4 are done.** `EVT_SHARED_CARD` shipped early (bounds-match). Later phases are catalogued, not implemented.
+Status after this PR: **Phase 0–4 and Phase 12 are done.** Shared-Element is the full bounds-match family (not mesh). Later phases are catalogued, not implemented.
 
 | Phase | Job | Status |
 |---|---|---|
@@ -16,7 +16,7 @@ Status after this PR: **Phase 0–4 are done.** `EVT_SHARED_CARD` shipped early 
 | 9 | Overlay-Modal family | planned |
 | 10 | Page-Screen family | planned |
 | 11 | Wipe-Split family (soft mattes / native gradient wipe) | planned |
-| 12 | Shared-Element family (bounds match, not mesh) | planned |
+| **12** | Shared-Element family (bounds match, not mesh) | **done** |
 | 13 | Stagger-Cascade family (reuse `staggerReveal` numbers where they fit) | planned |
 | 14 | Camera-Dolly family (plate push/pull — not a 3D camera rig) | planned |
 | 15 | Glass-Frost family (native frost; no Liquid Glass binary) | planned |
@@ -68,7 +68,18 @@ Status after this PR: **Phase 0–4 are done.** `EVT_SHARED_CARD` shipped early 
 - JSX mirrors apply math in `ae/Evotechly Transitions.jsx` Transitions tab
 - Registry: native `sourceType` rows, `commercialUse: true`
 - Tests: deterministic plans, unique IDs, implemented flags
-- Remaining Shared-Element IDs (`SHARED_IMAGE`, `MATCH_CUT`, `MORPH_BOUNDS`, `HERO_TO_DETAIL`, `LIST_TO_DETAIL`) stay catalog-only
+- Remaining Shared-Element IDs (`SHARED_IMAGE`, `MATCH_CUT`, `MORPH_BOUNDS`, `HERO_TO_DETAIL`, `LIST_TO_DETAIL`) stay catalog-only — **superseded by Phase 12**
+
+## Phase 12 — done
+
+- `core/transitions/sharedElement.js` — full family: `EVT_SHARED_CARD` / `SHARED_IMAGE` / `MATCH_CUT` / `MORPH_BOUNDS` / `HERO_TO_DETAIL` / `LIST_TO_DETAIL`
+- Position + independent scale via `planBoundsMorph`. No mesh warp
+- EvoCRM paths: card → detail, list row → pane, marketing hero → app UI, image → gallery
+- Catalog `implemented:true` + names on all 6 Shared-Element IDs (`phase: 12`)
+- JSX mirrors apply math in `ae/Evotechly Transitions.jsx` Transitions tab
+- Registry: native `sourceType` rows, `commercialUse: true`
+- Tests: deterministic plans, unique IDs, implemented flags, axis / scale math
+- Charts / device plates still deferred to P2b
 
 ## What “done” means later
 

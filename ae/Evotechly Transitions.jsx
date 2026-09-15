@@ -1,10 +1,10 @@
 #target aftereffects
 /*
-  Evotechly Transitions — companion ScriptUI (Transition Kit Phase 4 + SaaS Assets P1).
+  Evotechly Transitions — companion ScriptUI (Transition Kit Phase 12 Shared-Element + SaaS Assets P1).
   Window → Evotechly Transitions.
   Tabs: Transitions / Text / UI / Cursor.
   Numbers mirrored from core/transitions/*.js and core/assets/*.js — Node is source of truth.
-  ExtendScript cannot require Node. Apply UI Push + UI-Slide + Scale-Zoom + Shared Card and P1 native assets here.
+  ExtendScript cannot require Node. Apply UI Push + UI-Slide + Scale-Zoom + Shared-Element and P1 native assets here.
   Native AE only. No .ffx / .aep / vendor plugins.
   Does not replace Evotechly Motion OS v0.32 (~297 KB).
 */
@@ -50,7 +50,12 @@
     EVT_SCALE_BREATHE: 1,
     EVT_SCALE_PUNCH: 1,
     EVT_SCALE_SETTLE: 1,
-    EVT_SHARED_CARD: 1
+    EVT_SHARED_CARD: 1,
+    EVT_SHARED_IMAGE: 1,
+    EVT_MATCH_CUT: 1,
+    EVT_MORPH_BOUNDS: 1,
+    EVT_HERO_TO_DETAIL: 1,
+    EVT_LIST_TO_DETAIL: 1
   };
   /* influence pairs match core/transitions/easing.js + polish.js */
   var EASE = {
@@ -140,11 +145,11 @@
     { id: "EVT_WIPE_GRADIENT", category: "Wipe-Split", duration: "SMOOTH", intensity: "subtle", implemented: false, phase: 11, bestUse: "Native gradient wipe, Apple ease" },
     { id: "EVT_SPLIT_REVEAL", category: "Wipe-Split", duration: "SMOOTH", intensity: "subtle", implemented: false, phase: 11, bestUse: "Center split, incoming in the gap" },
     { id: "EVT_SHARED_CARD", name: "Shared Card", category: "Shared-Element", duration: "SMOOTH", intensity: "standard", implemented: true, phase: 12, bestUse: "Card bounds morph to detail" },
-    { id: "EVT_SHARED_IMAGE", category: "Shared-Element", duration: "SMOOTH", intensity: "standard", implemented: false, phase: 12, bestUse: "Image hero → gallery" },
-    { id: "EVT_MATCH_CUT", category: "Shared-Element", duration: "FAST", intensity: "subtle", implemented: false, phase: 12, bestUse: "Match position/scale, cut the rest" },
-    { id: "EVT_MORPH_BOUNDS", category: "Shared-Element", duration: "STANDARD", intensity: "standard", implemented: false, phase: 12, bestUse: "Rect morph only (no mesh)" },
-    { id: "EVT_HERO_TO_DETAIL", category: "Shared-Element", duration: "SMOOTH", intensity: "standard", implemented: false, phase: 12, bestUse: "Marketing hero into app UI" },
-    { id: "EVT_LIST_TO_DETAIL", category: "Shared-Element", duration: "STANDARD", intensity: "standard", implemented: false, phase: 12, bestUse: "Row expands into detail pane" },
+    { id: "EVT_SHARED_IMAGE", name: "Shared Image", category: "Shared-Element", duration: "SMOOTH", intensity: "standard", implemented: true, phase: 12, bestUse: "Image hero → gallery" },
+    { id: "EVT_MATCH_CUT", name: "Match Cut", category: "Shared-Element", duration: "FAST", intensity: "subtle", implemented: true, phase: 12, bestUse: "Match position/scale, cut the rest" },
+    { id: "EVT_MORPH_BOUNDS", name: "Morph Bounds", category: "Shared-Element", duration: "STANDARD", intensity: "standard", implemented: true, phase: 12, bestUse: "Rect morph only (no mesh)" },
+    { id: "EVT_HERO_TO_DETAIL", name: "Hero to Detail", category: "Shared-Element", duration: "SMOOTH", intensity: "standard", implemented: true, phase: 12, bestUse: "Marketing hero into app UI" },
+    { id: "EVT_LIST_TO_DETAIL", name: "List to Detail", category: "Shared-Element", duration: "STANDARD", intensity: "standard", implemented: true, phase: 12, bestUse: "Row expands into detail pane" },
     { id: "EVT_STAGGER_CARDS", category: "Stagger-Cascade", duration: "STANDARD", intensity: "subtle", implemented: false, phase: 13, bestUse: "Card row stagger in" },
     { id: "EVT_STAGGER_LIST", category: "Stagger-Cascade", duration: "STANDARD", intensity: "subtle", implemented: false, phase: 13, bestUse: "List rows cascade" },
     { id: "EVT_CASCADE_IN", category: "Stagger-Cascade", duration: "SMOOTH", intensity: "subtle", implemented: false, phase: 13, bestUse: "Tree / nav cascade in" },
@@ -866,6 +871,42 @@
   function defaultDetailBounds() {
     return { l: 280, t: 80, r: 1640, b: 1000 };
   }
+  function defaultImageBounds() {
+    return { l: 640, t: 220, r: 1280, b: 700 };
+  }
+  function defaultGalleryBounds() {
+    return { l: 360, t: 120, r: 1560, b: 960 };
+  }
+  function defaultHeroBounds() {
+    return { l: 80, t: 60, r: 1840, b: 1020 };
+  }
+  function defaultHeroDetailBounds() {
+    return { l: 520, t: 140, r: 1400, b: 900 };
+  }
+  function defaultListRowBounds() {
+    return { l: 80, t: 360, r: 920, b: 440 };
+  }
+  function defaultListDetailBounds() {
+    return { l: 720, t: 80, r: 1840, b: 1000 };
+  }
+  function defaultFromBoundsForId(id) {
+    if (id === "EVT_SHARED_IMAGE") return defaultImageBounds();
+    if (id === "EVT_HERO_TO_DETAIL") return defaultHeroBounds();
+    if (id === "EVT_LIST_TO_DETAIL") return defaultListRowBounds();
+    return defaultCardBounds();
+  }
+  function defaultToBoundsForId(id) {
+    if (id === "EVT_SHARED_IMAGE") return defaultGalleryBounds();
+    if (id === "EVT_HERO_TO_DETAIL") return defaultHeroDetailBounds();
+    if (id === "EVT_LIST_TO_DETAIL") return defaultListDetailBounds();
+    return defaultDetailBounds();
+  }
+  function defaultLayerBoundsForId(id) {
+    if (id === "EVT_SHARED_CARD" || id === "EVT_SHARED_IMAGE" || id === "EVT_MATCH_CUT" || id === "EVT_MORPH_BOUNDS" || id === "EVT_HERO_TO_DETAIL" || id === "EVT_LIST_TO_DETAIL") {
+      return defaultFromBoundsForId(id);
+    }
+    return defaultTargetBounds();
+  }
   function layerBoundsBox(layer, t) {
     var rect, pos, sc, w, h;
     try {
@@ -1502,31 +1543,49 @@
       phases: ph
     };
   }
-  function planSharedCard(frames, fps, comp, target) {
-    var ph = phaseFrames(frames);
-    var morph = planBoundsMorphJs((target && target.layerBounds) || defaultCardBounds(), (target && target.destBounds) || defaultDetailBounds());
+  function planSharedMorphJs(frames, fps, target, id, profile, overshootPct, phaseProfile) {
+    var ph = phaseFrames(frames, phaseProfile);
+    var morph = planBoundsMorphJs((target && target.layerBounds) || defaultFromBoundsForId(id), (target && target.destBounds) || defaultToBoundsForId(id));
     var dx = morph.valid ? morph.dx : 0;
     var dy = morph.valid ? morph.dy : 0;
     var outSx = morph.valid ? morph.sx : 100;
     var outSy = morph.valid ? morph.sy : 100;
     var inSx = morph.valid ? morph.invSx : 100;
     var inSy = morph.valid ? morph.invSy : 100;
-    var over = overshootPx(Math.max(Math.abs(dx), Math.abs(dy), 24), 4);
+    var over = overshootPx(Math.max(Math.abs(dx), Math.abs(dy), 24), overshootPct);
     return {
       outgoing: [
         key(ph.start, fps, 0, 0, 100, 100, 0, "anticipate", 100),
-        key(ph.anticipate, fps, r4(dx * 0.04), r4(dy * 0.04), 101.2, 100, 0, "action", 101.2),
-        key(ph.mid, fps, r4(dx * 0.5), r4(dy * 0.5), r4(100 + (outSx - 100) * 0.5), 36, 1, "crossover", r4(100 + (outSy - 100) * 0.5)),
-        key(ph.end, fps, dx, dy, outSx, 0, 2, "done", outSy)
+        key(ph.anticipate, fps, r4(dx * profile.antiTravel), r4(dy * profile.antiTravel), profile.antiScale, 100, 0, "action", profile.antiScale),
+        key(ph.mid, fps, r4(dx * profile.midTravel), r4(dy * profile.midTravel), r4(100 + (outSx - 100) * profile.midOutScale), profile.midOutOpacity, profile.midOutBlur, "crossover", r4(100 + (outSy - 100) * profile.midOutScale)),
+        key(ph.end, fps, dx, dy, outSx, profile.outEndOpacity, profile.outEndBlur, "done", outSy)
       ],
       incoming: [
-        key(ph.start, fps, r4(-dx), r4(-dy), inSx, 0, 2, "anticipate", inSy),
-        key(ph.mid, fps, r4(-dx * 0.18), r4(-dy * 0.18), r4(inSx + (100 - inSx) * 0.72), 78, 1, "crossover", r4(inSy + (100 - inSy) * 0.72)),
-        key(ph.settle, fps, r4(dx === 0 ? 0 : (dx > 0 ? over : -over) * 0.15), r4(dy === 0 ? 0 : (dy > 0 ? over : -over) * 0.15), 100.6, 100, 0, "settle", 100.6),
+        key(ph.start, fps, r4(-dx), r4(-dy), inSx, profile.inStartOpacity, profile.inStartBlur, "anticipate", inSy),
+        key(ph.mid, fps, r4(-dx * profile.inMidTravel), r4(-dy * profile.inMidTravel), r4(inSx + (100 - inSx) * profile.inMidScale), profile.inMidOpacity, profile.inMidBlur, "crossover", r4(inSy + (100 - inSy) * profile.inMidScale)),
+        key(ph.settle, fps, r4(dx === 0 ? 0 : (dx > 0 ? over : -over) * profile.settleOver), r4(dy === 0 ? 0 : (dy > 0 ? over : -over) * profile.settleOver), profile.settleScale, 100, 0, "settle", profile.settleScale),
         key(ph.end, fps, 0, 0, 100, 100, 0, "done", 100)
       ],
       phases: ph
     };
+  }
+  function planSharedCard(frames, fps, comp, target) {
+    return planSharedMorphJs(frames, fps, target, "EVT_SHARED_CARD", { antiTravel: 0.04, antiScale: 101.2, midTravel: 0.5, midOutScale: 0.5, midOutOpacity: 36, midOutBlur: 1, outEndOpacity: 0, outEndBlur: 2, inStartOpacity: 0, inStartBlur: 2, inMidTravel: 0.18, inMidScale: 0.72, inMidOpacity: 78, inMidBlur: 1, settleOver: 0.15, settleScale: 100.6 }, 4);
+  }
+  function planSharedImage(frames, fps, comp, target) {
+    return planSharedMorphJs(frames, fps, target, "EVT_SHARED_IMAGE", { antiTravel: 0.02, antiScale: 100.8, midTravel: 0.5, midOutScale: 0.5, midOutOpacity: 52, midOutBlur: 1, outEndOpacity: 0, outEndBlur: 2, inStartOpacity: 0, inStartBlur: 2, inMidTravel: 0.22, inMidScale: 0.68, inMidOpacity: 70, inMidBlur: 1, settleOver: 0.1, settleScale: 100.4 }, 3);
+  }
+  function planMatchCut(frames, fps, comp, target) {
+    return planSharedMorphJs(frames, fps, target, "EVT_MATCH_CUT", { antiTravel: 0, antiScale: 100, midTravel: 1, midOutScale: 1, midOutOpacity: 100, midOutBlur: 0, outEndOpacity: 0, outEndBlur: 0, inStartOpacity: 0, inStartBlur: 0, inMidTravel: 1, inMidScale: 0, inMidOpacity: 0, inMidBlur: 0, settleOver: 0, settleScale: 100 }, 0, "snap");
+  }
+  function planMorphBounds(frames, fps, comp, target) {
+    return planSharedMorphJs(frames, fps, target, "EVT_MORPH_BOUNDS", { antiTravel: 0, antiScale: 100, midTravel: 0.5, midOutScale: 0.5, midOutOpacity: 100, midOutBlur: 0, outEndOpacity: 0, outEndBlur: 0, inStartOpacity: 0, inStartBlur: 0, inMidTravel: 0.5, inMidScale: 0.5, inMidOpacity: 100, inMidBlur: 0, settleOver: 0, settleScale: 100 }, 2);
+  }
+  function planHeroToDetail(frames, fps, comp, target) {
+    return planSharedMorphJs(frames, fps, target, "EVT_HERO_TO_DETAIL", { antiTravel: 0.03, antiScale: 100.6, midTravel: 0.45, midOutScale: 0.45, midOutOpacity: 40, midOutBlur: 1, outEndOpacity: 0, outEndBlur: 3, inStartOpacity: 0, inStartBlur: 3, inMidTravel: 0.2, inMidScale: 0.65, inMidOpacity: 74, inMidBlur: 1, settleOver: 0.12, settleScale: 100.5 }, 3, "soft");
+  }
+  function planListToDetail(frames, fps, comp, target) {
+    return planSharedMorphJs(frames, fps, target, "EVT_LIST_TO_DETAIL", { antiTravel: 0.04, antiScale: 100.8, midTravel: 0.5, midOutScale: 0.5, midOutOpacity: 32, midOutBlur: 1, outEndOpacity: 0, outEndBlur: 2, inStartOpacity: 0, inStartBlur: 2, inMidTravel: 0.16, inMidScale: 0.7, inMidOpacity: 80, inMidBlur: 1, settleOver: 0.12, settleScale: 100.4 }, 3);
   }
   function planForId(id, dir, frames, fps, comp, target) {
     if (id === "EVT_UI_PUSH_SCALE") return planScale(frames, fps);
@@ -1556,6 +1615,11 @@
     if (id === "EVT_SCALE_PUNCH") return planScalePunch(frames, fps, comp, target);
     if (id === "EVT_SCALE_SETTLE") return planScaleSettle(frames, fps);
     if (id === "EVT_SHARED_CARD") return planSharedCard(frames, fps, comp, target);
+    if (id === "EVT_SHARED_IMAGE") return planSharedImage(frames, fps, comp, target);
+    if (id === "EVT_MATCH_CUT") return planMatchCut(frames, fps, comp, target);
+    if (id === "EVT_MORPH_BOUNDS") return planMorphBounds(frames, fps, comp, target);
+    if (id === "EVT_HERO_TO_DETAIL") return planHeroToDetail(frames, fps, comp, target);
+    if (id === "EVT_LIST_TO_DETAIL") return planListToDetail(frames, fps, comp, target);
     return planDirectional(dir, frames, fps, comp);
   }
   function defaultDirForId(id) {
@@ -1598,7 +1662,7 @@
     id = remapId(row.id, dir);
     row = findCatalog(id) || row;
     if (!row.implemented) {
-      alert(row.id + " is catalogued for Phase " + row.phase + ".\nPhase 4 applies Scale-Zoom + Shared Card (plus UI Push / UI-Slide).\nSee docs/TRANSITION_PHASES.md.");
+      alert(row.id + " is catalogued for Phase " + row.phase + ".\nPhase 12 applies Shared-Element (plus UI Push / UI-Slide / Scale-Zoom).\nSee docs/TRANSITION_PHASES.md.");
       return;
     }
     if (sel.length < 2) { alert("Select outgoing, then incoming (two layers)."); return; }
@@ -1608,8 +1672,8 @@
     ease = EASING_IDS[easeList.selection ? easeList.selection.index : 0] || "premium-smooth";
     t0 = comp.time;
     plan = planForId(id, dir, frames, fps, comp, {
-      layerBounds: layerBoundsBox(sel[0], t0) || (id === "EVT_SHARED_CARD" ? defaultCardBounds() : defaultTargetBounds()),
-      destBounds: layerBoundsBox(sel[1], t0) || defaultDetailBounds()
+      layerBounds: layerBoundsBox(sel[0], t0) || defaultLayerBoundsForId(id),
+      destBounds: layerBoundsBox(sel[1], t0) || defaultToBoundsForId(id)
     });
     undo = "Evotechly Transition · " + id;
     app.beginUndoGroup(undo);

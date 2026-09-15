@@ -19,7 +19,12 @@ const NATIVE_ZOOM = [
 ];
 
 const NATIVE_SHARED = [
-  { id: "EVT_SHARED_CARD", name: "Shared Card", implemented: true, phase: 12, bestUse: "Card bounds morph to detail" }
+  { id: "EVT_SHARED_CARD", name: "Shared Card", implemented: true, phase: 12, bestUse: "Card bounds morph to detail" },
+  { id: "EVT_SHARED_IMAGE", name: "Shared Image", implemented: true, phase: 12, bestUse: "Image hero → gallery" },
+  { id: "EVT_MATCH_CUT", name: "Match Cut", implemented: true, phase: 12, bestUse: "Match position/scale, cut the rest" },
+  { id: "EVT_MORPH_BOUNDS", name: "Morph Bounds", implemented: true, phase: 12, bestUse: "Rect morph only (no mesh)" },
+  { id: "EVT_HERO_TO_DETAIL", name: "Hero to Detail", implemented: true, phase: 12, bestUse: "Marketing hero into app UI" },
+  { id: "EVT_LIST_TO_DETAIL", name: "List to Detail", implemented: true, phase: 12, bestUse: "Row expands into detail pane" }
 ];
 
 const NATIVE_SLIDE = [
@@ -199,7 +204,7 @@ const registry = {
   style: "premium-saas",
   schemaVersion: 1,
   note:
-    "P1 native text / UI / cursor + Transition Kit Phase 4 Scale-Zoom + Shared Card (sourceType native, commercialUse true). No AEJuice / Motion Bro / Bento binaries.",
+    "P1 native text / UI / cursor + Transition Kit Phase 12 Shared-Element (plus Phase 2–4 UI Push / UI-Slide / Scale-Zoom). sourceType native, commercialUse true. No AEJuice / Motion Bro / Bento binaries.",
   fields: {
     id: "EVT_* unique pack id",
     sourceType: "native | thirdParty",

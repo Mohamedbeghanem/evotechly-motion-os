@@ -144,13 +144,22 @@ test("asset registry schema + native Transition Kit stubs", function () {
   });
 
   const shared = native.filter(function (a) {
-    return a.transitionKitId === "EVT_SHARED_CARD";
+    return (
+      a.transitionKitId &&
+      (a.transitionKitId.indexOf("EVT_SHARED_") === 0 ||
+        a.transitionKitId === "EVT_MATCH_CUT" ||
+        a.transitionKitId === "EVT_MORPH_BOUNDS" ||
+        a.transitionKitId === "EVT_HERO_TO_DETAIL" ||
+        a.transitionKitId === "EVT_LIST_TO_DETAIL")
+    );
   });
-  assert.equal(shared.length, 1);
-  assert.equal(shared[0].sourceType, "native");
-  assert.equal(shared[0].commercialUse, true);
-  assert.equal(shared[0].implemented, true);
-  assert.match(shared[0].notes, /sharedElement\.js/);
+  assert.equal(shared.length, 6);
+  shared.forEach(function (a) {
+    assert.equal(a.sourceType, "native");
+    assert.equal(a.commercialUse, true);
+    assert.equal(a.implemented, true);
+    assert.match(a.notes, /sharedElement\.js/);
+  });
 
   const catalog = JSON.parse(
     fs.readFileSync(path.join(__dirname, "..", "transitions", "Metadata", "catalog.json"), "utf8")

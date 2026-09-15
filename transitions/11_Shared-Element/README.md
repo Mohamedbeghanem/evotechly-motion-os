@@ -2,14 +2,11 @@
 
 Premium SaaS. No glitch / RGB / flares. Bounds match (position + scale) — not mesh warp.
 
-Phase for this family: **12**. `EVT_SHARED_CARD` shipped early with Scale-Zoom (Phase 4) for the EvoCRM dashboard → card → detail path.
+Phase for this family: **12**. `EVT_SHARED_CARD` shipped early with Scale-Zoom (Phase 4); the rest of the family landed in Phase 12 for EvoCRM list / hero / image paths.
 
-Implemented:
+Implemented (all `implemented:true`):
 
 - `EVT_SHARED_CARD` · SMOOTH · Card bounds morph to detail
-
-Still catalog-only:
-
 - `EVT_SHARED_IMAGE` · SMOOTH · Image hero → gallery
 - `EVT_MATCH_CUT` · FAST · Match position/scale, cut the rest
 - `EVT_MORPH_BOUNDS` · STANDARD · Rect morph only (no mesh)

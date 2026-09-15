@@ -2,19 +2,19 @@
 
 **Product tag:** Ultimate **v2.0.0** on current `main`.
 
-## Transition Kit — Phase 0–4
+## Transition Kit — Phase 0–4 + Phase 12
 
 Architecture + core engine on top of Ultimate 2.0.0. Does not stub the 297 KB v0.32 panel. Does not bump the 2.0.0 tag.
 
-- Docs: `docs/TRANSITION_KIT.md`, `docs/TRANSITION_PHASES.md` (phases 0–4 **done**)
+- Docs: `docs/TRANSITION_KIT.md`, `docs/TRANSITION_PHASES.md` (phases 0–4 and **Phase 12** **done**)
 - Engine: `core/transitions/` — easing, timing, target zoom, bounds morph, control null, `applyTransitionPlan`, `uiPush.js`, `uiSlide.js`, `scaleZoom.js`, `sharedElement.js`
 - Catalog: `transitions/Metadata/catalog.json` — unique `EVT_*` IDs, families A–16
-- Implemented plans: full UI Push family (15 IDs) + UI-Slide card family (8 IDs) + **Scale-Zoom (8 IDs)** + **`EVT_SHARED_CARD`** (bounds-match card→detail, not mesh)
+- Implemented plans: full UI Push family (15 IDs) + UI-Slide card family (8 IDs) + Scale-Zoom (8 IDs) + **Shared-Element (6 IDs)** — card / image / match cut / morph bounds / hero→detail / list→detail (position + scale, not mesh)
 - Companion: `ae/Evotechly Transitions.jsx` — Window → Evotechly Transitions (install beside Hub)
 - Tests: `tests/transitions-engine.test.js`
 - Demo sequence (data only): `transitions/Examples/demo-storyboard.json` (apply in Phase 16)
 
-**Limitations:** AE cannot run in CI. JSX mirrors Node numbers. Other Shared-Element IDs and later families are metadata. No `.ffx` / `.aep` / SFX audio / vendor plugins. Charts / device plates are P2b.
+**Limitations:** AE cannot run in CI. JSX mirrors Node numbers. Later families (Crossfade onward, except Shared-Element) are metadata. No `.ffx` / `.aep` / SFX audio / vendor plugins. Charts / device plates are P2b.
 
 ## SaaS Assets Pack — P1 (native generators)
 

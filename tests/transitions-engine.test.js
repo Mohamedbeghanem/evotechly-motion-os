@@ -191,7 +191,12 @@ test("every implemented ID produces a deterministic complete plan", function () 
     "EVT_SCALE_BREATHE",
     "EVT_SCALE_PUNCH",
     "EVT_SCALE_SETTLE",
-    "EVT_SHARED_CARD"
+    "EVT_SHARED_CARD",
+    "EVT_SHARED_IMAGE",
+    "EVT_MATCH_CUT",
+    "EVT_MORPH_BOUNDS",
+    "EVT_HERO_TO_DETAIL",
+    "EVT_LIST_TO_DETAIL"
   ]);
   ids.forEach(function (id) {
     const opts = {
@@ -557,6 +562,87 @@ test("Shared Card morphs card bounds to detail with position + scale, not mesh",
   assert.deepEqual(alias, plan);
 });
 
+test("Shared Image / Match Cut / Morph Bounds / Hero / List are position+scale only", function () {
+  const image = engine.applyTransitionPlan({ id: "EVT_SHARED_IMAGE", durationFrames: 16, fps: 30 });
+  const imageAlias = engine.applyTransitionPlan({ id: "EVT_IMAGE_TO_GALLERY", durationFrames: 16, fps: 30 });
+  const cut = engine.applyTransitionPlan({ id: "EVT_MATCH_CUT", durationFrames: 16, fps: 30 });
+  const morph = engine.applyTransitionPlan({ id: "EVT_MORPH_BOUNDS", durationFrames: 16, fps: 30 });
+  const hero = engine.applyTransitionPlan({ id: "EVT_HERO_TO_DETAIL", durationFrames: 16, fps: 30 });
+  const list = engine.applyTransitionPlan({ id: "EVT_LIST_TO_DETAIL", durationFrames: 16, fps: 30 });
+  const listAlias = engine.applyTransitionPlan({ id: "EVT_ROW_TO_DETAIL", durationFrames: 16, fps: 30 });
+
+  assert.equal(image.category, "Shared-Element");
+  assert.equal(image.name, "Shared Image");
+  assert.equal(image.travel.image, true);
+  assert.equal(image.travel.mesh, false);
+  assert.equal(image.travel.boundsMatch, true);
+  assert.deepEqual(image.morph.positionDelta, [0, 80]);
+  assert.deepEqual(image.morph.scale, [187.5, 175]);
+  assert.deepEqual(image.outgoing.keys[3].scale, [187.5, 175]);
+  assert.equal(image.outgoing.keys[3].y, 80);
+  assert.equal(image.outgoing.keys[3].opacity, 0);
+  assert.equal(image.incoming.keys[0].y, -80);
+  assert.deepEqual(image.incoming.keys[0].scale, [53.3333, 57.1429]);
+  assert.equal(image.incoming.keys[3].opacity, 100);
+  assert.deepEqual(imageAlias, image);
+
+  assert.equal(cut.name, "Match Cut");
+  assert.equal(cut.travel.matchCut, true);
+  assert.equal(cut.travel.mesh, false);
+  assert.deepEqual(cut.morph.positionDelta, [480, 60]);
+  assert.equal(cut.outgoing.keys[2].opacity, 100);
+  assert.equal(cut.outgoing.keys[2].x, 480);
+  assert.deepEqual(cut.outgoing.keys[2].scale, [283.3333, 255.5556]);
+  assert.equal(cut.outgoing.keys[3].opacity, 0);
+  assert.equal(cut.incoming.keys[0].opacity, 0);
+  assert.equal(cut.incoming.keys[1].opacity, 0);
+  assert.equal(cut.incoming.keys[2].opacity, 100);
+  assert.equal(cut.incoming.keys[2].x, 0);
+  assert.equal(cut.incoming.keys[2].scale[0], 100);
+
+  assert.equal(morph.name, "Morph Bounds");
+  assert.equal(morph.travel.morphBounds, true);
+  assert.equal(morph.travel.mesh, false);
+  assert.equal(morph.outgoing.keys[2].opacity, 100);
+  assert.equal(morph.incoming.keys[1].opacity, 100);
+  assert.equal(morph.outgoing.keys[1].scale[0], 100);
+  assert.equal(morph.outgoing.keys[2].x, 240);
+  assert.deepEqual(morph.outgoing.keys[3].scale, [283.3333, 255.5556]);
+
+  assert.equal(hero.name, "Hero to Detail");
+  assert.equal(hero.travel.hero, true);
+  assert.equal(hero.travel.mesh, false);
+  assert.deepEqual(hero.morph.positionDelta, [0, -20]);
+  assert.deepEqual(hero.morph.scale, [50, 79.1667]);
+  assert.equal(hero.outgoing.keys[3].y, -20);
+  assert.deepEqual(hero.outgoing.keys[3].scale, [50, 79.1667]);
+  assert.equal(hero.incoming.keys[0].y, 20);
+  assert.deepEqual(hero.incoming.keys[0].scale, [200, 126.3158]);
+
+  assert.equal(list.name, "List to Detail");
+  assert.equal(list.travel.list, true);
+  assert.equal(list.travel.mesh, false);
+  assert.deepEqual(list.morph.positionDelta, [780, 140]);
+  assert.deepEqual(list.morph.scale, [133.3333, 1150]);
+  assert.equal(list.outgoing.keys[3].x, 780);
+  assert.equal(list.outgoing.keys[3].y, 140);
+  assert.deepEqual(list.outgoing.keys[3].scale, [133.3333, 1150]);
+  assert.deepEqual(list.incoming.keys[0].scale, [75, 8.6957]);
+  assert.deepEqual(listAlias, list);
+
+  const custom = engine.applyTransitionPlan({
+    id: "EVT_LIST_TO_DETAIL",
+    durationFrames: 16,
+    fps: 30,
+    target: {
+      layerBounds: { l: 240, t: 300, r: 720, b: 660 },
+      destBounds: { l: 280, t: 80, r: 1640, b: 1000 }
+    }
+  });
+  assert.deepEqual(custom.morph.positionDelta, [480, 60]);
+  assert.deepEqual(custom.morph.scale, [283.3333, 255.5556]);
+});
+
 test("unimplemented catalog IDs return a safe stub plan", function () {
   const plan = engine.applyTransitionPlan({ id: "EVT_MICRO_HOVER" });
   assert.equal(plan.implemented, false);
@@ -581,7 +667,7 @@ test("catalog has unique EVT_ IDs and implemented flags for shipped families", f
     set[id] = true;
   });
   const implemented = registry.listImplemented();
-  assert.equal(implemented.length, 32);
+  assert.equal(implemented.length, 37);
   implemented.forEach(function (row) {
     assert.equal(row.implemented, true);
     assert.equal(row.style, "premium-saas");
@@ -623,6 +709,12 @@ test("catalog has unique EVT_ IDs and implemented flags for shipped families", f
   assert.equal(registry.getById("EVT_SCALE_POP").name, "Scale Pop");
   assert.equal(registry.getById("EVT_SHARED_CARD").implemented, true);
   assert.equal(registry.getById("EVT_SHARED_CARD").name, "Shared Card");
+  assert.equal(registry.getById("EVT_SHARED_IMAGE").implemented, true);
+  assert.equal(registry.getById("EVT_SHARED_IMAGE").name, "Shared Image");
+  assert.equal(registry.getById("EVT_MATCH_CUT").name, "Match Cut");
+  assert.equal(registry.getById("EVT_MORPH_BOUNDS").name, "Morph Bounds");
+  assert.equal(registry.getById("EVT_HERO_TO_DETAIL").name, "Hero to Detail");
+  assert.equal(registry.getById("EVT_LIST_TO_DETAIL").name, "List to Detail");
   assert.equal(registry.filterCatalog({ query: "micro", category: "Micro" }).length, 8);
   assert.equal(registry.filterCatalog({ query: "dashboard push", category: "UI-Push" }).length, 1);
   assert.equal(registry.filterCatalog({ query: "split panel", category: "UI-Push" })[0].id, "EVT_UI_PUSH_SPLIT");
@@ -633,6 +725,8 @@ test("catalog has unique EVT_ IDs and implemented flags for shipped families", f
   assert.equal(registry.listByCategory("Scale-Zoom").length, 8);
   assert.equal(registry.listByCategory("Shared-Element").length, 6);
   assert.equal(registry.filterCatalog({ query: "shared card", category: "Shared-Element" })[0].id, "EVT_SHARED_CARD");
+  assert.equal(registry.filterCatalog({ query: "list to detail", category: "Shared-Element" })[0].id, "EVT_LIST_TO_DETAIL");
+  assert.equal(registry.filterCatalog({ implemented: true, category: "Shared-Element" }).length, 6);
 });
 
 test("demo storyboard is a dashboard→card→analytics sequence", function () {
@@ -680,6 +774,12 @@ test("JSX companion embeds UI Push IDs and mirrored constants", function () {
   assert.ok(jsx.indexOf("function planScalePunch") !== -1);
   assert.ok(jsx.indexOf("function planScaleSettle") !== -1);
   assert.ok(jsx.indexOf("function planSharedCard") !== -1);
+  assert.ok(jsx.indexOf("function planSharedImage") !== -1);
+  assert.ok(jsx.indexOf("function planMatchCut") !== -1);
+  assert.ok(jsx.indexOf("function planMorphBounds") !== -1);
+  assert.ok(jsx.indexOf("function planHeroToDetail") !== -1);
+  assert.ok(jsx.indexOf("function planListToDetail") !== -1);
+  assert.ok(jsx.indexOf("function planSharedMorphJs") !== -1);
   assert.ok(jsx.indexOf("function planTargetZoomJs") !== -1);
   assert.ok(jsx.indexOf("Panel Push") !== -1);
   assert.ok(jsx.indexOf("Dashboard Push") !== -1);
@@ -691,6 +791,11 @@ test("JSX companion embeds UI Push IDs and mirrored constants", function () {
   assert.ok(jsx.indexOf("Zoom Target") !== -1);
   assert.ok(jsx.indexOf("Scale Pop") !== -1);
   assert.ok(jsx.indexOf("Shared Card") !== -1);
+  assert.ok(jsx.indexOf("Shared Image") !== -1);
+  assert.ok(jsx.indexOf("Match Cut") !== -1);
+  assert.ok(jsx.indexOf("Morph Bounds") !== -1);
+  assert.ok(jsx.indexOf("Hero to Detail") !== -1);
+  assert.ok(jsx.indexOf("List to Detail") !== -1);
   assert.ok(/#target aftereffects/.test(jsx));
   assert.ok(jsx.indexOf("does not replace") !== -1);
   registry.catalogIds().forEach(function (id) {
