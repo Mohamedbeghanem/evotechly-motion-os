@@ -55,7 +55,7 @@ P1 KEEP ID rows (all **OWNED**, implemented):
 | Verdict | **KEEP** |
 | Score | **96** (20+25+15+15+10+10+1) — vendor risk n/a, tiny “we must not drift JSX” residual |
 | Downloaded? | N/A — already in repo (`core/transitions`, catalog, `ae/Evotechly Transitions.jsx`) |
-| Notes | `sourceType: native`, `commercialUse: true`. Full UI Push family (Phase 2) + UI-Slide card family (Phase 3) + Scale-Zoom (Phase 4) + Shared-Element (Phase 12) + Overlay-Modal (Phase 9) + **Page-Screen (Phase 10)**. Other families catalog-only. |
+| Notes | `sourceType: native`, `commercialUse: true`. Full UI Push family (Phase 2) + UI-Slide card family (Phase 3) + Scale-Zoom (Phase 4) + Shared-Element (Phase 12) + Overlay-Modal (Phase 9) + Page-Screen (Phase 10) + **Stagger-Cascade (Phase 13)**. Other families catalog-only. |
 
 Phase 3 KEEP ID rows (all **OWNED**, implemented):
 
@@ -78,6 +78,10 @@ Phase 9 KEEP ID rows (all **OWNED**, implemented):
 Phase 10 KEEP ID rows (all **OWNED**, implemented):
 
 - Page: `EVT_PAGE_PUSH`, `EVT_PAGE_FADE`, `EVT_SCREEN_SWAP`, `EVT_NAV_FORWARD`, `EVT_NAV_BACK`, `EVT_TAB_CROSS`
+
+Phase 13 KEEP ID rows (all **OWNED**, implemented):
+
+- Stagger: `EVT_STAGGER_CARDS`, `EVT_STAGGER_LIST`, `EVT_CASCADE_IN`, `EVT_CASCADE_OUT`, `EVT_STAGGER_FADE`, `EVT_WAVE_SOFT`
 
 ### Lucide curated SVGs
 

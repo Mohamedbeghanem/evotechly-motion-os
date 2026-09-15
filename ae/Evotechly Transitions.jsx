@@ -1,10 +1,10 @@
 #target aftereffects
 /*
-  Evotechly Transitions — companion ScriptUI (Transition Kit Phase 10 Page-Screen + Phase 9 Overlay-Modal + Phase 12 Shared-Element + SaaS Assets P1).
+  Evotechly Transitions — companion ScriptUI (Transition Kit Phase 13 Stagger-Cascade + Phase 10 Page-Screen + Phase 9 Overlay-Modal + Phase 12 Shared-Element + SaaS Assets P1).
   Window → Evotechly Transitions.
   Tabs: Transitions / Text / UI / Cursor.
   Numbers mirrored from core/transitions/*.js and core/assets/*.js — Node is source of truth.
-  ExtendScript cannot require Node. Apply UI Push + UI-Slide + Scale-Zoom + Shared-Element + Overlay-Modal + Page-Screen and P1 native assets here.
+  ExtendScript cannot require Node. Apply UI Push + UI-Slide + Scale-Zoom + Shared-Element + Overlay-Modal + Page-Screen + Stagger-Cascade and P1 native assets here.
   Native AE only. No .ffx / .aep / vendor plugins.
   Does not replace Evotechly Motion OS v0.32 (~297 KB).
 */
@@ -68,7 +68,13 @@
     EVT_SCREEN_SWAP: 1,
     EVT_NAV_FORWARD: 1,
     EVT_NAV_BACK: 1,
-    EVT_TAB_CROSS: 1
+    EVT_TAB_CROSS: 1,
+    EVT_STAGGER_CARDS: 1,
+    EVT_STAGGER_LIST: 1,
+    EVT_CASCADE_IN: 1,
+    EVT_CASCADE_OUT: 1,
+    EVT_STAGGER_FADE: 1,
+    EVT_WAVE_SOFT: 1
   };
   /* influence pairs match core/transitions/easing.js + polish.js */
   var EASE = {
@@ -163,12 +169,12 @@
     { id: "EVT_MORPH_BOUNDS", name: "Morph Bounds", category: "Shared-Element", duration: "STANDARD", intensity: "standard", implemented: true, phase: 12, bestUse: "Rect morph only (no mesh)" },
     { id: "EVT_HERO_TO_DETAIL", name: "Hero to Detail", category: "Shared-Element", duration: "SMOOTH", intensity: "standard", implemented: true, phase: 12, bestUse: "Marketing hero into app UI" },
     { id: "EVT_LIST_TO_DETAIL", name: "List to Detail", category: "Shared-Element", duration: "STANDARD", intensity: "standard", implemented: true, phase: 12, bestUse: "Row expands into detail pane" },
-    { id: "EVT_STAGGER_CARDS", category: "Stagger-Cascade", duration: "STANDARD", intensity: "subtle", implemented: false, phase: 13, bestUse: "Card row stagger in" },
-    { id: "EVT_STAGGER_LIST", category: "Stagger-Cascade", duration: "STANDARD", intensity: "subtle", implemented: false, phase: 13, bestUse: "List rows cascade" },
-    { id: "EVT_CASCADE_IN", category: "Stagger-Cascade", duration: "SMOOTH", intensity: "subtle", implemented: false, phase: 13, bestUse: "Tree / nav cascade in" },
-    { id: "EVT_CASCADE_OUT", category: "Stagger-Cascade", duration: "FAST", intensity: "subtle", implemented: false, phase: 13, bestUse: "Cascade out" },
-    { id: "EVT_STAGGER_FADE", category: "Stagger-Cascade", duration: "STANDARD", intensity: "subtle", implemented: false, phase: 13, bestUse: "Opacity-only stagger" },
-    { id: "EVT_WAVE_SOFT", category: "Stagger-Cascade", duration: "SMOOTH", intensity: "subtle", implemented: false, phase: 13, bestUse: "Soft delay wave, no bounce" },
+    { id: "EVT_STAGGER_CARDS", name: "Stagger Cards", category: "Stagger-Cascade", duration: "STANDARD", intensity: "subtle", implemented: true, phase: 13, bestUse: "Card row stagger in" },
+    { id: "EVT_STAGGER_LIST", name: "Stagger List", category: "Stagger-Cascade", duration: "STANDARD", intensity: "subtle", implemented: true, phase: 13, bestUse: "List rows cascade" },
+    { id: "EVT_CASCADE_IN", name: "Cascade In", category: "Stagger-Cascade", duration: "SMOOTH", intensity: "subtle", implemented: true, phase: 13, bestUse: "Tree / nav cascade in" },
+    { id: "EVT_CASCADE_OUT", name: "Cascade Out", category: "Stagger-Cascade", duration: "FAST", intensity: "subtle", implemented: true, phase: 13, bestUse: "Cascade out" },
+    { id: "EVT_STAGGER_FADE", name: "Stagger Fade", category: "Stagger-Cascade", duration: "STANDARD", intensity: "subtle", implemented: true, phase: 13, bestUse: "Opacity-only stagger" },
+    { id: "EVT_WAVE_SOFT", name: "Wave Soft", category: "Stagger-Cascade", duration: "SMOOTH", intensity: "subtle", implemented: true, phase: 13, bestUse: "Soft delay wave, no bounce" },
     { id: "EVT_CAM_DOLLY_IN", category: "Camera-Dolly", duration: "SMOOTH", intensity: "subtle", implemented: false, phase: 14, bestUse: "Slow push on the UI plate" },
     { id: "EVT_CAM_DOLLY_OUT", category: "Camera-Dolly", duration: "SMOOTH", intensity: "subtle", implemented: false, phase: 14, bestUse: "Slow pull" },
     { id: "EVT_CAM_PAN_SOFT", category: "Camera-Dolly", duration: "STANDARD", intensity: "subtle", implemented: false, phase: 14, bestUse: "Small pan, no whip" },
@@ -1768,6 +1774,78 @@
       phases: ph
     };
   }
+  function isStaggerId(id) {
+    return id === "EVT_STAGGER_CARDS" || id === "EVT_STAGGER_LIST" || id === "EVT_CASCADE_IN" || id === "EVT_CASCADE_OUT" || id === "EVT_STAGGER_FADE" || id === "EVT_WAVE_SOFT";
+  }
+  function staggerOffsetForId(id) {
+    return id === "EVT_WAVE_SOFT" ? 4 : 3;
+  }
+  function shiftKeysJs(keys, offsetFrames, fps) {
+    var out = [], i, k, frame;
+    for (i = 0; i < keys.length; i++) {
+      k = keys[i];
+      frame = k.frame + offsetFrames;
+      out.push(key(frame, fps, k.x, k.y, k.sx, k.opacity, k.blur, k.phase, k.sy));
+    }
+    return out;
+  }
+  function packStaggerItem(item, offsetFrames, fps, ph) {
+    return {
+      outgoing: item,
+      incoming: shiftKeysJs(item, offsetFrames, fps),
+      item: item,
+      offsetFrames: offsetFrames,
+      phases: ph
+    };
+  }
+  function planStaggerEnter(dir, frames, fps, travel, enterScale, profile, offsetFrames) {
+    var ph = phaseFrames(frames, profile);
+    var a = axisOf(dir);
+    var startX = -a.x * travel;
+    var startY = -a.y * travel;
+    var item = [
+      key(ph.start, fps, startX, startY, enterScale, 0, 0, "anticipate"),
+      key(ph.anticipate, fps, r4(startX * 0.88), r4(startY * 0.88), enterScale + 0.6, 18, 0, "action"),
+      key(ph.mid, fps, r4(startX * 0.22), r4(startY * 0.22), mixScale(enterScale, 100, 60), 78, 0, "crossover"),
+      key(ph.settle, fps, 0, 0, 100, 100, 0, "settle"),
+      key(ph.end, fps, 0, 0, 100, 100, 0, "done")
+    ];
+    return packStaggerItem(item, offsetFrames, fps, ph);
+  }
+  function planStaggerCards(dir, frames, fps) {
+    return planStaggerEnter(dir, frames, fps, 16, 98, null, 3);
+  }
+  function planStaggerList(dir, frames, fps) {
+    return planStaggerEnter(dir, frames, fps, 16, 100, null, 3);
+  }
+  function planCascadeIn(dir, frames, fps) {
+    return planStaggerEnter(dir, frames, fps, 12, 97, "soft", 3);
+  }
+  function planCascadeOut(dir, frames, fps) {
+    var ph = phaseFrames(frames, "snap");
+    var a = axisOf(dir);
+    var travel = 16;
+    var item = [
+      key(ph.start, fps, 0, 0, 100, 100, 0, "anticipate"),
+      key(ph.anticipate, fps, r4(a.x * travel * 0.08), r4(a.y * travel * 0.08), 100, 100, 0, "action"),
+      key(ph.mid, fps, r4(a.x * travel * 0.45), r4(a.y * travel * 0.45), 99.2, 40, 0, "crossover"),
+      key(ph.end, fps, r4(a.x * travel), r4(a.y * travel), 98, 0, 0, "done")
+    ];
+    return packStaggerItem(item, 3, fps, ph);
+  }
+  function planStaggerFade(frames, fps) {
+    var ph = phaseFrames(frames);
+    var item = [
+      key(ph.start, fps, 0, 0, 100, 0, 0, "anticipate"),
+      key(ph.mid, fps, 0, 0, 100, 58, 0, "crossover"),
+      key(ph.settle, fps, 0, 0, 100, 100, 0, "settle"),
+      key(ph.end, fps, 0, 0, 100, 100, 0, "done")
+    ];
+    return packStaggerItem(item, 3, fps, ph);
+  }
+  function planWaveSoft(dir, frames, fps) {
+    return planStaggerEnter(dir, frames, fps, 16, 100, "soft", 4);
+  }
   function planForId(id, dir, frames, fps, comp, target) {
     if (id === "EVT_UI_PUSH_SCALE") return planScale(frames, fps);
     if (id === "EVT_UI_PUSH_DEPTH") return planDepth(frames, fps);
@@ -1812,6 +1890,12 @@
     if (id === "EVT_PAGE_FADE") return planPageFade(frames, fps);
     if (id === "EVT_SCREEN_SWAP") return planCard(dir, frames, fps, comp);
     if (id === "EVT_TAB_CROSS") return planTabCross(frames, fps);
+    if (id === "EVT_STAGGER_CARDS") return planStaggerCards(dir, frames, fps);
+    if (id === "EVT_STAGGER_LIST") return planStaggerList(dir, frames, fps);
+    if (id === "EVT_CASCADE_IN") return planCascadeIn(dir, frames, fps);
+    if (id === "EVT_CASCADE_OUT") return planCascadeOut(dir, frames, fps);
+    if (id === "EVT_STAGGER_FADE") return planStaggerFade(frames, fps);
+    if (id === "EVT_WAVE_SOFT") return planWaveSoft(dir, frames, fps);
     return planDirectional(dir, frames, fps, comp);
   }
   function defaultDirForId(id) {
@@ -1824,6 +1908,8 @@
     if (id === "EVT_SLIDE_SHEET_UP" || id === "EVT_SHEET_UP") return "up";
     if (id === "EVT_SHEET_DOWN" || id === "EVT_TOAST_IN") return "down";
     if (id === "EVT_NAV_BACK") return "right";
+    if (id === "EVT_CASCADE_OUT") return "down";
+    if (id === "EVT_STAGGER_CARDS" || id === "EVT_STAGGER_LIST" || id === "EVT_CASCADE_IN" || id === "EVT_STAGGER_FADE" || id === "EVT_WAVE_SOFT") return "up";
     return "left";
   }
   function remapId(id, dir) {
@@ -1848,7 +1934,7 @@
     var comp = requireComp();
     if (!comp) return;
     var sel = selectedLayers(comp);
-    var row, id, dir, group, frames, fps, ease, plan, t0, undo;
+    var row, id, dir, group, frames, fps, ease, plan, t0, undo, i;
     if (!list.selection) { alert("Select a transition in the list."); return; }
     row = filtered[list.selection.index];
     if (!row) { alert("Select a transition in the list."); return; }
@@ -1856,10 +1942,13 @@
     id = remapId(row.id, dir);
     row = findCatalog(id) || row;
     if (!row.implemented) {
-      alert(row.id + " is catalogued for Phase " + row.phase + ".\nPhase 10 applies Page-Screen (plus UI Push / UI-Slide / Scale-Zoom / Shared-Element / Overlay-Modal).\nSee docs/TRANSITION_PHASES.md.");
+      alert(row.id + " is catalogued for Phase " + row.phase + ".\nPhase 13 applies Stagger-Cascade (plus UI Push / UI-Slide / Scale-Zoom / Shared-Element / Overlay-Modal / Page-Screen).\nSee docs/TRANSITION_PHASES.md.");
       return;
     }
-    if (sel.length < 2) { alert("Select outgoing, then incoming (two layers)."); return; }
+    if (sel.length < 2) {
+      alert(isStaggerId(id) ? "Select 2+ list/card rows (top of selection = first)." : "Select outgoing, then incoming (two layers).");
+      return;
+    }
     group = groupList.selection ? String(groupList.selection.text) : "STANDARD";
     fps = comp.frameRate || DEFAULT_FPS;
     frames = durationFrames(group, fps);
@@ -1873,8 +1962,12 @@
     app.beginUndoGroup(undo);
     try {
       ensureControl(comp, frames, DIRS.indexOf(dir), EASING_IDS.indexOf(ease));
-      applyLayerKeys(sel[0], plan.outgoing, t0, ease);
-      applyLayerKeys(sel[1], plan.incoming, t0, ease);
+      if (isStaggerId(id) && plan.item) {
+        for (i = 0; i < sel.length; i++) applyLayerKeys(sel[i], shiftKeysJs(plan.item, i * plan.offsetFrames, fps), t0, ease);
+      } else {
+        applyLayerKeys(sel[0], plan.outgoing, t0, ease);
+        applyLayerKeys(sel[1], plan.incoming, t0, ease);
+      }
       addMarker(comp, t0 + secondsFromFrames(plan.phases.start, fps), "EVT_SFX_ANTICIPATE", "sfx:ui-soft-in");
       addMarker(comp, t0 + secondsFromFrames(plan.phases.anticipate, fps), "EVT_SFX_ACTION", "sfx:ui-whoosh-soft");
       addMarker(comp, t0 + secondsFromFrames(plan.phases.mid, fps), "EVT_SFX_CROSSOVER", "sfx:ui-cross");
@@ -1916,7 +2009,7 @@
     win.spacing = 8;
     win.margins = 10;
     win.add("statictext", undefined, "EVOTECHLY  ·  Transitions");
-    intro = win.add("statictext", undefined, "Phase 10 Page-Screen + Phase 9 Overlay-Modal + Phase 12 Shared-Element + Phase 4 Scale-Zoom + Phase 3 UI-Slide + Phase 2 UI Push + P1 native Text / UI / Cursor. Catalog is searchable. Companion to Motion OS — does not replace v0.32. Node is source of truth; this panel mirrors apply numbers.", { multiline: true });
+    intro = win.add("statictext", undefined, "Phase 13 Stagger-Cascade + Phase 10 Page-Screen + Phase 9 Overlay-Modal + Phase 12 Shared-Element + Phase 4 Scale-Zoom + Phase 3 UI-Slide + Phase 2 UI Push + P1 native Text / UI / Cursor. Catalog is searchable. Companion to Motion OS — does not replace v0.32. Node is source of truth; this panel mirrors apply numbers.", { multiline: true });
     intro.characters = 46;
 
     g = win.add("group");
@@ -1973,7 +2066,7 @@
       else runApplyAsset("Cursor", curList, groupList, easeList);
     };
 
-    note = win.add("statictext", undefined, "Transitions: select outgoing, then incoming. Text / UI / Cursor: select the target layer (Swap needs two). ● = apply. Native only — no vendor packs.", { multiline: true });
+    note = win.add("statictext", undefined, "Transitions: select outgoing, then incoming. Stagger-Cascade: 2+ row layers (top = first). Text / UI / Cursor: select the target layer (Swap needs two). ● = apply. Native only — no vendor packs.", { multiline: true });
     note.characters = 46;
 
     foot = win.add("statictext", undefined, "Install: Scripts/ScriptUI Panels next to Motion OS Hub. Docs: TRANSITION_KIT.md · TRANSITION_PHASES.md.", { multiline: true });

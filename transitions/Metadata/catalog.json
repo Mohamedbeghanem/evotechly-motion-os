@@ -1,5 +1,5 @@
 {
-  "version": "phase-10",
+  "version": "phase-13",
   "style": "premium-saas",
   "aspectRatios": [
     "16:9",
@@ -8,7 +8,7 @@
     "4:5"
   ],
   "generated": "transitions/Metadata/catalog.json",
-  "note": "Phase 10 implements the Page-Screen family (plus Phase 2–4 UI Push / UI-Slide / Scale-Zoom, Phase 9 Overlay-Modal, and Phase 12 Shared-Element). Other rows are metadata for later phases and AI pairing.",
+  "note": "Phase 13 implements the Stagger-Cascade family (plus Phase 2–4 UI Push / UI-Slide / Scale-Zoom, Phase 9 Overlay-Modal, Phase 10 Page-Screen, and Phase 12 Shared-Element). Other rows are metadata for later phases and AI pairing.",
   "transitions": [
     {
       "id": "EVT_UI_PUSH_LEFT",
@@ -1614,9 +1614,12 @@
         "1:1",
         "4:5"
       ],
-      "sfx": [],
+      "sfx": [
+        "ui-soft-in"
+      ],
       "phase": 13,
-      "implemented": false
+      "implemented": true,
+      "name": "Stagger Cards"
     },
     {
       "id": "EVT_STAGGER_LIST",
@@ -1632,9 +1635,12 @@
         "1:1",
         "4:5"
       ],
-      "sfx": [],
+      "sfx": [
+        "ui-soft-in"
+      ],
       "phase": 13,
-      "implemented": false
+      "implemented": true,
+      "name": "Stagger List"
     },
     {
       "id": "EVT_CASCADE_IN",
@@ -1650,9 +1656,12 @@
         "1:1",
         "4:5"
       ],
-      "sfx": [],
+      "sfx": [
+        "ui-soft-in"
+      ],
       "phase": 13,
-      "implemented": false
+      "implemented": true,
+      "name": "Cascade In"
     },
     {
       "id": "EVT_CASCADE_OUT",
@@ -1668,9 +1677,12 @@
         "1:1",
         "4:5"
       ],
-      "sfx": [],
+      "sfx": [
+        "ui-soft-in"
+      ],
       "phase": 13,
-      "implemented": false
+      "implemented": true,
+      "name": "Cascade Out"
     },
     {
       "id": "EVT_STAGGER_FADE",
@@ -1686,9 +1698,12 @@
         "1:1",
         "4:5"
       ],
-      "sfx": [],
+      "sfx": [
+        "ui-cross"
+      ],
       "phase": 13,
-      "implemented": false
+      "implemented": true,
+      "name": "Stagger Fade"
     },
     {
       "id": "EVT_WAVE_SOFT",
@@ -1704,9 +1719,12 @@
         "1:1",
         "4:5"
       ],
-      "sfx": [],
+      "sfx": [
+        "ui-soft-in"
+      ],
       "phase": 13,
-      "implemented": false
+      "implemented": true,
+      "name": "Wave Soft"
     },
     {
       "id": "EVT_CAM_DOLLY_IN",
