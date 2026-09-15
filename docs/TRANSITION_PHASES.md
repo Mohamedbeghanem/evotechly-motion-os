@@ -1,6 +1,6 @@
 # Transition Kit — phase roadmap
 
-Status after this PR: **Phase 0–4, Phase 9, Phase 10, Phase 12, and Phase 13 are done.** Stagger-Cascade is the EvoCRM list/table-row family (deal pipeline, contacts, activity). Page-Screen is the IA family (dashboard → page, forward/back, tab content). Overlay-Modal is the dialog family. Shared-Element is the full bounds-match family (not mesh). Later phases are catalogued, not implemented. Crossfade stays catalog-only — `PAGE_FADE` / `TAB_CROSS` already own dissolves.
+Status after this PR: **Phase 0–4, Phase 9, Phase 10, Phase 12, and Phase 13 are done.** Stagger-Cascade is the EvoCRM list/table-row family (deal pipeline, contacts, activity). Page-Screen is the IA family (dashboard → page, forward/back, tab content). Overlay-Modal is the dialog family. Shared-Element is the full bounds-match family (not mesh). Later phases are catalogued, not implemented. Charts / device plates are **P2b SaaS assets** (not a kit phase). Crossfade stays catalog-only — `PAGE_FADE` / `TAB_CROSS` already own dissolves. Highest-ROI kit leftovers: **Mask-Reveal** (Phase 6) or **Micro** (Phase 17).
 
 | Phase | Job | Status |
 |---|---|---|
@@ -57,7 +57,7 @@ Status after this PR: **Phase 0–4, Phase 9, Phase 10, Phase 12, and Phase 13 a
 - JSX mirrors apply math in `ae/Evotechly Transitions.jsx` Transitions tab
 - Registry: native `sourceType` rows, `commercialUse: true`
 - Tests: deterministic plans, unique IDs, implemented flags
-- Charts / device plates deferred to P2b
+- Charts / device plates are **P2b owned** (`core/assets/chartsDevices.js` + Charts tab) — not a Transition Kit family
 
 ## Phase 4 — done
 
@@ -79,7 +79,7 @@ Status after this PR: **Phase 0–4, Phase 9, Phase 10, Phase 12, and Phase 13 a
 - JSX mirrors apply math in `ae/Evotechly Transitions.jsx` Transitions tab
 - Registry: native `sourceType` rows, `commercialUse: true`
 - Tests: deterministic plans, unique IDs, implemented flags, axis / scale math
-- Charts / device plates still deferred to P2b
+- Charts / device plates are **P2b owned** (`core/assets/chartsDevices.js` + Charts tab) — not a Transition Kit family
 
 ## Phase 13 — done
 
@@ -90,7 +90,7 @@ Status after this PR: **Phase 0–4, Phase 9, Phase 10, Phase 12, and Phase 13 a
 - JSX mirrors apply math in `ae/Evotechly Transitions.jsx` Transitions tab (2+ selected rows, top = first)
 - Registry: native `sourceType` rows, `commercialUse: true`
 - Tests: deterministic plans, unique IDs, implemented flags, offset / travel / opacity-only math
-- Charts / device plates still deferred to P2b. Crossfade stays catalog-only
+- Charts / device plates are **P2b owned** (`core/assets/chartsDevices.js` + Charts tab) — not a Transition Kit family. Crossfade stays catalog-only
 
 ## Phase 10 — done
 
@@ -101,7 +101,7 @@ Status after this PR: **Phase 0–4, Phase 9, Phase 10, Phase 12, and Phase 13 a
 - JSX mirrors apply math in `ae/Evotechly Transitions.jsx` Transitions tab
 - Registry: native `sourceType` rows, `commercialUse: true`
 - Tests: deterministic plans, unique IDs, implemented flags, push / fade / chrome-stay math
-- Charts / device plates still deferred to P2b
+- Charts / device plates are **P2b owned** (`core/assets/chartsDevices.js` + Charts tab) — not a Transition Kit family
 
 ## Phase 9 — done
 
@@ -112,7 +112,7 @@ Status after this PR: **Phase 0–4, Phase 9, Phase 10, Phase 12, and Phase 13 a
 - JSX mirrors apply math in `ae/Evotechly Transitions.jsx` Transitions tab
 - Registry: native `sourceType` rows, `commercialUse: true`
 - Tests: deterministic plans, unique IDs, implemented flags, dim / sheet / popover math
-- Charts / device plates still deferred to P2b
+- Charts / device plates are **P2b owned** (`core/assets/chartsDevices.js` + Charts tab) — not a Transition Kit family
 
 ## What “done” means later
 

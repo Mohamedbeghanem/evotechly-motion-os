@@ -1,16 +1,17 @@
 "use strict";
 
 /**
- * EvotechlyNative P1 packs.
+ * EvotechlyNative P1 + P2b packs.
  * Require this file as `core/assets/index` — `core/assets.js` is the older filename parser.
  */
 
 const text = require("./textAnimations");
 const ui = require("./uiMicro");
 const cursor = require("./cursorPack");
+const charts = require("./chartsDevices");
 const C = require("./common");
 
-const NATIVE_ASSET_IDS = text.TEXT_IDS.concat(ui.UI_MICRO_IDS).concat(cursor.CURSOR_IDS);
+const NATIVE_ASSET_IDS = text.TEXT_IDS.concat(ui.UI_MICRO_IDS).concat(cursor.CURSOR_IDS).concat(charts.CHART_DEVICE_IDS);
 
 function isNativeAssetId(id) {
   const norm = C.normalizeId(id);
@@ -18,7 +19,7 @@ function isNativeAssetId(id) {
 }
 
 function catalogRows() {
-  return text.catalogRows().concat(ui.catalogRows()).concat(cursor.catalogRows());
+  return text.catalogRows().concat(ui.catalogRows()).concat(cursor.catalogRows()).concat(charts.catalogRows());
 }
 
 function applyAssetPlan(opts) {
@@ -27,9 +28,10 @@ function applyAssetPlan(opts) {
   if (text.isTextId(id)) return text.applyTextPlan(opts);
   if (ui.isUiMicroId(id)) return ui.applyUiMicroPlan(opts);
   if (cursor.isCursorId(id)) return cursor.applyCursorPlan(opts);
+  if (charts.isChartDeviceId(id)) return charts.applyChartDevicePlan(opts);
   return C.wrapPlan("asset", id || "EVT_UNKNOWN", C.resolveTiming(opts, "STANDARD"), {
     implemented: false,
-    description: (id || "missing-id") + " is not a P1 native asset.",
+    description: (id || "missing-id") + " is not a P1 / P2b native asset.",
     layers: []
   });
 }
@@ -57,5 +59,6 @@ module.exports = {
   uniqueIdErrors,
   text: text,
   ui: ui,
-  cursor: cursor
+  cursor: cursor,
+  charts: charts
 };

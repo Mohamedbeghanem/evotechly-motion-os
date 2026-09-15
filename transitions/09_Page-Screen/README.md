@@ -4,7 +4,7 @@ Premium SaaS. No glitch / RGB / flares.
 
 Phase for this family: **10** (see docs/TRANSITION_PHASES.md). **Implemented.**
 
-EvoCRM IA: dashboard → page, stack forward/back, tab content. Charts / device plates stay P2b.
+EvoCRM IA: dashboard → page, stack forward/back, tab content. Charts / device plates are **P2b owned** (SaaS assets Charts tab), not this family.
 
 Implemented IDs:
 

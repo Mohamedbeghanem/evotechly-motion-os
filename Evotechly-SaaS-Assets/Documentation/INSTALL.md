@@ -1,6 +1,6 @@
-# Install — Evotechly SaaS Assets (P1)
+# Install — Evotechly SaaS Assets (P2b)
 
-P1 apply lives on **Window → Evotechly Transitions** (tabs: Transitions / Text / UI / Cursor). Copy `ae/Evotechly Transitions.jsx` into ScriptUI Panels next to Motion OS Hub. Lucide SVGs are still static icons; motion is native plans, not vendor packs.
+P1 + P2b apply lives on **Window → Evotechly Transitions** (tabs: Transitions / Text / UI / Cursor / Charts). Copy `ae/Evotechly Transitions.jsx` into ScriptUI Panels next to Motion OS Hub. Lucide SVGs are still static icons; motion is native plans, not vendor packs.
 
 ## After Effects script paths
 

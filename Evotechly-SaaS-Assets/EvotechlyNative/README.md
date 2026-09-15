@@ -22,4 +22,4 @@ Implemented Transition Kit IDs are registered in `../Metadata/asset-registry.jso
 
 ## P1
 
-Generators live in `core/assets/` (text / UI micro / cursor). This folder holds policy plus `lucide-shape-recipes.json` (untested AE import). Apply: **Window → Evotechly Transitions** → Text / UI / Cursor.
+Generators live in `core/assets/` (text / UI micro / cursor / charts-devices). This folder holds policy plus `lucide-shape-recipes.json` (untested AE import). Apply: **Window → Evotechly Transitions** → Text / UI / Cursor / Charts.

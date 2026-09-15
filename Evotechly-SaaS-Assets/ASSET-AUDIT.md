@@ -1,4 +1,4 @@
-# Asset audit — P0 + P1 (no fake KEEP)
+# Asset audit — P0 + P1 + P2b (no fake KEEP)
 
 Researched **2026-09-15**. Verdicts apply to **sources and capabilities**, not to files on disk (except Lucide SVGs and Evotechly-owned Transition Kit IDs).
 
@@ -32,6 +32,20 @@ A row can be **REBUILD** + **KEEP companion**.
 ---
 
 ## Pre-seeded rows
+
+### EvotechlyNative P2b charts / device plates (ours)
+
+| Field | Value |
+|---|---|
+| Verdict | **KEEP** |
+| Score | **95** (20+25+15+15+10+10+0) |
+| Downloaded? | N/A — generators in `core/assets/chartsDevices.js` |
+| Notes | `sourceType: native`, `commercialUse: true`. 11 IDs: series enter, bar draw, column rise, line reveal, donut fill, KPI count, funnel in, spark, dash widget, laptop plate, phone plate. Apply: Evotechly Transitions → Charts. Reuses Scale-Zoom / Stagger-Cascade numbers. Not a vendor chart AEP. Not a 3D camera. |
+
+P2b KEEP ID rows (all **OWNED**, implemented):
+
+- Charts: `EVT_CHART_SERIES_ENTER`, `EVT_CHART_BAR_DRAW`, `EVT_CHART_COLUMN_RISE`, `EVT_CHART_LINE_REVEAL`, `EVT_CHART_DONUT_FILL`, `EVT_CHART_KPI_COUNT`, `EVT_CHART_FUNNEL_IN`, `EVT_CHART_SPARK`, `EVT_DASH_WIDGET_IN`
+- Devices: `EVT_DEVICE_LAPTOP_IN`, `EVT_DEVICE_PHONE_IN`
 
 ### EvotechlyNative P1 text / UI / cursor (ours)
 
@@ -242,6 +256,7 @@ Phase 13 KEEP ID rows (all **OWNED**, implemented):
 
 | ID | Verdict | Score | On disk in P0? |
 |---|---|---|---|
+| P2b native charts / devices | KEEP | 95 | Yes (`core/assets/chartsDevices.js` + registry) |
 | P1 native text / UI / cursor | KEEP | 95 | Yes (`core/assets` + registry) |
 | Transition Kit native (Push + Slide + Zoom + Shared + Overlay) | KEEP | 96 | Yes (Motion OS) |
 | Lucide curated | KEEP | 92 | Yes (`ThirdParty/lucide`) |

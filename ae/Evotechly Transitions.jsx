@@ -1,10 +1,10 @@
 #target aftereffects
 /*
-  Evotechly Transitions — companion ScriptUI (Transition Kit Phase 13 Stagger-Cascade + Phase 10 Page-Screen + Phase 9 Overlay-Modal + Phase 12 Shared-Element + SaaS Assets P1).
+  Evotechly Transitions — companion ScriptUI (Transition Kit Phase 13 Stagger-Cascade + Phase 10 Page-Screen + Phase 9 Overlay-Modal + Phase 12 Shared-Element + SaaS Assets P1 + P2b Charts/Devices).
   Window → Evotechly Transitions.
-  Tabs: Transitions / Text / UI / Cursor.
+  Tabs: Transitions / Text / UI / Cursor / Charts.
   Numbers mirrored from core/transitions/*.js and core/assets/*.js — Node is source of truth.
-  ExtendScript cannot require Node. Apply UI Push + UI-Slide + Scale-Zoom + Shared-Element + Overlay-Modal + Page-Screen + Stagger-Cascade and P1 native assets here.
+  ExtendScript cannot require Node. Apply UI Push + UI-Slide + Scale-Zoom + Shared-Element + Overlay-Modal + Page-Screen + Stagger-Cascade, P1 native assets, and P2b chart/device plates here.
   Native AE only. No .ffx / .aep / vendor plugins.
   Does not replace Evotechly Motion OS v0.32 (~297 KB).
 */
@@ -294,6 +294,19 @@
     { id: "EVT_CURSOR_SELECT", name: "Cursor Select", duration: "STANDARD", bestUse: "Down, drag range, up" },
     { id: "EVT_CURSOR_RIPPLE", name: "Cursor Ripple", duration: "FAST", bestUse: "Optional click halo — opacity + scale only" }
   ];
+  var CHART_CATALOG = [
+    { id: "EVT_CHART_SERIES_ENTER", name: "Chart Series Enter", duration: "STANDARD", bestUse: "EvoCRM series / bars stagger in — 3f offset, 16px lift" },
+    { id: "EVT_CHART_BAR_DRAW", name: "Chart Bar Draw", duration: "STANDARD", bestUse: "Horizontal bar grows scaleX 0→100, no bounce" },
+    { id: "EVT_CHART_COLUMN_RISE", name: "Chart Column Rise", duration: "STANDARD", bestUse: "Vertical column rises scaleY 0→100" },
+    { id: "EVT_CHART_LINE_REVEAL", name: "Chart Line Reveal", duration: "SMOOTH", bestUse: "Line draw — native trim path 0→100" },
+    { id: "EVT_CHART_DONUT_FILL", name: "Chart Donut Fill", duration: "SMOOTH", bestUse: "Donut / arc fill to a percent, no spin" },
+    { id: "EVT_CHART_KPI_COUNT", name: "Chart KPI Count", duration: "SMOOTH", bestUse: "KPI widget present + linear count-up (pairs with Text counters)" },
+    { id: "EVT_CHART_FUNNEL_IN", name: "Chart Funnel In", duration: "STANDARD", bestUse: "Pipeline funnel stages stagger in" },
+    { id: "EVT_CHART_SPARK", name: "Chart Spark", duration: "FAST", bestUse: "Activity sparkline draw" },
+    { id: "EVT_DASH_WIDGET_IN", name: "Dash Widget In", duration: "FAST", bestUse: "Dashboard widget present — Scale-Zoom 90→100" },
+    { id: "EVT_DEVICE_LAPTOP_IN", name: "Device Laptop In", duration: "STANDARD", bestUse: "Laptop frame present — not a 3D camera" },
+    { id: "EVT_DEVICE_PHONE_IN", name: "Device Phone In", duration: "FAST", bestUse: "Phone frame present — not a 3D camera" }
+  ];
   var iUi;
   for (iUi = 0; iUi < UI_CATALOG.length; iUi++) {
     UI_CATALOG[iUi].category = "UI";
@@ -304,6 +317,11 @@
   for (iCur = 0; iCur < CURSOR_CATALOG.length; iCur++) {
     CURSOR_CATALOG[iCur].category = "Cursor";
     CURSOR_CATALOG[iCur].implemented = true;
+  }
+  var iCh;
+  for (iCh = 0; iCh < CHART_CATALOG.length; iCh++) {
+    CHART_CATALOG[iCh].category = "Charts";
+    CHART_CATALOG[iCh].implemented = true;
   }
   var filtered = [];
   var assetFiltered = [];
@@ -712,6 +730,78 @@
       key(ph.end, fps, 0, 0, 100, 100, 0, "done")
     ];
   }
+  function planChartGrowKeys(axis, frames, fps) {
+    var ph = assetPhaseFrames(frames);
+    if (axis === "x") {
+      return [
+        key(ph.start, fps, 0, 0, 0, 80, 0, "start", 100),
+        key(ph.mid, fps, 0, 0, 72, 100, 0, "mid", 100),
+        key(ph.end, fps, 0, 0, 100, 100, 0, "done", 100)
+      ];
+    }
+    return [
+      key(ph.start, fps, 0, 0, 100, 80, 0, "start", 0),
+      key(ph.mid, fps, 0, 0, 100, 100, 0, "mid", 72),
+      key(ph.end, fps, 0, 0, 100, 100, 0, "done", 100)
+    ];
+  }
+  function planChartPopKeys(startScale, liftY, frames, fps) {
+    var ph = assetPhaseFrames(frames);
+    var midScale = startScale + (100 - startScale) * 0.6;
+    return [
+      key(ph.start, fps, 0, liftY, startScale, 0, 2, "start"),
+      key(ph.mid, fps, 0, liftY * 0.18, midScale, 84, 0, "mid"),
+      key(ph.end, fps, 0, 0, 100, 100, 0, "done")
+    ];
+  }
+  function planChartSeriesKeys(frames, fps, travel, enterScale) {
+    var ph = assetPhaseFrames(frames);
+    return [
+      key(ph.start, fps, 0, travel, enterScale, 0, 0, "start"),
+      key(ph.mid, fps, 0, travel * 0.22, enterScale + 1.2, 78, 0, "mid"),
+      key(ph.end, fps, 0, 0, 100, 100, 0, "done")
+    ];
+  }
+  function planChartFadeKeys(frames, fps) {
+    var ph = assetPhaseFrames(frames);
+    return [
+      key(ph.start, fps, 0, 0, 100, 0, 0, "start"),
+      key(ph.mid, fps, 0, 0, 100, 100, 0, "mid"),
+      key(ph.end, fps, 0, 0, 100, 100, 0, "done")
+    ];
+  }
+  function applyTrimPath(layer, frames, fps, t0, ease, fillPct) {
+    var contents, group, vectors, trim, endP, ph, endVal, midVal;
+    ph = assetPhaseFrames(frames);
+    endVal = fillPct == null ? 100 : fillPct;
+    midVal = endVal * 0.72;
+    try {
+      contents = layer.property("ADBE Root Vectors Group");
+      if (!contents) return;
+      try { group = contents.property(1); } catch (e0) { group = null; }
+      vectors = null;
+      if (group) {
+        try { vectors = group.property("ADBE Vectors Group"); } catch (e1) { vectors = null; }
+      }
+      trim = null;
+      if (vectors) {
+        try { trim = vectors.addProperty("ADBE Vector Filter - Trim"); } catch (e2) { trim = null; }
+      }
+      if (!trim) {
+        try { trim = contents.addProperty("ADBE Vector Filter - Trim"); } catch (e3) { trim = null; }
+      }
+      if (!trim) return;
+      endP = trim.property("ADBE Vector Trim End");
+      if (!endP) {
+        try { endP = trim.property("End"); } catch (e4) { endP = null; }
+      }
+      if (!endP) return;
+      endP.setValueAtTime(t0, 0);
+      endP.setValueAtTime(t0 + secondsFromFrames(ph.mid, fps), midVal);
+      endP.setValueAtTime(t0 + secondsFromFrames(ph.end, fps), endVal);
+      applyEase(endP, ease);
+    } catch (e) {}
+  }
   function applyAssetLayer(layer, keys, t0, ease) {
     applyLayerKeys(layer, keys, t0, ease);
   }
@@ -789,7 +879,7 @@
     if (!comp) return;
     var sel = selectedLayers(comp);
     var catalog, row, id, group, frames, fps, ease, t0, undo, keys, ph;
-    catalog = tab === "Text" ? TEXT_CATALOG : tab === "UI" ? UI_CATALOG : CURSOR_CATALOG;
+    catalog = tab === "Text" ? TEXT_CATALOG : tab === "UI" ? UI_CATALOG : tab === "Charts" ? CHART_CATALOG : CURSOR_CATALOG;
     if (!list.selection) { alert("Select an asset in the list."); return; }
     row = assetFiltered[list.selection.index];
     if (!row) { alert("Select an asset in the list."); return; }
@@ -799,7 +889,7 @@
     group = groupList.selection ? String(groupList.selection.text) : (row.duration || "STANDARD");
     fps = comp.frameRate || DEFAULT_FPS;
     frames = durationFrames(group, fps);
-    ease = id.indexOf("COUNTER") !== -1 ? "linear" : (EASING_IDS[easeList.selection ? easeList.selection.index : 0] || "premium-smooth");
+    ease = (id.indexOf("COUNTER") !== -1 || id === "EVT_CHART_KPI_COUNT") ? "linear" : (EASING_IDS[easeList.selection ? easeList.selection.index : 0] || "premium-smooth");
     t0 = comp.time;
     ph = assetPhaseFrames(frames);
     undo = "Evotechly Asset · " + id;
@@ -836,6 +926,29 @@
         }
       } else if (tab === "UI") {
         applyAssetLayer(sel[0], planUiKeys(row, frames, fps), t0, ease);
+      } else if (tab === "Charts") {
+        if (id === "EVT_CHART_SERIES_ENTER" || id === "EVT_CHART_FUNNEL_IN") {
+          keys = planChartSeriesKeys(frames, fps, id === "EVT_CHART_FUNNEL_IN" ? 12 : 16, id === "EVT_CHART_FUNNEL_IN" ? 97 : 98);
+          for (var iChart = 0; iChart < sel.length; iChart++) {
+            applyAssetLayer(sel[iChart], shiftKeysJs(keys, iChart * 3, fps), t0, ease);
+          }
+        } else if (id === "EVT_CHART_BAR_DRAW") {
+          applyAssetLayer(sel[0], planChartGrowKeys("x", frames, fps), t0, ease);
+        } else if (id === "EVT_CHART_COLUMN_RISE") {
+          applyAssetLayer(sel[0], planChartGrowKeys("y", frames, fps), t0, ease);
+        } else if (id === "EVT_CHART_LINE_REVEAL" || id === "EVT_CHART_SPARK" || id === "EVT_CHART_DONUT_FILL") {
+          applyAssetLayer(sel[0], planChartFadeKeys(frames, fps), t0, ease);
+          applyTrimPath(sel[0], frames, fps, t0, ease, id === "EVT_CHART_DONUT_FILL" ? 72 : 100);
+        } else if (id === "EVT_CHART_KPI_COUNT") {
+          if (isTextLayer(sel[0])) applySourceText(sel[0], t0, frames, fps, 0, 124, "number");
+          applyAssetLayer(sel[0], planChartPopKeys(96, 8, frames, fps), t0, "linear");
+        } else if (id === "EVT_DEVICE_PHONE_IN") {
+          applyAssetLayer(sel[0], planChartPopKeys(92, 10, frames, fps), t0, ease);
+        } else if (id === "EVT_DEVICE_LAPTOP_IN") {
+          applyAssetLayer(sel[0], planChartPopKeys(90, 12, frames, fps), t0, ease);
+        } else {
+          applyAssetLayer(sel[0], planChartPopKeys(90, 8, frames, fps), t0, ease);
+        }
       } else {
         applyCursorMotion(sel[0], id, t0, frames, fps, ease);
       }
@@ -2003,13 +2116,13 @@
   function buildUI(thisObj) {
     var win = (thisObj instanceof Panel) ? thisObj : new Window("palette", "Evotechly Transitions", undefined, { resizeable: true });
     var intro, searchField, catList, list, g, groupList, dirList, easeList, foot, note;
-    var tabs, transTab, textTab, uiTab, curTab, textList, uiList, curList, activeTab;
+    var tabs, transTab, textTab, uiTab, curTab, chartTab, textList, uiList, curList, chartList, activeTab;
     win.orientation = "column";
     win.alignChildren = ["fill", "top"];
     win.spacing = 8;
     win.margins = 10;
     win.add("statictext", undefined, "EVOTECHLY  ·  Transitions");
-    intro = win.add("statictext", undefined, "Phase 13 Stagger-Cascade + Phase 10 Page-Screen + Phase 9 Overlay-Modal + Phase 12 Shared-Element + Phase 4 Scale-Zoom + Phase 3 UI-Slide + Phase 2 UI Push + P1 native Text / UI / Cursor. Catalog is searchable. Companion to Motion OS — does not replace v0.32. Node is source of truth; this panel mirrors apply numbers.", { multiline: true });
+    intro = win.add("statictext", undefined, "Phase 13 Stagger-Cascade + Phase 10 Page-Screen + Phase 9 Overlay-Modal + Phase 12 Shared-Element + Phase 4 Scale-Zoom + Phase 3 UI-Slide + Phase 2 UI Push + P1 native Text / UI / Cursor + P2b Charts / Devices. Catalog is searchable. Companion to Motion OS — does not replace v0.32. Node is source of truth; this panel mirrors apply numbers.", { multiline: true });
     intro.characters = 46;
 
     g = win.add("group");
@@ -2025,6 +2138,7 @@
     textTab = tabs.add("tab", undefined, "Text");
     uiTab = tabs.add("tab", undefined, "UI");
     curTab = tabs.add("tab", undefined, "Cursor");
+    chartTab = tabs.add("tab", undefined, "Charts");
     transTab.orientation = "column";
     transTab.alignChildren = ["fill", "fill"];
     textTab.orientation = "column";
@@ -2033,6 +2147,8 @@
     uiTab.alignChildren = ["fill", "fill"];
     curTab.orientation = "column";
     curTab.alignChildren = ["fill", "fill"];
+    chartTab.orientation = "column";
+    chartTab.alignChildren = ["fill", "fill"];
     tabs.selection = transTab;
     activeTab = "Transitions";
 
@@ -2045,6 +2161,8 @@
     uiList.preferredSize = [340, 200];
     curList = curTab.add("listbox", undefined, []);
     curList.preferredSize = [340, 200];
+    chartList = chartTab.add("listbox", undefined, []);
+    chartList.preferredSize = [340, 200];
 
     g = win.add("group");
     g.add("statictext", undefined, "Duration");
@@ -2063,10 +2181,11 @@
       if (activeTab === "Transitions") runApply(list, groupList, dirList, easeList);
       else if (activeTab === "Text") runApplyAsset("Text", textList, groupList, easeList);
       else if (activeTab === "UI") runApplyAsset("UI", uiList, groupList, easeList);
+      else if (activeTab === "Charts") runApplyAsset("Charts", chartList, groupList, easeList);
       else runApplyAsset("Cursor", curList, groupList, easeList);
     };
 
-    note = win.add("statictext", undefined, "Transitions: select outgoing, then incoming. Stagger-Cascade: 2+ row layers (top = first). Text / UI / Cursor: select the target layer (Swap needs two). ● = apply. Native only — no vendor packs.", { multiline: true });
+    note = win.add("statictext", undefined, "Transitions: select outgoing, then incoming. Stagger-Cascade: 2+ row layers (top = first). Text / UI / Cursor / Charts: select the target layer (Swap needs two; series/funnel stagger selected layers). ● = apply. Native only — no vendor packs.", { multiline: true });
     note.characters = 46;
 
     foot = win.add("statictext", undefined, "Install: Scripts/ScriptUI Panels next to Motion OS Hub. Docs: TRANSITION_KIT.md · TRANSITION_PHASES.md.", { multiline: true });
@@ -2077,6 +2196,7 @@
       if (activeTab === "Text") refreshAssetList(textList, searchField, TEXT_CATALOG);
       else if (activeTab === "UI") refreshAssetList(uiList, searchField, UI_CATALOG);
       else if (activeTab === "Cursor") refreshAssetList(curList, searchField, CURSOR_CATALOG);
+      else if (activeTab === "Charts") refreshAssetList(chartList, searchField, CHART_CATALOG);
     }
     searchField.onChanging = function () {
       if (activeTab === "Transitions") onFilter();
@@ -2100,6 +2220,7 @@
     refreshAssetList(textList, searchField, TEXT_CATALOG);
     refreshAssetList(uiList, searchField, UI_CATALOG);
     refreshAssetList(curList, searchField, CURSOR_CATALOG);
+    refreshAssetList(chartList, searchField, CHART_CATALOG);
     if (list.selection) list.onChange();
 
     win.onResizing = win.onResize = function () { this.layout.resize(); };
