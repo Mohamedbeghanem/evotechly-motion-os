@@ -1,6 +1,6 @@
-# Install — Evotechly SaaS Assets (P0)
+# Install — Evotechly SaaS Assets (P1)
 
-P0 is a **library scaffold**. There is nothing to drag into a composition except the optional Lucide SVGs (static icons). Motion still comes from Motion OS + the Transition Kit panel.
+P1 apply lives on **Window → Evotechly Transitions** (tabs: Transitions / Text / UI / Cursor). Copy `ae/Evotechly Transitions.jsx` into ScriptUI Panels next to Motion OS Hub. Lucide SVGs are still static icons; motion is native plans, not vendor packs.
 
 ## After Effects script paths
 

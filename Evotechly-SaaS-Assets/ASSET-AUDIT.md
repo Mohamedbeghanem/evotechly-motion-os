@@ -1,4 +1,4 @@
-# Asset audit — P0 (no fake KEEP)
+# Asset audit — P0 + P1 (no fake KEEP)
 
 Researched **2026-09-15**. Verdicts apply to **sources and capabilities**, not to files on disk (except Lucide SVGs and Evotechly-owned Transition Kit IDs).
 
@@ -32,6 +32,21 @@ A row can be **REBUILD** + **KEEP companion**.
 ---
 
 ## Pre-seeded rows
+
+### EvotechlyNative P1 text / UI / cursor (ours)
+
+| Field | Value |
+|---|---|
+| Verdict | **KEEP** |
+| Score | **95** (20+25+15+15+10+10+0) |
+| Downloaded? | N/A — generators in `core/assets/` (`textAnimations.js`, `uiMicro.js`, `cursorPack.js`) |
+| Notes | `sourceType: native`, `commercialUse: true`. IDs: 18 `EVT_TEXT_*`, 44 `EVT_UI_{ELEMENT}_{ACTION}`, 8 `EVT_CURSOR_*`. Apply: Evotechly Transitions tabs. Not a vendor preset dump. |
+
+P1 KEEP ID rows (all **OWNED**, implemented):
+
+- Text: `EVT_TEXT_FADE_UP`, `EVT_TEXT_FADE_DOWN`, `EVT_TEXT_MASK_REVEAL`, `EVT_TEXT_WORD_REVEAL`, `EVT_TEXT_LINE_REVEAL`, `EVT_TEXT_CHAR_REVEAL`, `EVT_TEXT_BLUR_IN`, `EVT_TEXT_BLUR_OUT`, `EVT_TEXT_SCALE_IN`, `EVT_TEXT_SLIDE_IN`, `EVT_TEXT_TRACKING_REVEAL`, `EVT_TEXT_HEADLINE_REVEAL`, `EVT_TEXT_SUBTITLE_REVEAL`, `EVT_TEXT_KINETIC_HEADLINE`, `EVT_TEXT_SWAP`, `EVT_TEXT_NUMBER_COUNTER`, `EVT_TEXT_PCT_COUNTER`, `EVT_TEXT_METRIC_COUNTER`
+- UI: `EVT_UI_BUTTON_{ENTER,EXIT,HOVER,CLICK}`, `EVT_UI_CARD_{ENTER,EXIT,HOVER,CLICK,EXPAND,COLLAPSE}`, `EVT_UI_MODAL_{ENTER,EXIT,EXPAND,COLLAPSE}`, `EVT_UI_TOOLTIP_{ENTER,EXIT,HOVER}`, `EVT_UI_DROPDOWN_{ENTER,EXIT,EXPAND,COLLAPSE}`, `EVT_UI_SIDEBAR_{ENTER,EXIT,EXPAND,COLLAPSE}`, `EVT_UI_NAV_{ENTER,EXIT,HOVER}`, `EVT_UI_TABS_{ENTER,CLICK}`, `EVT_UI_ROW_{ENTER,EXIT,HOVER}`, `EVT_UI_METRIC_{ENTER,HOVER}`, `EVT_UI_BADGE_{ENTER,EXIT}`, `EVT_UI_NOTIFICATION_{ENTER,EXIT}`, `EVT_UI_SEARCH_{ENTER,EXPAND,COLLAPSE}`, `EVT_UI_AVATAR_{ENTER,HOVER}`
+- Cursor: `EVT_CURSOR_MOVE`, `EVT_CURSOR_CLICK`, `EVT_CURSOR_DBLCLICK`, `EVT_CURSOR_HOVER`, `EVT_CURSOR_DRAG`, `EVT_CURSOR_SWIPE`, `EVT_CURSOR_SELECT`, `EVT_CURSOR_RIPPLE`
 
 ### Evotechly Transition Kit (ours)
 
@@ -201,6 +216,7 @@ A row can be **REBUILD** + **KEEP companion**.
 
 | ID | Verdict | Score | On disk in P0? |
 |---|---|---|---|
+| P1 native text / UI / cursor | KEEP | 95 | Yes (`core/assets` + registry) |
 | Transition Kit native | KEEP | 96 | Yes (Motion OS) |
 | Lucide curated | KEEP | 92 | Yes (`ThirdParty/lucide`) |
 | Phosphor / Heroicons | REBUILD | 88 | No |

@@ -25,6 +25,8 @@ const NATIVE_PUSH = [
   { id: "EVT_UI_PUSH_SPLIT", name: "Split Panel Push", implemented: true, phase: 2, bestUse: "Master–detail split" }
 ];
 
+const assets = require("../core/assets/index");
+
 const OTHER_NATIVE = [
   {
     id: "EVT_TEXT_FLOWING",
@@ -57,6 +59,8 @@ const OTHER_NATIVE = [
     notes: "Already owned native frost. Not BentoMotion / TFM binaries."
   }
 ];
+
+const P1_NATIVE = assets.catalogRows();
 
 function lucideId(file) {
   const stem = file.replace(/\.svg$/, "");
@@ -145,13 +149,13 @@ function lucideRows() {
 }
 
 const registry = {
-  version: "0.1.0-p0",
-  phase: "P0",
+  version: "0.2.0-p1",
+  phase: "P1",
   product: "Evotechly SaaS Assets Pack",
   style: "premium-saas",
   schemaVersion: 1,
   note:
-    "P0: schema + Evotechly-native Transition Kit stubs + optional Lucide SVGs. Empty of AE vendor packs. downloaded:true only when a file was actually fetched. Integration with the Transition Kit apply path is later.",
+    "P1: native text / UI micro / cursor generators (sourceType native, commercialUse true). P0 Lucide + Transition Kit stubs remain. No AEJuice / Motion Bro / Bento binaries.",
   fields: {
     id: "EVT_* unique pack id",
     sourceType: "native | thirdParty",
@@ -159,7 +163,10 @@ const registry = {
     downloaded: "true only after a real fetch + license verification",
     transitionKitId: "optional link into transitions/Metadata/catalog.json"
   },
-  assets: NATIVE_PUSH.map(nativePushRow).concat(OTHER_NATIVE.map(otherNativeRow)).concat(lucideRows())
+  assets: NATIVE_PUSH.map(nativePushRow)
+    .concat(OTHER_NATIVE.map(otherNativeRow))
+    .concat(P1_NATIVE.map(otherNativeRow))
+    .concat(lucideRows())
 };
 
 fs.mkdirSync(path.dirname(REGISTRY), { recursive: true });

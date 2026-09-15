@@ -2,9 +2,9 @@
 
 Nav, tabs, pills, toasts, input focus, toggle chrome. Linear / Stripe taste. Rebuild as AE shapes + our presets.
 
-## Intended contents (P0 = docs only)
+## Intended contents
 
-Nothing binary ships in this folder in P0. P1 fills **EvotechlyNative** generators and optional editor-local ThirdParty installs.
+P1 native UI micro plans live in `core/assets/uiMicro.js` (`EVT_UI_{ELEMENT}_{ACTION}`). Nothing binary ships in this folder. Apply: Evotechly Transitions → **UI**.
 
 ## EVT_ naming examples
 
