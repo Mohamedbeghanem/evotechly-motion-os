@@ -4,7 +4,7 @@ Premium SaaS. No glitch / RGB / flares.
 
 Phase for this family: **13** (see docs/TRANSITION_PHASES.md). **Implemented.**
 
-EvoCRM list / table rows: deal pipeline cards, contacts, activity. Reuses `saasDemo.STAGGER` (offset 3f, travel 16px). Opacity-only for fade. Soft delay wave, no bounce. Charts / device plates stay P2b.
+EvoCRM list / table rows: deal pipeline cards, contacts, activity. Reuses `saasDemo.STAGGER` (offset 3f, travel 16px). Opacity-only for fade. Soft delay wave, no bounce. Charts / device plates are **P2b owned** (SaaS assets Charts tab), not this family.
 
 Implemented IDs:
 

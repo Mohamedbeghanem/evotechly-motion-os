@@ -241,13 +241,13 @@ function lucideRows() {
 }
 
 const registry = {
-  version: "0.2.0-p1",
-  phase: "P1",
+  version: "0.3.0-p2b",
+  phase: "P2b",
   product: "Evotechly SaaS Assets Pack",
   style: "premium-saas",
   schemaVersion: 1,
   note:
-    "P1 native text / UI / cursor + Transition Kit Phase 13 Stagger-Cascade (plus Phase 2–4 UI Push / UI-Slide / Scale-Zoom, Phase 9 Overlay-Modal, Phase 10 Page-Screen, and Phase 12 Shared-Element). sourceType native, commercialUse true. No AEJuice / Motion Bro / Bento binaries.",
+    "P2b native charts / device plates + P1 text / UI / cursor + Transition Kit Phase 13 Stagger-Cascade (plus Phase 2–4 UI Push / UI-Slide / Scale-Zoom, Phase 9 Overlay-Modal, Phase 10 Page-Screen, and Phase 12 Shared-Element). sourceType native, commercialUse true. No AEJuice / Motion Bro / Bento binaries.",
   fields: {
     id: "EVT_* unique pack id",
     sourceType: "native | thirdParty",

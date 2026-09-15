@@ -14,11 +14,15 @@ Architecture + core engine on top of Ultimate 2.0.0. Does not stub the 297 KB v0
 - Tests: `tests/transitions-engine.test.js`
 - Demo sequence (data only): `transitions/Examples/demo-storyboard.json` (apply in Phase 16)
 
-**Limitations:** AE cannot run in CI. JSX mirrors Node numbers. Later families (Crossfade, Mask-Reveal, Blur-Focus, Depth-Parallax, Wipe-Split, and later) are metadata. No `.ffx` / `.aep` / SFX audio / vendor plugins. Charts / device plates are P2b. Crossfade stays catalog-only — `PAGE_FADE` / `TAB_CROSS` already own dissolves.
+**Limitations:** AE cannot run in CI. JSX mirrors Node numbers. Later families (Crossfade, Mask-Reveal, Blur-Focus, Depth-Parallax, Wipe-Split, and later) are metadata. No `.ffx` / `.aep` / SFX audio / vendor plugins. Charts / device plates are **P2b owned** (not a Transition Kit family). Crossfade stays catalog-only — `PAGE_FADE` / `TAB_CROSS` already own dissolves.
+
+## SaaS Assets Pack — P2b (charts / device plates)
+
+Native chart series enter, bar/column rise, line draw, donut fill, pipeline funnel, activity spark, dashboard widget present, and laptop/phone frame present. `core/assets/chartsDevices.js` + **Window → Evotechly Transitions → Charts**. Reuses Scale-Zoom 90→100 and Stagger-Cascade 3f / 16px. KPI count-up stays the P1 text counters plus `EVT_CHART_KPI_COUNT`. Registry `0.3.0-p2b`. No AEJuice / Motion Bro / Bento binaries. Pointer: [docs/SAAS_ASSETS_P2B.md](docs/SAAS_ASSETS_P2B.md) · [Evotechly-SaaS-Assets/Documentation/P2B_NATIVE.md](Evotechly-SaaS-Assets/Documentation/P2B_NATIVE.md).
 
 ## SaaS Assets Pack — P1 (native generators)
 
-Text / UI micro / cursor plans in `core/assets/` + **Window → Evotechly Transitions** tabs (Text / UI / Cursor). Registry `0.2.0-p1`. No AEJuice / Motion Bro / Bento binaries. Pointer: [docs/SAAS_ASSETS_P1.md](docs/SAAS_ASSETS_P1.md) · [Evotechly-SaaS-Assets/Documentation/P1_NATIVE.md](Evotechly-SaaS-Assets/Documentation/P1_NATIVE.md).
+Text / UI micro / cursor plans in `core/assets/` + **Window → Evotechly Transitions** tabs (Text / UI / Cursor). Registry now `0.3.0-p2b` (P1 IDs unchanged). No AEJuice / Motion Bro / Bento binaries. Pointer: [docs/SAAS_ASSETS_P1.md](docs/SAAS_ASSETS_P1.md) · [Evotechly-SaaS-Assets/Documentation/P1_NATIVE.md](Evotechly-SaaS-Assets/Documentation/P1_NATIVE.md).
 
 ## SaaS Assets Pack — P0 (scaffold)
 

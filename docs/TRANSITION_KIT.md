@@ -2,7 +2,7 @@
 
 Premium SaaS screen-to-screen motion. Apple / Linear / Stripe / Raycast taste. Not a glitch pack.
 
-**Phase 0–4, Phase 9–10, and Phase 12–13** ship this document, the folder scaffold, a Node-testable engine, catalog metadata, and a companion ScriptUI panel. The full UI Push family, the UI-Slide card family, the Scale-Zoom family, the Shared-Element family, the Overlay-Modal family, the Page-Screen family, and the **Stagger-Cascade family** produce complete keyframe plans. Everything else is catalogued for later phases and AI pairing.
+**Phase 0–4, Phase 9–10, and Phase 12–13** ship this document, the folder scaffold, a Node-testable engine, catalog metadata, and a companion ScriptUI panel. The full UI Push family, the UI-Slide card family, the Scale-Zoom family, the Shared-Element family, the Overlay-Modal family, the Page-Screen family, and the **Stagger-Cascade family** produce complete keyframe plans. Everything else is catalogued for later phases and AI pairing. Charts / device plates are **P2b SaaS assets** (`core/assets/chartsDevices.js` + Charts tab), not a Transition Kit family. Crossfade stays catalog-only.
 
 This kit does **not** replace the v0.32 Motion tab transitions (shot-level Clean Push / Whip / Zoom Match). Those stay in `ae/Evotechly Motion OS.jsx` (~297 KB — never stub). This kit is UI-to-UI: dashboard → card → analytics.
 

@@ -17,6 +17,6 @@ Implemented IDs:
 
 Plans live in `core/transitions/uiSlide.js`. JSX mirrors the same numbers in `ae/Evotechly Transitions.jsx`. Travel is a card / panel / drawer width (0.22–0.42 of the axis), not a full-frame push.
 
-EvoCRM path: dashboard → card → detail. Charts / device plates are a later P2b.
+EvoCRM path: dashboard → card → detail. Charts / device plates are **P2b owned** (SaaS assets Charts tab), not this family.
 
 Docs: [../../docs/TRANSITION_KIT.md](../../docs/TRANSITION_KIT.md)

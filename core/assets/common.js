@@ -1,7 +1,7 @@
 "use strict";
 
 /**
- * Shared helpers for EvotechlyNative P1 plans.
+ * Shared helpers for EvotechlyNative P1 / P2b plans.
  * Node is source of truth. JSX mirrors apply numbers.
  */
 
@@ -150,7 +150,7 @@ function wrapPlan(kind, id, timing, extra) {
       easeInfluences: timing.easeInfluences,
       phases: timing.phases,
       undo: "Evotechly Asset · " + id,
-      note: "Native AE keyframes. Node plan is source of truth. JSX mirrors P1 IDs. No vendor packs."
+      note: "Native AE keyframes. Node plan is source of truth. JSX mirrors native IDs. No vendor packs."
     },
     extra
   );

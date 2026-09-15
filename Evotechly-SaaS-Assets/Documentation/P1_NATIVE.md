@@ -20,7 +20,7 @@ Transition Kit catalog stays the screen-to-screen family. P1 assets are **not** 
 
 **Window → Evotechly Transitions** (same companion as UI Push — not a stub of the 297 KB Motion OS panel).
 
-1. Open **Text**, **UI**, or **Cursor**.
+1. Open **Text**, **UI**, or **Cursor** (P2b adds **Charts**).
 2. Search. Pick a duration group and ease.
 3. Select the target layer (Text Swap / some cursor moves: two layers).
 4. **Apply**.

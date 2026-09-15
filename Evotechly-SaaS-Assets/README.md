@@ -1,8 +1,8 @@
-# Evotechly SaaS Assets Pack — P1
+# Evotechly SaaS Assets Pack — P2b
 
 Source discovery + license audit + library scaffold. **No pirated packs. No fake downloads.**
 
-P1 ships native text / UI / cursor generators (`core/assets/`) and apply tabs on [Evotechly Transitions](../ae/Evotechly Transitions.jsx). P0 folders, legal docs, registry schema, and Lucide icons stay. See [Documentation/P1_NATIVE.md](Documentation/P1_NATIVE.md).
+P2b ships native chart / device-plate generators (`core/assets/chartsDevices.js`) on [Evotechly Transitions](../ae/Evotechly Transitions.jsx) **Charts** tab. P1 text / UI / cursor tabs stay. P0 folders, legal docs, registry schema, and Lucide icons stay. See [Documentation/P2B_NATIVE.md](Documentation/P2B_NATIVE.md) and [Documentation/P1_NATIVE.md](Documentation/P1_NATIVE.md).
 
 ## What P0 is not
 
@@ -34,6 +34,6 @@ P1 ships native text / UI / cursor generators (`core/assets/`) and apply tabs on
 
 ## Next
 
-P2 = charts / devices **or** Transition Kit Phase 3 Card family (recommended next for EvoCRM). Still no AEJuice / Motion Bro / Bento in git.
+P2b charts / devices are owned. Highest-ROI Transition Kit leftovers are Mask-Reveal or Micro. Crossfade stays catalog-only. Still no AEJuice / Motion Bro / Bento in git.
 
-Motion OS pointer: [docs/SAAS_ASSETS_P1.md](../docs/SAAS_ASSETS_P1.md).
+Motion OS pointers: [docs/SAAS_ASSETS_P2B.md](../docs/SAAS_ASSETS_P2B.md) · [docs/SAAS_ASSETS_P1.md](../docs/SAAS_ASSETS_P1.md).

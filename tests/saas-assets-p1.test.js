@@ -9,6 +9,7 @@ const assets = require("../core/assets/index");
 const text = require("../core/assets/textAnimations");
 const ui = require("../core/assets/uiMicro");
 const cursor = require("../core/assets/cursorPack");
+const charts = require("../core/assets/chartsDevices");
 
 const PACK = path.join(__dirname, "..", "Evotechly-SaaS-Assets");
 const REGISTRY_PATH = path.join(PACK, "Metadata", "asset-registry.json");
@@ -25,6 +26,7 @@ test("P1 native IDs are unique and cover text / UI / cursor", function () {
   assert.equal(text.TEXT_IDS.length, 18);
   assert.ok(ui.UI_MICRO_IDS.length >= 40);
   assert.equal(cursor.CURSOR_IDS.length, 8);
+  assert.equal(charts.CHART_DEVICE_IDS.length, 11);
   assert.deepEqual(assets.uniqueIdErrors(), []);
   const seen = {};
   assets.NATIVE_ASSET_IDS.forEach(function (id) {
@@ -188,7 +190,7 @@ test("cursor pack extends createCursor styles and motion IDs", function () {
 
 test("asset registry is complete for the implemented P1 set", function () {
   const registry = JSON.parse(fs.readFileSync(REGISTRY_PATH, "utf8"));
-  assert.equal(registry.phase, "P1");
+  assert.ok(registry.phase === "P1" || registry.phase === "P2b");
   assert.equal(registry.schemaVersion, 1);
   const byId = {};
   registry.assets.forEach(function (row) {
