@@ -2,19 +2,19 @@
 
 **Product tag:** Ultimate **v2.0.0** on current `main`.
 
-## Transition Kit — Phase 0–4 + Phase 6 + Phase 9–10 + Phase 12–13
+## Transition Kit — Phase 0–4 + Phase 6 + Phase 9–10 + Phase 12–13 + Phase 17
 
 Architecture + core engine on top of Ultimate 2.0.0. Does not stub the 297 KB v0.32 panel. Does not bump the 2.0.0 tag.
 
-- Docs: `docs/TRANSITION_KIT.md`, `docs/TRANSITION_PHASES.md` (phases 0–4, **Phase 6**, **Phase 9**, **Phase 10**, **Phase 12**, and **Phase 13** **done**)
-- Engine: `core/transitions/` — easing, timing, target zoom, bounds morph, control null, `applyTransitionPlan`, `uiPush.js`, `uiSlide.js`, `scaleZoom.js`, `sharedElement.js`, `overlayModal.js`, `pageScreen.js`, `staggerCascade.js`, `maskReveal.js`
+- Docs: `docs/TRANSITION_KIT.md`, `docs/TRANSITION_PHASES.md` (phases 0–4, **Phase 6**, **Phase 9**, **Phase 10**, **Phase 12**, **Phase 13**, and **Phase 17** **done**)
+- Engine: `core/transitions/` — easing, timing, target zoom, bounds morph, control null, `applyTransitionPlan`, `uiPush.js`, `uiSlide.js`, `scaleZoom.js`, `sharedElement.js`, `overlayModal.js`, `pageScreen.js`, `staggerCascade.js`, `maskReveal.js`, `micro.js`
 - Catalog: `transitions/Metadata/catalog.json` — unique `EVT_*` IDs, families A–16
-- Implemented plans: full UI Push family (15 IDs) + UI-Slide card family (8 IDs) + Scale-Zoom (8 IDs) + Shared-Element (6 IDs) + Overlay-Modal (7 IDs) + Page-Screen (6 IDs) + Stagger-Cascade (6 IDs) + **Mask-Reveal (6 IDs)** — card iris, rounded-rect crop, feathered matte, screenshot iris, wipe-from-bounds
+- Implemented plans: full UI Push family (15 IDs) + UI-Slide card family (8 IDs) + Scale-Zoom (8 IDs) + Shared-Element (6 IDs) + Overlay-Modal (7 IDs) + Page-Screen (6 IDs) + Stagger-Cascade (6 IDs) + Mask-Reveal (6 IDs) + **Micro (8 IDs)** — hover / press / toggle / check / badge / counter / focus / snap
 - Companion: `ae/Evotechly Transitions.jsx` — Window → Evotechly Transitions (install beside Hub)
 - Tests: `tests/transitions-engine.test.js`
 - Demo sequence (data only): `transitions/Examples/demo-storyboard.json` (apply in Phase 16)
 
-**Limitations:** AE cannot run in CI. JSX mirrors Node numbers. Later families (Crossfade, Blur-Focus, Depth-Parallax, Wipe-Split, and later) are metadata. No `.ffx` / `.aep` / SFX audio / vendor plugins. Charts / device plates are **P2b owned** (not a Transition Kit family). Crossfade stays catalog-only — `PAGE_FADE` / `TAB_CROSS` already own dissolves.
+**Limitations:** AE cannot run in CI. JSX mirrors Node numbers. Later families (Crossfade, Blur-Focus, Depth-Parallax, Wipe-Split, Camera-Dolly, Glass-Frost, Hero) are metadata. No `.ffx` / `.aep` / SFX audio / vendor plugins. Charts / device plates are **P2b owned** (not a Transition Kit family). Crossfade stays catalog-only — `PAGE_FADE` / `TAB_CROSS` already own dissolves. The kit is complete enough for EvoCRM explainers — prefer an AE soak + demo sequence over more families.
 
 ## SaaS Assets Pack — P2b (charts / device plates)
 

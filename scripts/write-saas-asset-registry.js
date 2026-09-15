@@ -64,6 +64,17 @@ const NATIVE_MASK = [
   { id: "EVT_REVEAL_WIPE_SOFT", name: "Reveal Wipe Soft", implemented: true, phase: 6, bestUse: "Soft directional matte, not a bar wipe" }
 ];
 
+const NATIVE_MICRO = [
+  { id: "EVT_MICRO_HOVER", name: "Micro Hover", implemented: true, phase: 17, bestUse: "Hover lift 1–2%" },
+  { id: "EVT_MICRO_PRESS", name: "Micro Press", implemented: true, phase: 17, bestUse: "Click squash, then recover" },
+  { id: "EVT_MICRO_TOGGLE", name: "Micro Toggle", implemented: true, phase: 17, bestUse: "Toggle thumb settle" },
+  { id: "EVT_MICRO_CHECK", name: "Micro Check", implemented: true, phase: 17, bestUse: "Checkbox / check settle" },
+  { id: "EVT_MICRO_BADGE", name: "Micro Badge", implemented: true, phase: 17, bestUse: "Badge pop, no bounce loop" },
+  { id: "EVT_MICRO_COUNTER", name: "Micro Counter", implemented: true, phase: 17, bestUse: "KPI digit change" },
+  { id: "EVT_MICRO_FOCUS", name: "Micro Focus", implemented: true, phase: 17, bestUse: "Focus ring / field focus" },
+  { id: "EVT_MICRO_SNAP", name: "Micro Snap", implemented: true, phase: 17, bestUse: "Snap into grid / alignment" }
+];
+
 const NATIVE_SLIDE = [
   { id: "EVT_SLIDE_CARD_LEFT", name: "Slide Card Left", implemented: true, phase: 3, bestUse: "Single card enters from right" },
   { id: "EVT_SLIDE_CARD_RIGHT", name: "Slide Card Right", implemented: true, phase: 3, bestUse: "Single card enters from left" },
@@ -199,6 +210,10 @@ function nativeMaskRow(row) {
   return nativeKitRow(row, "maskReveal.js");
 }
 
+function nativeMicroRow(row) {
+  return nativeKitRow(row, "micro.js");
+}
+
 function otherNativeRow(row) {
   return {
     id: row.id,
@@ -260,7 +275,7 @@ const registry = {
   style: "premium-saas",
   schemaVersion: 1,
   note:
-    "P2b native charts / device plates + P1 text / UI / cursor + Transition Kit Phase 6 Mask-Reveal (plus Phase 2–4 UI Push / UI-Slide / Scale-Zoom, Phase 9 Overlay-Modal, Phase 10 Page-Screen, Phase 12 Shared-Element, and Phase 13 Stagger-Cascade). sourceType native, commercialUse true. No AEJuice / Motion Bro / Bento binaries.",
+    "P2b native charts / device plates + P1 text / UI / cursor + Transition Kit Phase 17 Micro (plus Phase 2–4 UI Push / UI-Slide / Scale-Zoom, Phase 6 Mask-Reveal, Phase 9 Overlay-Modal, Phase 10 Page-Screen, Phase 12 Shared-Element, and Phase 13 Stagger-Cascade). sourceType native, commercialUse true. No AEJuice / Motion Bro / Bento binaries.",
   fields: {
     id: "EVT_* unique pack id",
     sourceType: "native | thirdParty",
@@ -276,6 +291,7 @@ const registry = {
     .concat(NATIVE_PAGE.map(nativePageRow))
     .concat(NATIVE_STAGGER.map(nativeStaggerRow))
     .concat(NATIVE_MASK.map(nativeMaskRow))
+    .concat(NATIVE_MICRO.map(nativeMicroRow))
     .concat(OTHER_NATIVE.map(otherNativeRow))
     .concat(P1_NATIVE.map(otherNativeRow))
     .concat(lucideRows())

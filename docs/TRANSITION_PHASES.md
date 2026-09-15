@@ -1,6 +1,6 @@
 # Transition Kit — phase roadmap
 
-Status after this PR: **Phase 0–4, Phase 6, Phase 9, Phase 10, Phase 12, and Phase 13 are done.** Mask-Reveal is the EvoCRM screenshot / card iris family (native AE masks, no plugins). Stagger-Cascade is the list/table-row family. Page-Screen is the IA family. Overlay-Modal is the dialog family. Shared-Element is the full bounds-match family (not mesh). Later phases are catalogued, not implemented. Charts / device plates are **P2b SaaS assets** (not a kit phase). Crossfade stays catalog-only — `PAGE_FADE` / `TAB_CROSS` already own dissolves. Highest-ROI kit leftover: **Micro** (Phase 17 chrome hover/press not already in P1 UI).
+Status after this PR: **Phase 0–4, Phase 6, Phase 9, Phase 10, Phase 12, Phase 13, and Phase 17 are done.** Micro is the EvoCRM list/toolbar chrome family (hover/press/toggle/check/badge/counter/focus/snap). Mask-Reveal is the screenshot / card iris family. Stagger-Cascade is the list/table-row family. Page-Screen is the IA family. Overlay-Modal is the dialog family. Shared-Element is the full bounds-match family (not mesh). Later phases are catalogued, not implemented. Charts / device plates are **P2b SaaS assets** (not a kit phase). Crossfade stays catalog-only — `PAGE_FADE` / `TAB_CROSS` already own dissolves. The kit is complete enough for EvoCRM explainers — prefer an AE soak + demo sequence over more families. Highest-ROI leftover if one more family is needed: **Glass-Frost** (SaaS UI glass; Phase 2 already has native `glassPanel`).
 
 | Phase | Job | Status |
 |---|---|---|
@@ -21,7 +21,7 @@ Status after this PR: **Phase 0–4, Phase 6, Phase 9, Phase 10, Phase 12, and P
 | 14 | Camera-Dolly family (plate push/pull — not a 3D camera rig) | planned |
 | 15 | Glass-Frost family (native frost; no Liquid Glass binary) | planned |
 | 16 | Hero family + apply `transitions/Examples/demo-storyboard.json` | planned |
-| 17 | Micro family | planned |
+| **17** | Micro family (hover / press / toggle / check / badge / counter / focus / snap) | **done** |
 | 18 | AI pairing (catalog → prompt map) + SFX metadata polish | planned |
 
 ## Phase 0 — done
@@ -124,6 +124,18 @@ Status after this PR: **Phase 0–4, Phase 6, Phase 9, Phase 10, Phase 12, and P
 - Registry: native `sourceType` rows, `commercialUse: true`
 - Tests: deterministic plans, unique IDs, implemented flags, dim / sheet / popover math
 - Charts / device plates are **P2b owned** (`core/assets/chartsDevices.js` + Charts tab) — not a Transition Kit family
+
+## Phase 17 — done
+
+- `core/transitions/micro.js` — `EVT_MICRO_HOVER` / `PRESS` / `TOGGLE` / `CHECK` / `BADGE` / `COUNTER` / `FOCUS` / `SNAP`
+- Reuses P1 UI numbers only where they already match (button hover 102 / −2 px, button press 96→100, badge enter 90). Does not duplicate `EVT_UI_*_HOVER` / `EVT_UI_*_CLICK`
+- Soft, no bounce loop. Toggle 16 px thumb settle. Check 88→100. Focus 100→101 (not Blur-Focus). Snap 8 px into grid
+- EvoCRM paths: list row hover, toolbar press, toggle, checkbox, badge pop, KPI digit, field focus, snap-to-align
+- Catalog `implemented:true` + names on all 8 Micro IDs (`phase: 17`)
+- JSX mirrors apply math in `ae/Evotechly Transitions.jsx` Transitions tab (one chrome layer; Counter can take two digits)
+- Registry: native `sourceType` rows, `commercialUse: true`
+- Tests: deterministic plans, unique IDs, implemented flags, hover/press/toggle/check/badge/counter/focus/snap math
+- Charts / device plates are **P2b owned** (`core/assets/chartsDevices.js` + Charts tab) — not a Transition Kit family. Crossfade stays catalog-only
 
 ## What “done” means later
 

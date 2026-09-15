@@ -34,6 +34,6 @@ P2b ships native chart / device-plate generators (`core/assets/chartsDevices.js`
 
 ## Next
 
-P2b charts / devices are owned. Highest-ROI Transition Kit leftovers are Mask-Reveal or Micro. Crossfade stays catalog-only. Still no AEJuice / Motion Bro / Bento in git.
+P2b charts / devices are owned. Phase 17 Micro is owned. The kit is complete enough for EvoCRM explainers — prefer an AE soak + demo sequence. Crossfade stays catalog-only. Still no AEJuice / Motion Bro / Bento in git.
 
 Motion OS pointers: [docs/SAAS_ASSETS_P2B.md](../docs/SAAS_ASSETS_P2B.md) · [docs/SAAS_ASSETS_P1.md](../docs/SAAS_ASSETS_P1.md).

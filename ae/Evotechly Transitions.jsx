@@ -1,10 +1,10 @@
 #target aftereffects
 /*
-  Evotechly Transitions — companion ScriptUI (Transition Kit Phase 6 Mask-Reveal + Phase 13 Stagger-Cascade + Phase 10 Page-Screen + Phase 9 Overlay-Modal + Phase 12 Shared-Element + SaaS Assets P1 + P2b Charts/Devices).
+  Evotechly Transitions — companion ScriptUI (Transition Kit Phase 17 Micro + Phase 6 Mask-Reveal + Phase 13 Stagger-Cascade + Phase 10 Page-Screen + Phase 9 Overlay-Modal + Phase 12 Shared-Element + SaaS Assets P1 + P2b Charts/Devices).
   Window → Evotechly Transitions.
   Tabs: Transitions / Text / UI / Cursor / Charts.
   Numbers mirrored from core/transitions/*.js and core/assets/*.js — Node is source of truth.
-  ExtendScript cannot require Node. Apply UI Push + UI-Slide + Scale-Zoom + Shared-Element + Overlay-Modal + Page-Screen + Stagger-Cascade + Mask-Reveal, P1 native assets, and P2b chart/device plates here.
+  ExtendScript cannot require Node. Apply UI Push + UI-Slide + Scale-Zoom + Shared-Element + Overlay-Modal + Page-Screen + Stagger-Cascade + Mask-Reveal + Micro, P1 native assets, and P2b chart/device plates here.
   Native AE only. No .ffx / .aep / vendor plugins.
   Does not replace Evotechly Motion OS v0.32 (~297 KB).
 */
@@ -80,7 +80,15 @@
     EVT_MASK_SOFT_EDGE: 1,
     EVT_MASK_EXPAND: 1,
     EVT_REVEAL_IRIS: 1,
-    EVT_REVEAL_WIPE_SOFT: 1
+    EVT_REVEAL_WIPE_SOFT: 1,
+    EVT_MICRO_HOVER: 1,
+    EVT_MICRO_PRESS: 1,
+    EVT_MICRO_TOGGLE: 1,
+    EVT_MICRO_CHECK: 1,
+    EVT_MICRO_BADGE: 1,
+    EVT_MICRO_COUNTER: 1,
+    EVT_MICRO_FOCUS: 1,
+    EVT_MICRO_SNAP: 1
   };
   /* influence pairs match core/transitions/easing.js + polish.js */
   var EASE = {
@@ -199,14 +207,14 @@
     { id: "EVT_HERO_ZOOM", category: "Hero", duration: "HERO", intensity: "standard", implemented: false, phase: 16, bestUse: "Hero zoom to a feature" },
     { id: "EVT_HERO_TITLE", category: "Hero", duration: "SMOOTH", intensity: "subtle", implemented: false, phase: 16, bestUse: "Title lockup into UI" },
     { id: "EVT_HERO_PRODUCT", category: "Hero", duration: "HERO", intensity: "standard", implemented: false, phase: 16, bestUse: "Device / dashboard hero" },
-    { id: "EVT_MICRO_HOVER", category: "Micro", duration: "MICRO", intensity: "subtle", implemented: false, phase: 17, bestUse: "Hover lift 1–2%" },
-    { id: "EVT_MICRO_PRESS", category: "Micro", duration: "MICRO", intensity: "subtle", implemented: false, phase: 17, bestUse: "Click squash, then recover" },
-    { id: "EVT_MICRO_TOGGLE", category: "Micro", duration: "MICRO", intensity: "subtle", implemented: false, phase: 17, bestUse: "Toggle thumb settle" },
-    { id: "EVT_MICRO_CHECK", category: "Micro", duration: "MICRO", intensity: "subtle", implemented: false, phase: 17, bestUse: "Checkbox / check settle" },
-    { id: "EVT_MICRO_BADGE", category: "Micro", duration: "FAST", intensity: "subtle", implemented: false, phase: 17, bestUse: "Badge pop, no bounce loop" },
-    { id: "EVT_MICRO_COUNTER", category: "Micro", duration: "FAST", intensity: "subtle", implemented: false, phase: 17, bestUse: "KPI digit change" },
-    { id: "EVT_MICRO_FOCUS", category: "Micro", duration: "MICRO", intensity: "subtle", implemented: false, phase: 17, bestUse: "Focus ring / field focus" },
-    { id: "EVT_MICRO_SNAP", category: "Micro", duration: "MICRO", intensity: "standard", implemented: false, phase: 17, bestUse: "Snap into grid / alignment" }
+    { id: "EVT_MICRO_HOVER", name: "Micro Hover", category: "Micro", duration: "MICRO", intensity: "subtle", implemented: true, phase: 17, bestUse: "Hover lift 1–2%" },
+    { id: "EVT_MICRO_PRESS", name: "Micro Press", category: "Micro", duration: "MICRO", intensity: "subtle", implemented: true, phase: 17, bestUse: "Click squash, then recover" },
+    { id: "EVT_MICRO_TOGGLE", name: "Micro Toggle", category: "Micro", duration: "MICRO", intensity: "subtle", implemented: true, phase: 17, bestUse: "Toggle thumb settle" },
+    { id: "EVT_MICRO_CHECK", name: "Micro Check", category: "Micro", duration: "MICRO", intensity: "subtle", implemented: true, phase: 17, bestUse: "Checkbox / check settle" },
+    { id: "EVT_MICRO_BADGE", name: "Micro Badge", category: "Micro", duration: "FAST", intensity: "subtle", implemented: true, phase: 17, bestUse: "Badge pop, no bounce loop" },
+    { id: "EVT_MICRO_COUNTER", name: "Micro Counter", category: "Micro", duration: "FAST", intensity: "subtle", implemented: true, phase: 17, bestUse: "KPI digit change" },
+    { id: "EVT_MICRO_FOCUS", name: "Micro Focus", category: "Micro", duration: "MICRO", intensity: "subtle", implemented: true, phase: 17, bestUse: "Focus ring / field focus" },
+    { id: "EVT_MICRO_SNAP", name: "Micro Snap", category: "Micro", duration: "MICRO", intensity: "standard", implemented: true, phase: 17, bestUse: "Snap into grid / alignment" }
   ];
   var TEXT_CATALOG = [
     { id: "EVT_TEXT_FADE_UP", name: "Text Fade Up", category: "Text", duration: "FAST", implemented: true, bestUse: "Quiet line in, 8–12 px lift" },
@@ -1896,6 +1904,150 @@
   function isMaskId(id) {
     return id === "EVT_MASK_CIRCLE" || id === "EVT_MASK_RECT" || id === "EVT_MASK_SOFT_EDGE" || id === "EVT_MASK_EXPAND" || id === "EVT_REVEAL_IRIS" || id === "EVT_REVEAL_WIPE_SOFT";
   }
+  function isMicroId(id) {
+    return id === "EVT_MICRO_HOVER" || id === "EVT_MICRO_PRESS" || id === "EVT_MICRO_TOGGLE" || id === "EVT_MICRO_CHECK" || id === "EVT_MICRO_BADGE" || id === "EVT_MICRO_COUNTER" || id === "EVT_MICRO_FOCUS" || id === "EVT_MICRO_SNAP";
+  }
+  function stayKeysJs(ph, fps) {
+    return [
+      key(ph.start, fps, 0, 0, 100, 100, 0, "anticipate"),
+      key(ph.anticipate, fps, 0, 0, 100, 100, 0, "action"),
+      key(ph.mid, fps, 0, 0, 100, 100, 0, "crossover"),
+      key(ph.end, fps, 0, 0, 100, 100, 0, "done")
+    ];
+  }
+  function planMicroHover(frames, fps) {
+    var ph = phaseFrames(frames, "soft");
+    return {
+      outgoing: stayKeysJs(ph, fps),
+      incoming: [
+        key(ph.start, fps, 0, 0, 100, 100, 0, "anticipate"),
+        key(ph.anticipate, fps, 0, 0.5, 99.6, 100, 0, "action"),
+        key(ph.mid, fps, 0, -1, 101.2, 100, 0, "crossover"),
+        key(ph.settle, fps, 0, -2, 102, 100, 0, "settle"),
+        key(ph.end, fps, 0, -2, 102, 100, 0, "done")
+      ],
+      phases: ph
+    };
+  }
+  function planMicroPress(frames, fps) {
+    var ph = phaseFrames(frames, "snap");
+    return {
+      outgoing: stayKeysJs(ph, fps),
+      incoming: [
+        key(ph.start, fps, 0, 0, 100, 100, 0, "anticipate", 100),
+        key(ph.anticipate, fps, 0, 0, 100.4, 100, 0, "action", 100.4),
+        key(ph.mid, fps, 0, 1, 96, 100, 0, "crossover", 98),
+        key(ph.settle, fps, 0, 0, 100, 100, 0, "settle", 100),
+        key(ph.end, fps, 0, 0, 100, 100, 0, "done", 100)
+      ],
+      phases: ph
+    };
+  }
+  function planMicroToggle(dir, frames, fps) {
+    var ph = phaseFrames(frames, "snap");
+    var a = axisOf(dir);
+    var startX = r4(-a.x * 16);
+    var startY = r4(-a.y * 16);
+    return {
+      outgoing: stayKeysJs(ph, fps),
+      incoming: [
+        key(ph.start, fps, startX, startY, 100, 100, 0, "anticipate"),
+        key(ph.anticipate, fps, r4(startX * 0.88), r4(startY * 0.88), 100, 100, 0, "action"),
+        key(ph.mid, fps, r4(startX * 0.22), r4(startY * 0.22), 100.4, 100, 0, "crossover"),
+        key(ph.settle, fps, 0, 0, 100, 100, 0, "settle"),
+        key(ph.end, fps, 0, 0, 100, 100, 0, "done")
+      ],
+      phases: ph
+    };
+  }
+  function planMicroCheck(frames, fps) {
+    var ph = phaseFrames(frames, "snap");
+    return {
+      outgoing: stayKeysJs(ph, fps),
+      incoming: [
+        key(ph.start, fps, 0, 0, 88, 0, 0, "anticipate"),
+        key(ph.anticipate, fps, 0, 0, 88, 18, 0, "action"),
+        key(ph.mid, fps, 0, 0, 97, 78, 0, "crossover"),
+        key(ph.settle, fps, 0, 0, 100, 100, 0, "settle"),
+        key(ph.end, fps, 0, 0, 100, 100, 0, "done")
+      ],
+      phases: ph
+    };
+  }
+  function planMicroBadge(frames, fps) {
+    var ph = phaseFrames(frames, "snap");
+    return {
+      outgoing: stayKeysJs(ph, fps),
+      incoming: [
+        key(ph.start, fps, 0, 0, 90, 0, 0, "anticipate"),
+        key(ph.anticipate, fps, 0, 0, 91.2, 18, 0, "action"),
+        key(ph.mid, fps, 0, 0, 101.2, 86, 0, "crossover"),
+        key(ph.settle, fps, 0, 0, 100, 100, 0, "settle"),
+        key(ph.end, fps, 0, 0, 100, 100, 0, "done")
+      ],
+      phases: ph
+    };
+  }
+  function planMicroCounter(frames, fps) {
+    var ph = phaseFrames(frames, "snap");
+    return {
+      outgoing: [
+        key(ph.start, fps, 0, 0, 100, 100, 0, "anticipate"),
+        key(ph.anticipate, fps, 0, -1, 100, 100, 0, "action"),
+        key(ph.mid, fps, 0, -4, 100, 38, 0, "crossover"),
+        key(ph.end, fps, 0, -8, 100, 0, 0, "done")
+      ],
+      incoming: [
+        key(ph.start, fps, 0, 8, 100, 0, 0, "anticipate"),
+        key(ph.anticipate, fps, 0, 7, 100, 12, 0, "action"),
+        key(ph.mid, fps, 0, 2, 100, 72, 0, "crossover"),
+        key(ph.settle, fps, 0, 0, 100, 100, 0, "settle"),
+        key(ph.end, fps, 0, 0, 100, 100, 0, "done")
+      ],
+      phases: ph
+    };
+  }
+  function planMicroFocus(frames, fps) {
+    var ph = phaseFrames(frames, "soft");
+    return {
+      outgoing: stayKeysJs(ph, fps),
+      incoming: [
+        key(ph.start, fps, 0, 0, 100, 100, 0, "anticipate"),
+        key(ph.anticipate, fps, 0, 0, 100.2, 100, 0, "action"),
+        key(ph.mid, fps, 0, 0, 100.6, 100, 0, "crossover"),
+        key(ph.settle, fps, 0, 0, 101, 100, 0, "settle"),
+        key(ph.end, fps, 0, 0, 101, 100, 0, "done")
+      ],
+      phases: ph
+    };
+  }
+  function planMicroSnap(dir, frames, fps) {
+    var ph = phaseFrames(frames, "snap");
+    var a = axisOf(dir);
+    var startX = r4(-a.x * 8);
+    var startY = r4(-a.y * 8);
+    return {
+      outgoing: stayKeysJs(ph, fps),
+      incoming: [
+        key(ph.start, fps, startX, startY, 100, 100, 0, "anticipate"),
+        key(ph.anticipate, fps, r4(startX * 0.88), r4(startY * 0.88), 100, 100, 0, "action"),
+        key(ph.mid, fps, r4(startX * 0.18), r4(startY * 0.18), 100, 100, 0, "crossover"),
+        key(ph.settle, fps, 0, 0, 100, 100, 0, "settle"),
+        key(ph.end, fps, 0, 0, 100, 100, 0, "done")
+      ],
+      phases: ph
+    };
+  }
+  function planMicro(id, dir, frames, fps) {
+    if (id === "EVT_MICRO_HOVER") return planMicroHover(frames, fps);
+    if (id === "EVT_MICRO_PRESS") return planMicroPress(frames, fps);
+    if (id === "EVT_MICRO_TOGGLE") return planMicroToggle(dir, frames, fps);
+    if (id === "EVT_MICRO_CHECK") return planMicroCheck(frames, fps);
+    if (id === "EVT_MICRO_BADGE") return planMicroBadge(frames, fps);
+    if (id === "EVT_MICRO_COUNTER") return planMicroCounter(frames, fps);
+    if (id === "EVT_MICRO_FOCUS") return planMicroFocus(frames, fps);
+    return planMicroSnap(dir, frames, fps);
+  }
   function maskSpecForId(id) {
     if (id === "EVT_MASK_CIRCLE") return { type: "ellipse", feather: 10, start: -160, mid: -48, end: 0, outMid: 64, profile: null, targetAware: 1, defaultW: 360, defaultH: 240 };
     if (id === "EVT_MASK_RECT") return { type: "roundedRect", feather: 6, start: -140, mid: -36, end: 0, outMid: 58, profile: null };
@@ -2154,6 +2306,7 @@
     if (id === "EVT_STAGGER_FADE") return planStaggerFade(frames, fps);
     if (id === "EVT_WAVE_SOFT") return planWaveSoft(dir, frames, fps);
     if (isMaskId(id)) return planMaskReveal(id, dir, frames, fps);
+    if (isMicroId(id)) return planMicro(id, dir, frames, fps);
     return planDirectional(dir, frames, fps, comp);
   }
   function defaultDirForId(id) {
@@ -2168,6 +2321,8 @@
     if (id === "EVT_NAV_BACK") return "right";
     if (id === "EVT_CASCADE_OUT") return "down";
     if (id === "EVT_STAGGER_CARDS" || id === "EVT_STAGGER_LIST" || id === "EVT_CASCADE_IN" || id === "EVT_STAGGER_FADE" || id === "EVT_WAVE_SOFT") return "up";
+    if (id === "EVT_MICRO_TOGGLE") return "right";
+    if (id === "EVT_MICRO_COUNTER") return "up";
     return "left";
   }
   function remapId(id, dir) {
@@ -2200,10 +2355,15 @@
     id = remapId(row.id, dir);
     row = findCatalog(id) || row;
     if (!row.implemented) {
-      alert(row.id + " is catalogued for Phase " + row.phase + ".\nPhase 6 applies Mask-Reveal (plus UI Push / UI-Slide / Scale-Zoom / Shared-Element / Overlay-Modal / Page-Screen / Stagger-Cascade).\nSee docs/TRANSITION_PHASES.md.");
+      alert(row.id + " is catalogued for Phase " + row.phase + ".\nPhase 17 applies Micro (plus UI Push / UI-Slide / Scale-Zoom / Shared-Element / Overlay-Modal / Page-Screen / Stagger-Cascade / Mask-Reveal).\nSee docs/TRANSITION_PHASES.md.");
       return;
     }
-    if (sel.length < 2) {
+    if (isMicroId(id)) {
+      if (sel.length < 1) {
+        alert(id === "EVT_MICRO_COUNTER" ? "Select the chrome layer, or outgoing digit then incoming digit." : "Select the chrome layer (toolbar / list / toggle / badge).");
+        return;
+      }
+    } else if (sel.length < 2) {
       alert(isStaggerId(id) ? "Select 2+ list/card rows (top of selection = first)." : "Select outgoing, then incoming (two layers).");
       return;
     }
@@ -2222,6 +2382,8 @@
       ensureControl(comp, frames, DIRS.indexOf(dir), EASING_IDS.indexOf(ease));
       if (isStaggerId(id) && plan.item) {
         for (i = 0; i < sel.length; i++) applyLayerKeys(sel[i], shiftKeysJs(plan.item, i * plan.offsetFrames, fps), t0, ease);
+      } else if (isMicroId(id) && sel.length < 2) {
+        applyLayerKeys(sel[0], plan.incoming, t0, ease);
       } else {
         applyLayerKeys(sel[0], plan.outgoing, t0, ease);
         applyLayerKeys(sel[1], plan.incoming, t0, ease);
@@ -2268,7 +2430,7 @@
     win.spacing = 8;
     win.margins = 10;
     win.add("statictext", undefined, "EVOTECHLY  ·  Transitions");
-    intro = win.add("statictext", undefined, "Phase 6 Mask-Reveal + Phase 13 Stagger-Cascade + Phase 10 Page-Screen + Phase 9 Overlay-Modal + Phase 12 Shared-Element + Phase 4 Scale-Zoom + Phase 3 UI-Slide + Phase 2 UI Push + P1 native Text / UI / Cursor + P2b Charts / Devices. Catalog is searchable. Companion to Motion OS — does not replace v0.32. Node is source of truth; this panel mirrors apply numbers.", { multiline: true });
+    intro = win.add("statictext", undefined, "Phase 17 Micro + Phase 6 Mask-Reveal + Phase 13 Stagger-Cascade + Phase 10 Page-Screen + Phase 9 Overlay-Modal + Phase 12 Shared-Element + Phase 4 Scale-Zoom + Phase 3 UI-Slide + Phase 2 UI Push + P1 native Text / UI / Cursor + P2b Charts / Devices. Catalog is searchable. Companion to Motion OS — does not replace v0.32. Node is source of truth; this panel mirrors apply numbers.", { multiline: true });
     intro.characters = 46;
 
     g = win.add("group");
@@ -2331,7 +2493,7 @@
       else runApplyAsset("Cursor", curList, groupList, easeList);
     };
 
-    note = win.add("statictext", undefined, "Transitions: select outgoing, then incoming. Stagger-Cascade: 2+ row layers (top = first). Text / UI / Cursor / Charts: select the target layer (Swap needs two; series/funnel stagger selected layers). ● = apply. Native only — no vendor packs.", { multiline: true });
+    note = win.add("statictext", undefined, "Transitions: select outgoing, then incoming. Micro: one chrome layer (Counter: old digit, then new). Stagger-Cascade: 2+ row layers (top = first). Text / UI / Cursor / Charts: select the target layer (Swap needs two; series/funnel stagger selected layers). ● = apply. Native only — no vendor packs.", { multiline: true });
     note.characters = 46;
 
     foot = win.add("statictext", undefined, "Install: Scripts/ScriptUI Panels next to Motion OS Hub. Docs: TRANSITION_KIT.md · TRANSITION_PHASES.md.", { multiline: true });

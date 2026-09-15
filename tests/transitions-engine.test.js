@@ -158,6 +158,7 @@ test("every implemented ID produces a deterministic complete plan", function () 
   const pageScreen = require("../core/transitions/pageScreen");
   const staggerCascade = require("../core/transitions/staggerCascade");
   const maskReveal = require("../core/transitions/maskReveal");
+  const micro = require("../core/transitions/micro");
   const ids = engine.IMPLEMENTED_IDS.slice();
   assert.deepEqual(
     ids,
@@ -168,6 +169,7 @@ test("every implemented ID produces a deterministic complete plan", function () 
       .concat(pageScreen.PAGE_SCREEN_IDS)
       .concat(staggerCascade.STAGGER_CASCADE_IDS)
       .concat(maskReveal.MASK_REVEAL_IDS)
+      .concat(micro.MICRO_IDS)
   );
   assert.deepEqual(ids, [
     "EVT_UI_PUSH_LEFT",
@@ -231,7 +233,15 @@ test("every implemented ID produces a deterministic complete plan", function () 
     "EVT_MASK_SOFT_EDGE",
     "EVT_MASK_EXPAND",
     "EVT_REVEAL_IRIS",
-    "EVT_REVEAL_WIPE_SOFT"
+    "EVT_REVEAL_WIPE_SOFT",
+    "EVT_MICRO_HOVER",
+    "EVT_MICRO_PRESS",
+    "EVT_MICRO_TOGGLE",
+    "EVT_MICRO_CHECK",
+    "EVT_MICRO_BADGE",
+    "EVT_MICRO_COUNTER",
+    "EVT_MICRO_FOCUS",
+    "EVT_MICRO_SNAP"
   ]);
   ids.forEach(function (id) {
     const opts = {
@@ -262,7 +272,9 @@ test("every implemented ID produces a deterministic complete plan", function () 
     assert.ok(a.anatomy.action);
     assert.ok(a.anatomy.crossover);
     assert.ok(a.anatomy.settle);
-    const name = maskReveal.isMaskRevealId(id)
+    const name = micro.isMicroId(id)
+      ? micro.displayName(id)
+      : maskReveal.isMaskRevealId(id)
       ? maskReveal.displayName(id)
       : staggerCascade.isStaggerCascadeId(id)
         ? staggerCascade.displayName(id)
@@ -1142,8 +1154,124 @@ test("Mask-Reveal family uses native expansion, no bounce, and wipe-from-bounds"
   assert.equal(engine.applyTransitionPlan({ id: "EVT_CARD_REVEAL", durationFrames: 16, fps: 30 }).id, "EVT_MASK_RECT");
 });
 
+test("Micro family reuses P1 hover/press numbers, no bounce loop, no UI_* ID duplicates", function () {
+  const micro = require("../core/transitions/micro");
+  const ui = require("../core/assets/uiMicro");
+  assert.deepEqual(micro.MICRO_IDS, [
+    "EVT_MICRO_HOVER",
+    "EVT_MICRO_PRESS",
+    "EVT_MICRO_TOGGLE",
+    "EVT_MICRO_CHECK",
+    "EVT_MICRO_BADGE",
+    "EVT_MICRO_COUNTER",
+    "EVT_MICRO_FOCUS",
+    "EVT_MICRO_SNAP"
+  ]);
+  assert.equal(micro.HOVER_SCALE, ui.ELEMENTS.button.hoverScale);
+  assert.equal(micro.HOVER_Y, ui.ELEMENTS.button.hoverY);
+  assert.equal(micro.PRESS_SCALE, ui.ELEMENTS.button.clickScale);
+  assert.equal(micro.PRESS_SY, ui.ELEMENTS.button.clickScale + 2);
+  assert.equal(micro.PRESS_Y, 1);
+  assert.equal(micro.BADGE_START, ui.ELEMENTS.badge.enterScale);
+  assert.equal(micro.COUNTER_Y, ui.ELEMENTS.metric.y);
+  assert.equal(micro.TOGGLE_TRAVEL, 16);
+  assert.equal(micro.CHECK_START, 88);
+  assert.equal(micro.FOCUS_SCALE, 101);
+  assert.equal(micro.SNAP_TRAVEL, 8);
+  assert.equal(micro.HOVER_SCALE, 102);
+  assert.equal(micro.PRESS_SCALE, 96);
+
+  micro.MICRO_IDS.forEach(function (id) {
+    const plan = engine.applyTransitionPlan({ id: id, durationFrames: 8, fps: 30 });
+    assert.equal(plan.implemented, true);
+    assert.equal(plan.category, "Micro");
+    assert.equal(plan.style, "premium-saas");
+    assert.equal(plan.travel.overshoot, 0);
+    assert.ok(plan.incoming.keys.length >= 3);
+    assert.ok(plan.outgoing.keys.length >= 3);
+    const scales = plan.incoming.keys.map(function (k) {
+      return k.scale[0];
+    });
+    const peaks = scales.filter(function (s, i) {
+      return i > 0 && i < scales.length - 1 && s > scales[i - 1] && s > scales[i + 1];
+    });
+    assert.ok(peaks.length <= 1, id + " must not bounce-loop");
+    assert.equal(ui.UI_MICRO_IDS.indexOf(id), -1, id + " must not duplicate P1 UI IDs");
+  });
+
+  const hover = engine.applyTransitionPlan({ id: "EVT_MICRO_HOVER", durationFrames: 8, fps: 30 });
+  assert.equal(hover.group, "MICRO");
+  assert.equal(hover.incoming.keys[hover.incoming.keys.length - 1].scale[0], micro.HOVER_SCALE);
+  assert.equal(hover.incoming.keys[hover.incoming.keys.length - 1].y, micro.HOVER_Y);
+  assert.equal(hover.outgoing.keys[0].scale[0], 100);
+  assert.equal(hover.travel.hover, true);
+
+  const press = engine.applyTransitionPlan({ id: "EVT_MICRO_PRESS", durationFrames: 8, fps: 30 });
+  const pressMid = press.incoming.keys.filter(function (k) {
+    return k.phase === "crossover";
+  })[0];
+  assert.equal(pressMid.scale[0], micro.PRESS_SCALE);
+  assert.equal(pressMid.scale[1], micro.PRESS_SY);
+  assert.equal(pressMid.y, micro.PRESS_Y);
+  assert.equal(press.incoming.keys[press.incoming.keys.length - 1].scale[0], 100);
+  assert.equal(press.travel.recover, true);
+
+  const toggle = engine.applyTransitionPlan({ id: "EVT_MICRO_TOGGLE", durationFrames: 8, fps: 30 });
+  assert.equal(toggle.direction, "right");
+  assert.equal(toggle.incoming.keys[0].x, -micro.TOGGLE_TRAVEL);
+  assert.equal(toggle.incoming.keys[toggle.incoming.keys.length - 1].x, 0);
+  assert.equal(toggle.travel.distance, micro.TOGGLE_TRAVEL);
+
+  const toggleLeft = engine.applyTransitionPlan({ id: "EVT_MICRO_TOGGLE", durationFrames: 8, fps: 30, direction: "left" });
+  assert.equal(toggleLeft.incoming.keys[0].x, micro.TOGGLE_TRAVEL);
+
+  const check = engine.applyTransitionPlan({ id: "EVT_MICRO_CHECK", durationFrames: 8, fps: 30 });
+  assert.equal(check.incoming.keys[0].scale[0], micro.CHECK_START);
+  assert.equal(check.incoming.keys[0].opacity, 0);
+  assert.equal(check.incoming.keys[check.incoming.keys.length - 1].scale[0], 100);
+  assert.equal(check.incoming.keys[check.incoming.keys.length - 1].opacity, 100);
+
+  const badge = engine.applyTransitionPlan({ id: "EVT_MICRO_BADGE", fps: 30 });
+  assert.equal(badge.group, "FAST");
+  assert.equal(badge.incoming.keys[0].scale[0], micro.BADGE_START);
+  assert.equal(badge.incoming.keys[badge.incoming.keys.length - 1].scale[0], 100);
+  assert.equal(badge.travel.bounceLoop, false);
+
+  const counter = engine.applyTransitionPlan({ id: "EVT_MICRO_COUNTER", durationFrames: 10, fps: 30 });
+  assert.equal(counter.group, "FAST");
+  assert.equal(counter.outgoing.keys[counter.outgoing.keys.length - 1].y, -micro.COUNTER_Y);
+  assert.equal(counter.outgoing.keys[counter.outgoing.keys.length - 1].opacity, 0);
+  assert.equal(counter.incoming.keys[0].y, micro.COUNTER_Y);
+  assert.equal(counter.incoming.keys[0].opacity, 0);
+  assert.equal(counter.incoming.keys[counter.incoming.keys.length - 1].y, 0);
+  assert.equal(counter.incoming.keys[counter.incoming.keys.length - 1].opacity, 100);
+
+  const focus = engine.applyTransitionPlan({ id: "EVT_MICRO_FOCUS", durationFrames: 8, fps: 30 });
+  assert.equal(focus.incoming.keys[focus.incoming.keys.length - 1].scale[0], micro.FOCUS_SCALE);
+  assert.equal(focus.travel.focus, true);
+  focus.incoming.keys.forEach(function (k) {
+    assert.equal(k.blur, 0);
+  });
+
+  const snap = engine.applyTransitionPlan({ id: "EVT_MICRO_SNAP", durationFrames: 8, fps: 30 });
+  assert.equal(snap.direction, "left");
+  assert.equal(snap.incoming.keys[0].x, micro.SNAP_TRAVEL);
+  assert.equal(snap.incoming.keys[snap.incoming.keys.length - 1].x, 0);
+  assert.equal(snap.travel.distance, micro.SNAP_TRAVEL);
+
+  const snapDown = engine.applyTransitionPlan({ id: "EVT_MICRO_SNAP", durationFrames: 8, fps: 30, direction: "down" });
+  assert.equal(snapDown.incoming.keys[0].y, -micro.SNAP_TRAVEL);
+
+  assert.equal(engine.applyTransitionPlan({ id: "EVT_HOVER", durationFrames: 8, fps: 30 }).id, "EVT_MICRO_HOVER");
+  assert.equal(engine.applyTransitionPlan({ id: "EVT_TOGGLE", durationFrames: 8, fps: 30 }).id, "EVT_MICRO_TOGGLE");
+  assert.equal(engine.applyTransitionPlan({ id: "EVT_CHECKBOX", durationFrames: 8, fps: 30 }).id, "EVT_MICRO_CHECK");
+  assert.equal(engine.applyTransitionPlan({ id: "EVT_FOCUS_RING", durationFrames: 8, fps: 30 }).id, "EVT_MICRO_FOCUS");
+  assert.equal(engine.applyTransitionPlan({ id: "EVT_GRID_SNAP", durationFrames: 8, fps: 30 }).id, "EVT_MICRO_SNAP");
+  assert.notEqual(engine.applyTransitionPlan({ id: "EVT_UI_BUTTON_HOVER", durationFrames: 8, fps: 30 }).id, "EVT_MICRO_HOVER");
+});
+
 test("unimplemented catalog IDs return a safe stub plan", function () {
-  const plan = engine.applyTransitionPlan({ id: "EVT_MICRO_HOVER" });
+  const plan = engine.applyTransitionPlan({ id: "EVT_BLUR_FOCUS" });
   assert.equal(plan.implemented, false);
   assert.ok(plan.description.indexOf("later phase") !== -1);
   assert.equal(plan.outgoing.set.position.length, 0);
@@ -1158,6 +1286,7 @@ test("catalog has unique EVT_ IDs and implemented flags for shipped families", f
   const pageScreen = require("../core/transitions/pageScreen");
   const staggerCascade = require("../core/transitions/staggerCascade");
   const maskReveal = require("../core/transitions/maskReveal");
+  const micro = require("../core/transitions/micro");
   const list = registry.loadCatalog();
   assert.ok(list.length >= 90);
   assert.deepEqual(registry.uniqueIdErrors(), []);
@@ -1170,7 +1299,7 @@ test("catalog has unique EVT_ IDs and implemented flags for shipped families", f
     set[id] = true;
   });
   const implemented = registry.listImplemented();
-  assert.equal(implemented.length, 62);
+  assert.equal(implemented.length, 70);
   implemented.forEach(function (row) {
     assert.equal(row.implemented, true);
     assert.equal(row.style, "premium-saas");
@@ -1195,6 +1324,9 @@ test("catalog has unique EVT_ IDs and implemented flags for shipped families", f
     } else if (row.category === "Mask-Reveal") {
       assert.equal(row.phase, 6);
       assert.equal(row.name, maskReveal.displayName(row.id));
+    } else if (row.category === "Micro") {
+      assert.equal(row.phase, 17);
+      assert.equal(row.name, micro.displayName(row.id));
     } else {
       assert.equal(row.category, "UI-Push");
       assert.ok(uiPush.PHASE1_IDS.indexOf(row.id) !== -1 ? row.phase === 1 : row.phase === 2, row.id + " phase");
@@ -1287,6 +1419,19 @@ test("catalog has unique EVT_ IDs and implemented flags for shipped families", f
   assert.equal(registry.filterCatalog({ query: "mask circle", category: "Mask-Reveal" })[0].id, "EVT_MASK_CIRCLE");
   assert.equal(registry.filterCatalog({ query: "reveal iris", category: "Mask-Reveal" })[0].id, "EVT_REVEAL_IRIS");
   assert.equal(registry.filterCatalog({ implemented: true, category: "Mask-Reveal" }).length, 6);
+  assert.equal(registry.getById("EVT_MICRO_HOVER").implemented, true);
+  assert.equal(registry.getById("EVT_MICRO_HOVER").name, "Micro Hover");
+  assert.equal(registry.getById("EVT_MICRO_PRESS").name, "Micro Press");
+  assert.equal(registry.getById("EVT_MICRO_TOGGLE").name, "Micro Toggle");
+  assert.equal(registry.getById("EVT_MICRO_CHECK").name, "Micro Check");
+  assert.equal(registry.getById("EVT_MICRO_BADGE").name, "Micro Badge");
+  assert.equal(registry.getById("EVT_MICRO_COUNTER").name, "Micro Counter");
+  assert.equal(registry.getById("EVT_MICRO_FOCUS").name, "Micro Focus");
+  assert.equal(registry.getById("EVT_MICRO_SNAP").name, "Micro Snap");
+  assert.equal(registry.listByCategory("Micro").length, 8);
+  assert.equal(registry.filterCatalog({ query: "micro hover", category: "Micro" })[0].id, "EVT_MICRO_HOVER");
+  assert.equal(registry.filterCatalog({ query: "toggle thumb", category: "Micro" })[0].id, "EVT_MICRO_TOGGLE");
+  assert.equal(registry.filterCatalog({ implemented: true, category: "Micro" }).length, 8);
 });
 
 test("demo storyboard is a dashboard→card→analytics sequence", function () {
@@ -1357,6 +1502,17 @@ test("JSX companion embeds UI Push IDs and mirrored constants", function () {
   assert.ok(jsx.indexOf("function planMaskReveal") !== -1);
   assert.ok(jsx.indexOf("function applyNativeMask") !== -1);
   assert.ok(jsx.indexOf("function isMaskId") !== -1);
+  assert.ok(jsx.indexOf("function isMicroId") !== -1);
+  assert.ok(jsx.indexOf("function planMicro") !== -1);
+  assert.ok(jsx.indexOf("function planMicroHover") !== -1);
+  assert.ok(jsx.indexOf("function planMicroPress") !== -1);
+  assert.ok(jsx.indexOf("function planMicroToggle") !== -1);
+  assert.ok(jsx.indexOf("function planMicroCheck") !== -1);
+  assert.ok(jsx.indexOf("function planMicroBadge") !== -1);
+  assert.ok(jsx.indexOf("function planMicroCounter") !== -1);
+  assert.ok(jsx.indexOf("function planMicroFocus") !== -1);
+  assert.ok(jsx.indexOf("function planMicroSnap") !== -1);
+  assert.ok(jsx.indexOf("function stayKeysJs") !== -1);
   assert.ok(jsx.indexOf("function maskSpecForId") !== -1);
   assert.ok(jsx.indexOf("function setEllipseMaskShape") !== -1);
   assert.ok(jsx.indexOf("EVO_MASK_REVEAL") !== -1);
@@ -1402,6 +1558,14 @@ test("JSX companion embeds UI Push IDs and mirrored constants", function () {
   assert.ok(jsx.indexOf("Mask Expand") !== -1);
   assert.ok(jsx.indexOf("Reveal Iris") !== -1);
   assert.ok(jsx.indexOf("Reveal Wipe Soft") !== -1);
+  assert.ok(jsx.indexOf("Micro Hover") !== -1);
+  assert.ok(jsx.indexOf("Micro Press") !== -1);
+  assert.ok(jsx.indexOf("Micro Toggle") !== -1);
+  assert.ok(jsx.indexOf("Micro Check") !== -1);
+  assert.ok(jsx.indexOf("Micro Badge") !== -1);
+  assert.ok(jsx.indexOf("Micro Counter") !== -1);
+  assert.ok(jsx.indexOf("Micro Focus") !== -1);
+  assert.ok(jsx.indexOf("Micro Snap") !== -1);
   assert.ok(/#target aftereffects/.test(jsx));
   assert.ok(jsx.indexOf("does not replace") !== -1);
   registry.catalogIds().forEach(function (id) {

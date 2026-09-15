@@ -238,6 +238,27 @@ test("asset registry schema + native Transition Kit stubs", function () {
     assert.match(a.notes, /maskReveal\.js/);
   });
 
+  const chrome = native.filter(function (a) {
+    return (
+      a.transitionKitId &&
+      (a.transitionKitId === "EVT_MICRO_HOVER" ||
+        a.transitionKitId === "EVT_MICRO_PRESS" ||
+        a.transitionKitId === "EVT_MICRO_TOGGLE" ||
+        a.transitionKitId === "EVT_MICRO_CHECK" ||
+        a.transitionKitId === "EVT_MICRO_BADGE" ||
+        a.transitionKitId === "EVT_MICRO_COUNTER" ||
+        a.transitionKitId === "EVT_MICRO_FOCUS" ||
+        a.transitionKitId === "EVT_MICRO_SNAP")
+    );
+  });
+  assert.equal(chrome.length, 8);
+  chrome.forEach(function (a) {
+    assert.equal(a.sourceType, "native");
+    assert.equal(a.commercialUse, true);
+    assert.equal(a.implemented, true);
+    assert.match(a.notes, /micro\.js/);
+  });
+
   const catalog = JSON.parse(
     fs.readFileSync(path.join(__dirname, "..", "transitions", "Metadata", "catalog.json"), "utf8")
   );
@@ -245,7 +266,7 @@ test("asset registry schema + native Transition Kit stubs", function () {
   catalog.transitions.forEach(function (row) {
     byId[row.id] = row;
   });
-  push.concat(slide).concat(zoom).concat(shared).concat(overlay).concat(page).concat(stagger).concat(mask).forEach(function (a) {
+  push.concat(slide).concat(zoom).concat(shared).concat(overlay).concat(page).concat(stagger).concat(mask).concat(chrome).forEach(function (a) {
     assert.ok(byId[a.transitionKitId], "catalog missing " + a.transitionKitId);
     assert.equal(byId[a.transitionKitId].implemented, true);
   });

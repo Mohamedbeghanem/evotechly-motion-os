@@ -12,6 +12,7 @@ const overlayModal = require("./overlayModal");
 const pageScreen = require("./pageScreen");
 const staggerCascade = require("./staggerCascade");
 const maskReveal = require("./maskReveal");
+const micro = require("./micro");
 const engine = require("./engine");
 const registry = require("./registry");
 
@@ -23,6 +24,7 @@ module.exports = Object.assign({}, easing, timing, target, control, uiPush, engi
   pageScreen: pageScreen,
   staggerCascade: staggerCascade,
   maskReveal: maskReveal,
+  micro: micro,
   UI_SLIDE_IDS: uiSlide.UI_SLIDE_IDS,
   SCALE_ZOOM_IDS: scaleZoom.SCALE_ZOOM_IDS,
   SHARED_ELEMENT_IDS: sharedElement.SHARED_ELEMENT_IDS,
@@ -30,11 +32,13 @@ module.exports = Object.assign({}, easing, timing, target, control, uiPush, engi
   PAGE_SCREEN_IDS: pageScreen.PAGE_SCREEN_IDS,
   STAGGER_CASCADE_IDS: staggerCascade.STAGGER_CASCADE_IDS,
   MASK_REVEAL_IDS: maskReveal.MASK_REVEAL_IDS,
+  MICRO_IDS: micro.MICRO_IDS,
   isUiSlideId: uiSlide.isUiSlideId,
   isScaleZoomId: scaleZoom.isScaleZoomId,
   isSharedElementId: sharedElement.isSharedElementId,
   isOverlayModalId: overlayModal.isOverlayModalId,
   isPageScreenId: pageScreen.isPageScreenId,
   isStaggerCascadeId: staggerCascade.isStaggerCascadeId,
-  isMaskRevealId: maskReveal.isMaskRevealId
+  isMaskRevealId: maskReveal.isMaskRevealId,
+  isMicroId: micro.isMicroId
 });
