@@ -1,6 +1,6 @@
 # Transition Kit — phase roadmap
 
-Status after this PR: **Phase 0–3 are done.** Later phases are catalogued, not implemented.
+Status after this PR: **Phase 0–4 are done.** `EVT_SHARED_CARD` shipped early (bounds-match). Later phases are catalogued, not implemented.
 
 | Phase | Job | Status |
 |---|---|---|
@@ -8,7 +8,7 @@ Status after this PR: **Phase 0–3 are done.** Later phases are catalogued, not
 | **1** | Core engine + 6 UI Push plan generators + companion panel + tests | **done** |
 | **2** | Full UI Push family (soft / snap / overshoot / parallax / fade / cover / panel / dashboard / split) | **done** |
 | **3** | UI-Slide card family (card / panel / drawer / sheet / stack / peek) | **done** |
-| 4 | Scale-Zoom family + JSX apply for `planTargetZoom` | planned |
+| **4** | Scale-Zoom family + JSX apply for `planTargetZoom` + `EVT_SHARED_CARD` | **done** |
 | 5 | Crossfade family | planned |
 | 6 | Mask-Reveal family (native masks, no plugins) | planned |
 | 7 | Blur-Focus family | planned |
@@ -58,6 +58,17 @@ Status after this PR: **Phase 0–3 are done.** Later phases are catalogued, not
 - Registry: native `sourceType` rows, `commercialUse: true`
 - Tests: deterministic plans, unique IDs, implemented flags
 - Charts / device plates deferred to P2b
+
+## Phase 4 — done
+
+- `core/transitions/scaleZoom.js` — `EVT_ZOOM_IN` / `OUT` / `TARGET` / `MATCH` + `EVT_SCALE_POP` / `BREATHE` / `PUNCH` / `SETTLE`
+- `core/transitions/sharedElement.js` — `EVT_SHARED_CARD` bounds-match (position + scale, not mesh)
+- `planTargetZoom` + `planBoundsMorph` in `core/transitions/target.js`; JSX apply mirrors both
+- Catalog `implemented:true` + names on the 8 Scale-Zoom IDs (`phase: 4`) and `EVT_SHARED_CARD` (`phase: 12`)
+- JSX mirrors apply math in `ae/Evotechly Transitions.jsx` Transitions tab
+- Registry: native `sourceType` rows, `commercialUse: true`
+- Tests: deterministic plans, unique IDs, implemented flags
+- Remaining Shared-Element IDs (`SHARED_IMAGE`, `MATCH_CUT`, `MORPH_BOUNDS`, `HERO_TO_DETAIL`, `LIST_TO_DETAIL`) stay catalog-only
 
 ## What “done” means later
 

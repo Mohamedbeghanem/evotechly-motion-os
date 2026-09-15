@@ -2,7 +2,7 @@
 
 /**
  * Transition Kit engine — deterministic plans.
- * Node is source of truth. JSX mirrors UI Push + UI Slide family numbers.
+ * Node is source of truth. JSX mirrors UI Push / UI-Slide / Scale-Zoom numbers.
  * Native AE only. No .ffx / .aep / vendor plugins.
  */
 
@@ -13,8 +13,12 @@ const { planTargetZoom } = require("./target");
 const { planTransitionControl, CONTROL_NAME, DIRECTION_ENUM } = require("./control");
 const uiPush = require("./uiPush");
 const uiSlide = require("./uiSlide");
+const scaleZoom = require("./scaleZoom");
+const sharedElement = require("./sharedElement");
 
-const IMPLEMENTED_IDS = uiPush.UI_PUSH_IDS.concat(uiSlide.UI_SLIDE_IDS);
+const IMPLEMENTED_IDS = uiPush.UI_PUSH_IDS.concat(uiSlide.UI_SLIDE_IDS)
+  .concat(scaleZoom.SCALE_ZOOM_IDS)
+  .concat(sharedElement.SHARED_ELEMENT_IDS);
 const ANATOMY = uiPush.ANATOMY;
 const STYLE = "premium-saas";
 const DEFAULT_COMP = { w: 1920, h: 1080, fps: DEFAULT_FPS };
@@ -34,6 +38,10 @@ function layerRest(layer) {
 }
 
 function normalizeId(id) {
+  const shared = sharedElement.resolveId(id);
+  if (sharedElement.isSharedElementId(shared)) return shared;
+  const zoom = scaleZoom.resolveId(id);
+  if (scaleZoom.isScaleZoomId(zoom)) return zoom;
   const slide = uiSlide.resolveId(id);
   if (uiSlide.isUiSlideId(slide)) return slide;
   return uiPush.resolveId(id);
@@ -46,24 +54,40 @@ function defaultDirectionForId(id) {
 }
 
 function defaultGroupForId(id) {
-  return uiSlide.DEFAULT_GROUP_BY_ID[id] || uiPush.DEFAULT_GROUP_BY_ID[id] || "STANDARD";
+  return (
+    sharedElement.DEFAULT_GROUP_BY_ID[id] ||
+    scaleZoom.DEFAULT_GROUP_BY_ID[id] ||
+    uiSlide.DEFAULT_GROUP_BY_ID[id] ||
+    uiPush.DEFAULT_GROUP_BY_ID[id] ||
+    "STANDARD"
+  );
 }
 
 function defaultOvershootForId(id) {
+  if (sharedElement.DEFAULT_OVERSHOOT_BY_ID[id] != null) return sharedElement.DEFAULT_OVERSHOOT_BY_ID[id];
+  if (scaleZoom.DEFAULT_OVERSHOOT_BY_ID[id] != null) return scaleZoom.DEFAULT_OVERSHOOT_BY_ID[id];
   if (uiSlide.DEFAULT_OVERSHOOT_BY_ID[id] != null) return uiSlide.DEFAULT_OVERSHOOT_BY_ID[id];
   if (uiPush.DEFAULT_OVERSHOOT_BY_ID[id] != null) return uiPush.DEFAULT_OVERSHOOT_BY_ID[id];
   return 6;
 }
 
 function familyCategory(id) {
+  if (sharedElement.isSharedElementId(id)) return "Shared-Element";
+  if (scaleZoom.isScaleZoomId(id)) return "Scale-Zoom";
   if (uiSlide.isUiSlideId(id)) return "UI-Slide";
   if (uiPush.isUiPushId(id)) return "UI-Push";
   return "UI-Push";
 }
 
 function familyDisplayName(id) {
+  if (sharedElement.isSharedElementId(id)) return sharedElement.displayName(id);
+  if (scaleZoom.isScaleZoomId(id)) return scaleZoom.displayName(id);
   if (uiSlide.isUiSlideId(id)) return uiSlide.displayName(id);
   return uiPush.displayName(id);
+}
+
+function familyPhaseProfile(id) {
+  return uiPush.PHASE_PROFILE[id] || scaleZoom.PHASE_PROFILE[id];
 }
 
 function normalizePushDirection(value, id) {
@@ -143,7 +167,7 @@ function applyTransitionPlan(opts) {
   const incomingName = layerName(opts.incoming, "Incoming");
   const outgoingRest = layerRest(opts.outgoing);
   const incomingRest = layerRest(opts.incoming);
-  const phases = uiPush.phaseFrames(frames, uiPush.PHASE_PROFILE[id]);
+  const phases = uiPush.phaseFrames(frames, familyPhaseProfile(id));
   const control = planTransitionControl({
     durationFrames: frames,
     fps: fps,
@@ -180,7 +204,7 @@ function applyTransitionPlan(opts) {
     layers: [],
     outgoing: uiPush.emptyLayer(outgoingName, "outgoing", outgoingRest),
     incoming: uiPush.emptyLayer(incomingName, "incoming", incomingRest),
-    note: "Native AE keyframes. Node plan is source of truth. JSX mirrors the UI Push and UI Slide families."
+    note: "Native AE keyframes. Node plan is source of truth. JSX mirrors UI Push, UI-Slide, Scale-Zoom, and Shared Card."
   };
 
   if (opts.target && opts.target.layerBounds) {
@@ -208,13 +232,23 @@ function applyTransitionPlan(opts) {
     outgoingName: outgoingName,
     incomingName: incomingName,
     outgoingRest: outgoingRest,
-    incomingRest: incomingRest
+    incomingRest: incomingRest,
+    id: id,
+    strength: strength,
+    comp: comp,
+    target: opts.target
   };
 
-  const built = uiSlide.isUiSlideId(id) ? uiSlide.plan(id, ctx) : uiPush.plan(id, ctx);
+  let built;
+  if (uiSlide.isUiSlideId(id)) built = uiSlide.plan(id, ctx);
+  else if (scaleZoom.isScaleZoomId(id)) built = scaleZoom.plan(id, ctx);
+  else if (sharedElement.isSharedElementId(id)) built = sharedElement.plan(id, ctx);
+  else built = uiPush.plan(id, ctx);
   shared.outgoing = built.outgoing;
   shared.incoming = built.incoming;
   shared.travel = built.travel;
+  if (built.target) shared.target = built.target;
+  if (built.morph) shared.morph = built.morph;
   shared.layers = [built.outgoing, built.incoming];
   shared.description =
     "Apply " +

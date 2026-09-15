@@ -7,6 +7,21 @@ const ROOT = path.join(__dirname, "..");
 const REGISTRY = path.join(ROOT, "Evotechly-SaaS-Assets", "Metadata", "asset-registry.json");
 const LUCIDE_SVG = path.join(ROOT, "Evotechly-SaaS-Assets", "ThirdParty", "lucide", "svg");
 
+const NATIVE_ZOOM = [
+  { id: "EVT_ZOOM_IN", name: "Zoom In", implemented: true, phase: 4, bestUse: "Plate scales up into frame" },
+  { id: "EVT_ZOOM_OUT", name: "Zoom Out", implemented: true, phase: 4, bestUse: "Pull back to context" },
+  { id: "EVT_ZOOM_TARGET", name: "Zoom Target", implemented: true, phase: 4, bestUse: "Frame a selected region (target required)" },
+  { id: "EVT_ZOOM_MATCH", name: "Zoom Match", implemented: true, phase: 4, bestUse: "Match outgoing crop to incoming" },
+  { id: "EVT_SCALE_POP", name: "Scale Pop", implemented: true, phase: 4, bestUse: "90→100 card present" },
+  { id: "EVT_SCALE_BREATHE", name: "Scale Breathe", implemented: true, phase: 4, bestUse: "Idle 100→102→100 — use sparingly" },
+  { id: "EVT_SCALE_PUNCH", name: "Scale Punch", implemented: true, phase: 4, bestUse: "Short punch-in on a KPI" },
+  { id: "EVT_SCALE_SETTLE", name: "Scale Settle", implemented: true, phase: 4, bestUse: "Oversize incoming eases to 100" }
+];
+
+const NATIVE_SHARED = [
+  { id: "EVT_SHARED_CARD", name: "Shared Card", implemented: true, phase: 12, bestUse: "Card bounds morph to detail" }
+];
+
 const NATIVE_SLIDE = [
   { id: "EVT_SLIDE_CARD_LEFT", name: "Slide Card Left", implemented: true, phase: 3, bestUse: "Single card enters from right" },
   { id: "EVT_SLIDE_CARD_RIGHT", name: "Slide Card Right", implemented: true, phase: 3, bestUse: "Single card enters from left" },
@@ -115,6 +130,14 @@ function nativeSlideRow(row) {
   return nativeKitRow(row, "uiSlide.js");
 }
 
+function nativeZoomRow(row) {
+  return nativeKitRow(row, "scaleZoom.js");
+}
+
+function nativeSharedRow(row) {
+  return nativeKitRow(row, "sharedElement.js");
+}
+
 function otherNativeRow(row) {
   return {
     id: row.id,
@@ -176,7 +199,7 @@ const registry = {
   style: "premium-saas",
   schemaVersion: 1,
   note:
-    "P1 native text / UI / cursor + Transition Kit Phase 3 UI-Slide card family (sourceType native, commercialUse true). No AEJuice / Motion Bro / Bento binaries.",
+    "P1 native text / UI / cursor + Transition Kit Phase 4 Scale-Zoom + Shared Card (sourceType native, commercialUse true). No AEJuice / Motion Bro / Bento binaries.",
   fields: {
     id: "EVT_* unique pack id",
     sourceType: "native | thirdParty",
@@ -186,6 +209,8 @@ const registry = {
   },
   assets: NATIVE_PUSH.map(nativePushRow)
     .concat(NATIVE_SLIDE.map(nativeSlideRow))
+    .concat(NATIVE_ZOOM.map(nativeZoomRow))
+    .concat(NATIVE_SHARED.map(nativeSharedRow))
     .concat(OTHER_NATIVE.map(otherNativeRow))
     .concat(P1_NATIVE.map(otherNativeRow))
     .concat(lucideRows())

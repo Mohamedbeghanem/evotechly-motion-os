@@ -1,5 +1,5 @@
 {
-  "version": "phase-3",
+  "version": "phase-4",
   "style": "premium-saas",
   "aspectRatios": [
     "16:9",
@@ -8,7 +8,7 @@
     "4:5"
   ],
   "generated": "transitions/Metadata/catalog.json",
-  "note": "Phase 3 implements the UI-Slide card family (plus Phase 2 UI Push). Other rows are metadata for later phases and AI pairing.",
+  "note": "Phase 4 implements Scale-Zoom plus EVT_SHARED_CARD (plus Phase 2–3 UI Push / UI-Slide). Other rows are metadata for later phases and AI pairing.",
   "transitions": [
     {
       "id": "EVT_UI_PUSH_LEFT",
@@ -507,9 +507,12 @@
         "1:1",
         "4:5"
       ],
-      "sfx": [],
+      "sfx": [
+        "ui-whoosh-soft"
+      ],
       "phase": 4,
-      "implemented": false
+      "implemented": true,
+      "name": "Zoom In"
     },
     {
       "id": "EVT_ZOOM_OUT",
@@ -525,9 +528,12 @@
         "1:1",
         "4:5"
       ],
-      "sfx": [],
+      "sfx": [
+        "ui-whoosh-soft"
+      ],
       "phase": 4,
-      "implemented": false
+      "implemented": true,
+      "name": "Zoom Out"
     },
     {
       "id": "EVT_ZOOM_TARGET",
@@ -543,9 +549,12 @@
         "1:1",
         "4:5"
       ],
-      "sfx": [],
+      "sfx": [
+        "ui-whoosh-soft"
+      ],
       "phase": 4,
-      "implemented": false
+      "implemented": true,
+      "name": "Zoom Target"
     },
     {
       "id": "EVT_ZOOM_MATCH",
@@ -561,9 +570,12 @@
         "1:1",
         "4:5"
       ],
-      "sfx": [],
+      "sfx": [
+        "ui-cross"
+      ],
       "phase": 4,
-      "implemented": false
+      "implemented": true,
+      "name": "Zoom Match"
     },
     {
       "id": "EVT_SCALE_POP",
@@ -579,9 +591,12 @@
         "1:1",
         "4:5"
       ],
-      "sfx": [],
+      "sfx": [
+        "ui-soft-in"
+      ],
       "phase": 4,
-      "implemented": false
+      "implemented": true,
+      "name": "Scale Pop"
     },
     {
       "id": "EVT_SCALE_BREATHE",
@@ -597,9 +612,12 @@
         "1:1",
         "4:5"
       ],
-      "sfx": [],
+      "sfx": [
+        "ui-soft-in"
+      ],
       "phase": 4,
-      "implemented": false
+      "implemented": true,
+      "name": "Scale Breathe"
     },
     {
       "id": "EVT_SCALE_PUNCH",
@@ -615,9 +633,12 @@
         "1:1",
         "4:5"
       ],
-      "sfx": [],
+      "sfx": [
+        "ui-tick-soft"
+      ],
       "phase": 4,
-      "implemented": false
+      "implemented": true,
+      "name": "Scale Punch"
     },
     {
       "id": "EVT_SCALE_SETTLE",
@@ -633,9 +654,12 @@
         "1:1",
         "4:5"
       ],
-      "sfx": [],
+      "sfx": [
+        "ui-cross"
+      ],
       "phase": 4,
-      "implemented": false
+      "implemented": true,
+      "name": "Scale Settle"
     },
     {
       "id": "EVT_FADE_CROSS",
@@ -1425,9 +1449,12 @@
         "1:1",
         "4:5"
       ],
-      "sfx": [],
+      "sfx": [
+        "ui-whoosh-soft"
+      ],
       "phase": 12,
-      "implemented": false
+      "implemented": true,
+      "name": "Shared Card"
     },
     {
       "id": "EVT_SHARED_IMAGE",

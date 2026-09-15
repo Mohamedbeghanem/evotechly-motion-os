@@ -57,15 +57,15 @@ const transitions = [
   row("EVT_SLIDE_STACK", "UI-Slide", "SMOOTH", "subtle", false, "Card stack peek + commit", 3, true, ["ui-cross"], "Slide Stack"),
   row("EVT_SLIDE_PEEK", "UI-Slide", "MICRO", "subtle", false, "Partial reveal, then hold", 3, true, ["ui-soft-in"], "Slide Peek"),
 
-  // 03 Scale-Zoom
-  row("EVT_ZOOM_IN", "Scale-Zoom", "STANDARD", "standard", false, "Plate scales up into frame", 4, false, []),
-  row("EVT_ZOOM_OUT", "Scale-Zoom", "STANDARD", "standard", false, "Pull back to context", 4, false, []),
-  row("EVT_ZOOM_TARGET", "Scale-Zoom", "SMOOTH", "standard", true, "Frame a selected region (target required)", 4, false, []),
-  row("EVT_ZOOM_MATCH", "Scale-Zoom", "STANDARD", "subtle", true, "Match outgoing crop to incoming", 4, false, []),
-  row("EVT_SCALE_POP", "Scale-Zoom", "FAST", "standard", false, "90→100 card present", 4, false, []),
-  row("EVT_SCALE_BREATHE", "Scale-Zoom", "SMOOTH", "subtle", false, "Idle 100→102→100 — use sparingly", 4, false, []),
-  row("EVT_SCALE_PUNCH", "Scale-Zoom", "FAST", "bold", true, "Short punch-in on a KPI", 4, false, []),
-  row("EVT_SCALE_SETTLE", "Scale-Zoom", "STANDARD", "subtle", false, "Oversize incoming eases to 100", 4, false, []),
+  // 03 Scale-Zoom — Phase 4
+  row("EVT_ZOOM_IN", "Scale-Zoom", "STANDARD", "standard", false, "Plate scales up into frame", 4, true, ["ui-whoosh-soft"], "Zoom In"),
+  row("EVT_ZOOM_OUT", "Scale-Zoom", "STANDARD", "standard", false, "Pull back to context", 4, true, ["ui-whoosh-soft"], "Zoom Out"),
+  row("EVT_ZOOM_TARGET", "Scale-Zoom", "SMOOTH", "standard", true, "Frame a selected region (target required)", 4, true, ["ui-whoosh-soft"], "Zoom Target"),
+  row("EVT_ZOOM_MATCH", "Scale-Zoom", "STANDARD", "subtle", true, "Match outgoing crop to incoming", 4, true, ["ui-cross"], "Zoom Match"),
+  row("EVT_SCALE_POP", "Scale-Zoom", "FAST", "standard", false, "90→100 card present", 4, true, ["ui-soft-in"], "Scale Pop"),
+  row("EVT_SCALE_BREATHE", "Scale-Zoom", "SMOOTH", "subtle", false, "Idle 100→102→100 — use sparingly", 4, true, ["ui-soft-in"], "Scale Breathe"),
+  row("EVT_SCALE_PUNCH", "Scale-Zoom", "FAST", "bold", true, "Short punch-in on a KPI", 4, true, ["ui-tick-soft"], "Scale Punch"),
+  row("EVT_SCALE_SETTLE", "Scale-Zoom", "STANDARD", "subtle", false, "Oversize incoming eases to 100", 4, true, ["ui-cross"], "Scale Settle"),
 
   // 04 Crossfade
   row("EVT_FADE_CROSS", "Crossfade", "STANDARD", "subtle", false, "Opacity swap, no travel", 5, false, []),
@@ -125,7 +125,7 @@ const transitions = [
   row("EVT_SPLIT_REVEAL", "Wipe-Split", "SMOOTH", "subtle", false, "Center split, incoming in the gap", 11, false, []),
 
   // 11 Shared-Element
-  row("EVT_SHARED_CARD", "Shared-Element", "SMOOTH", "standard", true, "Card bounds morph to detail", 12, false, []),
+  row("EVT_SHARED_CARD", "Shared-Element", "SMOOTH", "standard", true, "Card bounds morph to detail", 12, true, ["ui-whoosh-soft"], "Shared Card"),
   row("EVT_SHARED_IMAGE", "Shared-Element", "SMOOTH", "standard", true, "Image hero → gallery", 12, false, []),
   row("EVT_MATCH_CUT", "Shared-Element", "FAST", "subtle", true, "Match position/scale, cut the rest", 12, false, []),
   row("EVT_MORPH_BOUNDS", "Shared-Element", "STANDARD", "standard", true, "Rect morph only (no mesh)", 12, false, []),
@@ -176,11 +176,11 @@ const transitions = [
 ];
 
 const out = {
-  version: "phase-3",
+  version: "phase-4",
   style: STYLE,
   aspectRatios: ASPECT,
   generated: "transitions/Metadata/catalog.json",
-  note: "Phase 3 implements the UI-Slide card family (plus Phase 2 UI Push). Other rows are metadata for later phases and AI pairing.",
+  note: "Phase 4 implements Scale-Zoom plus EVT_SHARED_CARD (plus Phase 2–3 UI Push / UI-Slide). Other rows are metadata for later phases and AI pairing.",
   transitions: transitions
 };
 

@@ -5,7 +5,7 @@
 ## What belongs here
 
 - Native generators, plans, shape recipes, and docs we wrote
-- Pointers to Transition Kit IDs we already own (`EVT_UI_PUSH_*`, `EVT_SLIDE_*`, catalog rows in `transitions/Metadata/catalog.json`)
+- Pointers to Transition Kit IDs we already own (`EVT_UI_PUSH_*`, `EVT_SLIDE_*`, `EVT_ZOOM_*`, `EVT_SCALE_*`, `EVT_SHARED_CARD`, catalog rows in `transitions/Metadata/catalog.json`)
 - Future text / UI / glass / cursor assets implemented in `core/` + companion JSX
 
 ## What does not belong here

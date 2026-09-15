@@ -55,11 +55,17 @@ P1 KEEP ID rows (all **OWNED**, implemented):
 | Verdict | **KEEP** |
 | Score | **96** (20+25+15+15+10+10+1) — vendor risk n/a, tiny “we must not drift JSX” residual |
 | Downloaded? | N/A — already in repo (`core/transitions`, catalog, `ae/Evotechly Transitions.jsx`) |
-| Notes | `sourceType: native`, `commercialUse: true`. Full UI Push family (Phase 2) + **UI-Slide card family (Phase 3)**. Other families catalog-only. |
+| Notes | `sourceType: native`, `commercialUse: true`. Full UI Push family (Phase 2) + UI-Slide card family (Phase 3) + **Scale-Zoom (Phase 4)** + **`EVT_SHARED_CARD`**. Other families catalog-only. |
 
 Phase 3 KEEP ID rows (all **OWNED**, implemented):
 
 - Slide: `EVT_SLIDE_CARD_LEFT`, `EVT_SLIDE_CARD_RIGHT`, `EVT_SLIDE_PANEL_IN`, `EVT_SLIDE_PANEL_OUT`, `EVT_SLIDE_DRAWER`, `EVT_SLIDE_SHEET_UP`, `EVT_SLIDE_STACK`, `EVT_SLIDE_PEEK`
+
+Phase 4 KEEP ID rows (all **OWNED**, implemented):
+
+- Zoom: `EVT_ZOOM_IN`, `EVT_ZOOM_OUT`, `EVT_ZOOM_TARGET`, `EVT_ZOOM_MATCH`
+- Scale: `EVT_SCALE_POP`, `EVT_SCALE_BREATHE`, `EVT_SCALE_PUNCH`, `EVT_SCALE_SETTLE`
+- Shared: `EVT_SHARED_CARD`
 
 ### Lucide curated SVGs
 
@@ -221,7 +227,7 @@ Phase 3 KEEP ID rows (all **OWNED**, implemented):
 | ID | Verdict | Score | On disk in P0? |
 |---|---|---|---|
 | P1 native text / UI / cursor | KEEP | 95 | Yes (`core/assets` + registry) |
-| Transition Kit native (Push + Slide) | KEEP | 96 | Yes (Motion OS) |
+| Transition Kit native (Push + Slide + Zoom + Shared Card) | KEEP | 96 | Yes (Motion OS) |
 | Lucide curated | KEEP | 92 | Yes (`ThirdParty/lucide`) |
 | Phosphor / Heroicons | REBUILD | 88 | No |
 | Mixkit Free SFX | KEEP local / REJECT zip | 74 | No |
