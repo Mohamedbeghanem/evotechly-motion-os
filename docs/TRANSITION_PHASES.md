@@ -1,12 +1,12 @@
 # Transition Kit — phase roadmap
 
-Status after this PR: **Phase 0 and Phase 1 are done.** Later phases are catalogued, not implemented.
+Status after this PR: **Phase 0, Phase 1, and Phase 2 are done.** Later phases are catalogued, not implemented.
 
 | Phase | Job | Status |
 |---|---|---|
 | **0** | Architecture docs, feasibility, folder scaffold, catalog shape | **done** |
 | **1** | Core engine + 6 UI Push plan generators + companion panel + tests | **done** |
-| 2 | Full UI Push family (`SOFT`, `SNAP`, `OVERSHOOT`, `PARALLAX`, `FADE`, `COVER`) | planned |
+| **2** | Full UI Push family (soft / snap / overshoot / parallax / fade / cover / panel / dashboard / split) | **done** |
 | 3 | UI-Slide family | planned |
 | 4 | Scale-Zoom family + JSX apply for `planTargetZoom` | planned |
 | 5 | Crossfade family | planned |
@@ -39,6 +39,15 @@ Status after this PR: **Phase 0 and Phase 1 are done.** Later phases are catalog
 - `tests/transitions-engine.test.js`
 - Demo storyboard JSON (data only; apply is Phase 16)
 - Hub one-line pointer. **v0.32 panel not edited.**
+
+## Phase 2 — done
+
+- `core/transitions/uiPush.js` — complete keyframe plans for every UI-Push catalog ID
+- Added `EVT_UI_PUSH_PANEL` (Panel Push), `EVT_UI_PUSH_DASHBOARD` (Dashboard Push), `EVT_UI_PUSH_SPLIT` (Split Panel Push)
+- Catalog names: UI Push Left/Right/Up/Down, UI Push + Scale, UI Push + Depth, Panel Push, Dashboard Push, Split Panel Push
+- `implemented:true` on the full UI Push family (15 IDs)
+- JSX mirrors apply math for every UI Push ID
+- Tests: every UI Push ID produces a deterministic plan
 
 ## What “done” means later
 

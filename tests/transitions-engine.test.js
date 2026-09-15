@@ -127,15 +127,26 @@ test("control plan is a shy null with the documented sliders", function () {
   assert.ok(plan.note.indexOf("metadata") !== -1);
 });
 
-test("six UI Push plans are deterministic and complete", function () {
+test("every UI Push ID produces a deterministic complete plan", function () {
+  const uiPush = require("../core/transitions/uiPush");
   const ids = engine.IMPLEMENTED_IDS.slice();
+  assert.deepEqual(ids, uiPush.UI_PUSH_IDS);
   assert.deepEqual(ids, [
     "EVT_UI_PUSH_LEFT",
     "EVT_UI_PUSH_RIGHT",
     "EVT_UI_PUSH_UP",
     "EVT_UI_PUSH_DOWN",
     "EVT_UI_PUSH_SCALE",
-    "EVT_UI_PUSH_DEPTH"
+    "EVT_UI_PUSH_DEPTH",
+    "EVT_UI_PUSH_SOFT",
+    "EVT_UI_PUSH_SNAP",
+    "EVT_UI_PUSH_OVERSHOOT",
+    "EVT_UI_PUSH_PARALLAX",
+    "EVT_UI_PUSH_FADE",
+    "EVT_UI_PUSH_COVER",
+    "EVT_UI_PUSH_PANEL",
+    "EVT_UI_PUSH_DASHBOARD",
+    "EVT_UI_PUSH_SPLIT"
   ]);
   ids.forEach(function (id) {
     const opts = {
@@ -166,6 +177,9 @@ test("six UI Push plans are deterministic and complete", function () {
     assert.ok(a.anatomy.action);
     assert.ok(a.anatomy.crossover);
     assert.ok(a.anatomy.settle);
+    assert.equal(a.name, uiPush.displayName(id));
+    assert.ok(a.outgoing.keys.length >= 3, id + " outgoing keys");
+    assert.ok(a.incoming.keys.length >= 3, id + " incoming keys");
   });
 });
 
@@ -225,6 +239,80 @@ test("scale and depth pushes key scale / blur without full-frame travel", functi
   assert.equal(depth.incoming.keys[3].blur, 0);
 });
 
+test("soft / snap / overshoot / fade vary travel and settle from left", function () {
+  const left = engine.applyTransitionPlan({ id: "EVT_UI_PUSH_LEFT", durationFrames: 16, fps: 30 });
+  const soft = engine.applyTransitionPlan({ id: "EVT_UI_PUSH_SOFT", durationFrames: 16, fps: 30 });
+  const snap = engine.applyTransitionPlan({ id: "EVT_UI_PUSH_SNAP", durationFrames: 16, fps: 30 });
+  const overshoot = engine.applyTransitionPlan({ id: "EVT_UI_PUSH_OVERSHOOT", durationFrames: 16, fps: 30 });
+  const fade = engine.applyTransitionPlan({ id: "EVT_UI_PUSH_FADE", durationFrames: 16, fps: 30 });
+
+  assert.equal(soft.direction, "left");
+  assert.equal(soft.travel.distance, 1766.4);
+  assert.ok(soft.phases.settle < left.phases.settle, "soft settle window starts earlier");
+  assert.equal(soft.outgoing.keys[3].blur, 3);
+  assert.equal(soft.incoming.keys[0].opacity, 12);
+
+  assert.equal(snap.travel.distance, 806.4);
+  assert.equal(snap.outgoing.keys[3].blur, 1);
+  assert.equal(snap.incoming.keys[1].opacity, 88);
+
+  assert.equal(overshoot.travel.distance, 1920);
+  assert.equal(overshoot.incoming.keys[2].scale[0], 101.4);
+  assert.ok(Math.abs(overshoot.incoming.keys[1].x) < Math.abs(left.incoming.keys[1].x));
+
+  assert.equal(fade.travel.distance, 691.2);
+  assert.equal(fade.outgoing.keys[2].opacity, 38);
+});
+
+test("parallax keeps background visible with less travel than foreground", function () {
+  const plan = engine.applyTransitionPlan({ id: "EVT_UI_PUSH_PARALLAX", durationFrames: 16, fps: 30 });
+  assert.equal(plan.travel.foreground, 1920);
+  assert.equal(plan.travel.background, 537.6);
+  assert.equal(plan.outgoing.keys[3].opacity, 28);
+  assert.equal(plan.outgoing.keys[3].x, -537.6);
+  assert.equal(plan.incoming.keys[0].x, 1920);
+  assert.equal(plan.incoming.keys[3].x, 0);
+});
+
+test("cover keeps outgoing in place and opaque", function () {
+  const plan = engine.applyTransitionPlan({ id: "EVT_UI_PUSH_COVER", durationFrames: 16, fps: 30 });
+  assert.equal(plan.travel.outgoingStays, true);
+  assert.equal(plan.outgoing.keys[3].x, 0);
+  assert.equal(plan.outgoing.keys[3].opacity, 100);
+  assert.equal(plan.incoming.keys[0].opacity, 100);
+  assert.equal(plan.incoming.keys[0].x, 1920);
+  assert.equal(plan.incoming.keys[3].opacity, 100);
+});
+
+test("panel / dashboard / split match named UI Push variants", function () {
+  const panel = engine.applyTransitionPlan({ id: "EVT_UI_PUSH_PANEL", durationFrames: 16, fps: 30 });
+  const alias = engine.applyTransitionPlan({ id: "EVT_PANEL_PUSH", durationFrames: 16, fps: 30 });
+  const dash = engine.applyTransitionPlan({ id: "EVT_UI_PUSH_DASHBOARD", durationFrames: 16, fps: 30 });
+  const split = engine.applyTransitionPlan({ id: "EVT_UI_PUSH_SPLIT", durationFrames: 16, fps: 30 });
+
+  assert.equal(panel.id, "EVT_UI_PUSH_PANEL");
+  assert.equal(panel.name, "Panel Push");
+  assert.equal(panel.direction, "right");
+  assert.equal(panel.travel.distance, 768);
+  assert.equal(panel.incoming.keys[0].x, 768);
+  assert.ok(panel.outgoing.keys[3].x < 0);
+  assert.equal(panel.outgoing.keys[3].opacity, 64);
+  assert.deepEqual(alias, panel);
+
+  assert.equal(dash.name, "Dashboard Push");
+  assert.equal(dash.direction, "left");
+  assert.equal(dash.travel.distance, 1920);
+  assert.equal(dash.outgoing.keys[3].y, 14);
+  assert.equal(dash.incoming.keys[0].y, -10);
+  assert.equal(dash.outgoing.keys[3].scale[0], 93.5);
+
+  assert.equal(split.name, "Split Panel Push");
+  assert.equal(split.travel.distance, 1056);
+  assert.equal(split.outgoing.keys[2].x, -528);
+  assert.equal(split.incoming.keys[1].x, 528);
+  assert.equal(split.outgoing.keys[2].x + split.incoming.keys[1].x, 0);
+});
+
 test("unimplemented catalog IDs return a safe stub plan", function () {
   const plan = engine.applyTransitionPlan({ id: "EVT_MICRO_HOVER" });
   assert.equal(plan.implemented, false);
@@ -232,7 +320,8 @@ test("unimplemented catalog IDs return a safe stub plan", function () {
   assert.equal(plan.outgoing.set.position.length, 0);
 });
 
-test("catalog has unique EVT_ IDs and Phase 1 implemented flags", function () {
+test("catalog has unique EVT_ IDs and UI Push implemented flags", function () {
+  const uiPush = require("../core/transitions/uiPush");
   const list = registry.loadCatalog();
   assert.ok(list.length >= 90);
   assert.deepEqual(registry.uniqueIdErrors(), []);
@@ -245,20 +334,32 @@ test("catalog has unique EVT_ IDs and Phase 1 implemented flags", function () {
     set[id] = true;
   });
   const implemented = registry.listImplemented();
-  assert.equal(implemented.length, 6);
+  assert.equal(implemented.length, 15);
   implemented.forEach(function (row) {
     assert.equal(row.implemented, true);
     assert.equal(row.style, "premium-saas");
-    assert.equal(row.phase, 1);
+    assert.equal(row.category, "UI-Push");
+    assert.ok(uiPush.PHASE1_IDS.indexOf(row.id) !== -1 ? row.phase === 1 : row.phase === 2, row.id + " phase");
     assert.ok(row.aspectRatios.indexOf("16:9") !== -1);
     assert.ok(row.aspectRatios.indexOf("9:16") !== -1);
     assert.ok(row.aspectRatios.indexOf("1:1") !== -1);
     assert.ok(row.aspectRatios.indexOf("4:5") !== -1);
+    assert.equal(row.name, uiPush.displayName(row.id));
   });
   assert.equal(registry.getById("EVT_UI_PUSH_LEFT").category, "UI-Push");
+  assert.equal(registry.getById("EVT_UI_PUSH_LEFT").name, "UI Push Left");
+  assert.equal(registry.getById("EVT_UI_PUSH_SCALE").name, "UI Push + Scale");
+  assert.equal(registry.getById("EVT_UI_PUSH_DEPTH").name, "UI Push + Depth");
+  assert.equal(registry.getById("EVT_UI_PUSH_PANEL").name, "Panel Push");
+  assert.equal(registry.getById("EVT_UI_PUSH_DASHBOARD").name, "Dashboard Push");
+  assert.equal(registry.getById("EVT_UI_PUSH_SPLIT").name, "Split Panel Push");
   assert.equal(registry.getById("evt-ui-push-depth").implemented, true);
+  assert.equal(registry.getById("EVT_UI_PUSH_COVER").implemented, true);
   assert.equal(registry.filterCatalog({ query: "micro", category: "Micro" }).length, 8);
+  assert.equal(registry.filterCatalog({ query: "dashboard push", category: "UI-Push" }).length, 1);
+  assert.equal(registry.filterCatalog({ query: "split panel", category: "UI-Push" })[0].id, "EVT_UI_PUSH_SPLIT");
   assert.equal(registry.categories().length, 16);
+  assert.equal(registry.listByCategory("UI-Push").length, 15);
 });
 
 test("demo storyboard is a dashboard→card→analytics sequence", function () {
@@ -274,7 +375,7 @@ test("demo storyboard is a dashboard→card→analytics sequence", function () {
   assert.ok(story.note.indexOf("Phase 16") !== -1);
 });
 
-test("JSX companion embeds Phase 1 IDs and mirrored constants", function () {
+test("JSX companion embeds UI Push IDs and mirrored constants", function () {
   engine.IMPLEMENTED_IDS.forEach(function (id) {
     assert.ok(jsx.indexOf(id) !== -1, id + " missing from JSX");
   });
@@ -283,6 +384,16 @@ test("JSX companion embeds Phase 1 IDs and mirrored constants", function () {
   assert.ok(jsx.indexOf("influenceIn: 88") !== -1 || jsx.indexOf("i: 88") !== -1);
   assert.ok(jsx.indexOf("Node is source of truth") !== -1 || jsx.indexOf("source of truth") !== -1);
   assert.ok(jsx.indexOf("function applyTransition") !== -1 || jsx.indexOf("function runApply") !== -1);
+  assert.ok(jsx.indexOf("function planForId") !== -1);
+  assert.ok(jsx.indexOf("function planPanel") !== -1);
+  assert.ok(jsx.indexOf("function planDashboard") !== -1);
+  assert.ok(jsx.indexOf("function planSplit") !== -1);
+  assert.ok(jsx.indexOf("function planSoft") !== -1);
+  assert.ok(jsx.indexOf("function planParallax") !== -1);
+  assert.ok(jsx.indexOf("function planCover") !== -1);
+  assert.ok(jsx.indexOf("Panel Push") !== -1);
+  assert.ok(jsx.indexOf("Dashboard Push") !== -1);
+  assert.ok(jsx.indexOf("Split Panel Push") !== -1);
   assert.ok(/#target aftereffects/.test(jsx));
   assert.ok(jsx.indexOf("does not replace") !== -1);
   registry.catalogIds().forEach(function (id) {

@@ -2,7 +2,7 @@
 
 Premium SaaS screen-to-screen motion. Apple / Linear / Stripe / Raycast taste. Not a glitch pack.
 
-**Phase 0–1** ships this document, the folder scaffold, a Node-testable engine, catalog metadata, and a companion ScriptUI panel. Six UI Push IDs produce complete keyframe plans. Everything else is catalogued for later phases and AI pairing.
+**Phase 0–2** ships this document, the folder scaffold, a Node-testable engine, catalog metadata, and a companion ScriptUI panel. The full UI Push family produces complete keyframe plans. Everything else is catalogued for later phases and AI pairing.
 
 This kit does **not** replace the v0.32 Motion tab transitions (shot-level Clean Push / Whip / Zoom Match). Those stay in `ae/Evotechly Motion OS.jsx` (~297 KB — never stub). This kit is UI-to-UI: dashboard → card → analytics.
 
@@ -10,7 +10,7 @@ This kit does **not** replace the v0.32 Motion tab transitions (shot-level Clean
 
 | Want | Native AE? | Phase 1 |
 |---|---|---|
-| Position / scale / opacity push | Yes | **Implemented** for 6 UI Push IDs |
+| Position / scale / opacity push | Yes | **Implemented** for the full UI Push family |
 | Fast Box Blur / Gaussian Blur | Yes | Planned on those 6 (blur keys in the plan) |
 | Shy control null + Slider Controls | Yes | Plan + JSX wiring |
 | Target-frame zoom math | Yes (pure math) | `planTargetZoom` only — JSX apply later |
@@ -23,7 +23,7 @@ This kit does **not** replace the v0.32 Motion tab transitions (shot-level Clean
 
 **CI cannot open After Effects.** Plans are deterministic JSON. Visual taste is an editor soak, same as the rest of Motion OS.
 
-**ExtendScript cannot `require` Node.** `core/transitions/*.js` is the source of truth for numbers and tests. `ae/Evotechly Transitions.jsx` mirrors the Phase 1 constants and apply math. If they drift, fix Node first, then the JSX.
+**ExtendScript cannot `require` Node.** `core/transitions/*.js` is the source of truth for numbers and tests. `ae/Evotechly Transitions.jsx` mirrors the UI Push constants and apply math. If they drift, fix Node first, then the JSX.
 
 **Progress slider** is reserved. Phase 1 keys are time-based. Driving the whole transition from `Progress` (0–100) is an Expressions-folder job in a later phase.
 
@@ -109,7 +109,7 @@ Folder names under `transitions/`. Letters are A=01 … P=16.
 
 | # | Family | Folder | Phase | Phase 1 |
 |---|---|---|---|---|
-| A / 01 | UI-Push | `01_UI-Push/` | 1–2 | **6 IDs implemented** |
+| A / 01 | UI-Push | `01_UI-Push/` | 1–2 | **15 IDs implemented (Phase 2)** |
 | B / 02 | UI-Slide | `02_UI-Slide/` | 3 | catalog |
 | C / 03 | Scale-Zoom | `03_Scale-Zoom/` | 4 | catalog |
 | D / 04 | Crossfade | `04_Crossfade/` | 5 | catalog |
@@ -128,13 +128,22 @@ Folder names under `transitions/`. Letters are A=01 … P=16.
 
 IDs live in `transitions/Metadata/catalog.json`. Each README stub lists the planned IDs for that family.
 
-### Phase 1 implemented IDs
+### Phase 1–2 implemented IDs (UI Push family)
 
-- `EVT_UI_PUSH_LEFT` / `RIGHT` / `UP` / `DOWN` — outgoing travels on axis; incoming enters from the opposite edge; anticipate opposite; settle overshoot capped.
-- `EVT_UI_PUSH_SCALE` — outgoing 100 → 88 + fade; incoming 110 → 100. No full-frame slide.
-- `EVT_UI_PUSH_DEPTH` — outgoing recedes (scale down, blur up, slight +Y); incoming lifts from blur.
+- `EVT_UI_PUSH_LEFT` / `RIGHT` / `UP` / `DOWN` — **UI Push Left/Right/Up/Down**. Outgoing travels on axis; incoming enters from the opposite edge; anticipate opposite; settle overshoot capped.
+- `EVT_UI_PUSH_SCALE` — **UI Push + Scale**. Outgoing 100 → 88 + fade; incoming 110 → 100. No full-frame slide.
+- `EVT_UI_PUSH_DEPTH` — **UI Push + Depth**. Outgoing recedes (scale down, blur up, slight +Y); incoming lifts from blur.
+- `EVT_UI_PUSH_SOFT` — same axis as left, longer settle, quieter blur.
+- `EVT_UI_PUSH_SNAP` — short tab-to-tab travel, almost no blur.
+- `EVT_UI_PUSH_OVERSHOOT` — directional push with a quieter elastic settle (scale 101.4, then 100).
+- `EVT_UI_PUSH_PARALLAX` — background (outgoing) travels 28% of the foreground (incoming).
+- `EVT_UI_PUSH_FADE` — short travel plus an earlier opacity cross.
+- `EVT_UI_PUSH_COVER` — incoming covers; outgoing stays put and opaque.
+- `EVT_UI_PUSH_PANEL` — **Panel Push**. Inspector from the trailing edge; content dims and yields.
+- `EVT_UI_PUSH_DASHBOARD` — **Dashboard Push**. Left-axis travel plus a quiet depth lift.
+- `EVT_UI_PUSH_SPLIT` — **Split Panel Push**. Panes part at crossover, then incoming takes the frame.
 
-Full UI Push family (soft / snap / overshoot / parallax / fade / cover) is **Phase 2**.
+Plans: `core/transitions/uiPush.js`. `EVT_PANEL_PUSH` aliases `EVT_UI_PUSH_PANEL`.
 
 ## AI pairing notes
 
@@ -146,6 +155,9 @@ Suggested prompt → ID mapping (later Phase 18):
 |---|---|
 | “next screen”, “forward”, “push left” | `EVT_UI_PUSH_LEFT` |
 | “back”, “previous” | `EVT_UI_PUSH_RIGHT` or `EVT_NAV_BACK` |
+| “side panel”, “inspector”, “panel push” | `EVT_UI_PUSH_PANEL` |
+| “dashboard push”, “tour the dashboard” | `EVT_UI_PUSH_DASHBOARD` |
+| “split view”, “master detail” | `EVT_UI_PUSH_SPLIT` |
 | “open card”, “zoom this widget” | `EVT_ZOOM_TARGET` (needs target bounds) |
 | “modal”, “dialog” | `EVT_MODAL_IN` |
 | “quiet”, “calm”, “expensive” | `SMOOTH` + `premium-smooth` or `soft-ui` |
@@ -176,6 +188,7 @@ Catalog `sfx: []` (or a short list of hook ids) is metadata for a future sound p
 | `core/transitions/target.js` | Target zoom math |
 | `core/transitions/control.js` | Control-null plan |
 | `core/transitions/engine.js` | `applyTransitionPlan` |
+| `core/transitions/uiPush.js` | UI Push family keyframe plans |
 | `core/transitions/registry.js` | Catalog load / filter |
 | `transitions/Metadata/catalog.json` | Every planned `EVT_*` |
 | `ae/Evotechly Transitions.jsx` | Companion panel |
@@ -204,10 +217,10 @@ Do not: RGB split, glitch, lens flares, explosions, 360 spins, bounce loops, com
 
 1. AE is not in CI. Green tests ≠ soaked comps.
 2. JSX is a mirror, not a `require`.
-3. Six generators only. 100+ catalog rows are metadata.
+3. UI Push family implemented (15 IDs). Other catalog rows are metadata.
 4. No `.ffx`, `.aep`, or vendored plugins.
 5. No SFX audio.
-6. Target zoom is math; target-required IDs are not applied in Phase 1.
+6. Target zoom is math; target-required IDs are not applied in Phase 2.
 7. Shared-element morph will be bounds, not True Comp or mesh.
 8. Glass is native frost, not refraction.
 9. Does not rewrite or stub `ae/Evotechly Motion OS.jsx`.

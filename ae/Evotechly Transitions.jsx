@@ -1,9 +1,9 @@
 #target aftereffects
 /*
-  Evotechly Transitions — companion ScriptUI (Transition Kit Phase 0–1).
+  Evotechly Transitions — companion ScriptUI (Transition Kit Phase 2).
   Window → Evotechly Transitions.
   Numbers mirrored from core/transitions/*.js — Node is source of truth.
-  ExtendScript cannot require Node. Apply the six UI Push IDs here.
+  ExtendScript cannot require Node. Apply the full UI Push family here.
   Native AE only. No .ffx / .aep / vendor plugins.
   Does not replace Evotechly Motion OS v0.32 (~297 KB).
 */
@@ -23,7 +23,16 @@
     EVT_UI_PUSH_UP: 1,
     EVT_UI_PUSH_DOWN: 1,
     EVT_UI_PUSH_SCALE: 1,
-    EVT_UI_PUSH_DEPTH: 1
+    EVT_UI_PUSH_DEPTH: 1,
+    EVT_UI_PUSH_SOFT: 1,
+    EVT_UI_PUSH_SNAP: 1,
+    EVT_UI_PUSH_OVERSHOOT: 1,
+    EVT_UI_PUSH_PARALLAX: 1,
+    EVT_UI_PUSH_FADE: 1,
+    EVT_UI_PUSH_COVER: 1,
+    EVT_UI_PUSH_PANEL: 1,
+    EVT_UI_PUSH_DASHBOARD: 1,
+    EVT_UI_PUSH_SPLIT: 1
   };
   /* influence pairs match core/transitions/easing.js + polish.js */
   var EASE = {
@@ -38,18 +47,21 @@
     linear: { i: 16, o: 16 }
   };
   var CATALOG = [
-    { id: "EVT_UI_PUSH_LEFT", category: "UI-Push", duration: "STANDARD", intensity: "standard", implemented: true, phase: 1, bestUse: "Dashboard → next screen, iOS-style push left" },
-    { id: "EVT_UI_PUSH_RIGHT", category: "UI-Push", duration: "STANDARD", intensity: "standard", implemented: true, phase: 1, bestUse: "Back navigation, previous screen from the left" },
-    { id: "EVT_UI_PUSH_UP", category: "UI-Push", duration: "STANDARD", intensity: "standard", implemented: true, phase: 1, bestUse: "Sheet-like screen rise, settings stack" },
-    { id: "EVT_UI_PUSH_DOWN", category: "UI-Push", duration: "STANDARD", intensity: "standard", implemented: true, phase: 1, bestUse: "Dismiss upward stack, close overlay screen" },
-    { id: "EVT_UI_PUSH_SCALE", category: "UI-Push", duration: "STANDARD", intensity: "subtle", implemented: true, phase: 1, bestUse: "Card or modal swap without a hard slide" },
-    { id: "EVT_UI_PUSH_DEPTH", category: "UI-Push", duration: "SMOOTH", intensity: "subtle", implemented: true, phase: 1, bestUse: "Recede outgoing, lift incoming — product tour" },
-    { id: "EVT_UI_PUSH_SOFT", category: "UI-Push", duration: "SMOOTH", intensity: "subtle", implemented: false, phase: 2, bestUse: "Same as left with longer settle" },
-    { id: "EVT_UI_PUSH_SNAP", category: "UI-Push", duration: "FAST", intensity: "bold", implemented: false, phase: 2, bestUse: "Short product chrome, tab-to-tab" },
-    { id: "EVT_UI_PUSH_OVERSHOOT", category: "UI-Push", duration: "STANDARD", intensity: "standard", implemented: false, phase: 2, bestUse: "Push with a quieter elastic settle" },
-    { id: "EVT_UI_PUSH_PARALLAX", category: "UI-Push", duration: "SMOOTH", intensity: "subtle", implemented: false, phase: 2, bestUse: "Foreground moves more than background" },
-    { id: "EVT_UI_PUSH_FADE", category: "UI-Push", duration: "STANDARD", intensity: "subtle", implemented: false, phase: 2, bestUse: "Push plus crossfade for busy UI" },
-    { id: "EVT_UI_PUSH_COVER", category: "UI-Push", duration: "STANDARD", intensity: "standard", implemented: false, phase: 2, bestUse: "Incoming covers outgoing; outgoing stays" },
+    { id: "EVT_UI_PUSH_LEFT", name: "UI Push Left", category: "UI-Push", duration: "STANDARD", intensity: "standard", implemented: true, phase: 1, bestUse: "Dashboard → next screen, iOS-style push left" },
+    { id: "EVT_UI_PUSH_RIGHT", name: "UI Push Right", category: "UI-Push", duration: "STANDARD", intensity: "standard", implemented: true, phase: 1, bestUse: "Back navigation, previous screen from the left" },
+    { id: "EVT_UI_PUSH_UP", name: "UI Push Up", category: "UI-Push", duration: "STANDARD", intensity: "standard", implemented: true, phase: 1, bestUse: "Sheet-like screen rise, settings stack" },
+    { id: "EVT_UI_PUSH_DOWN", name: "UI Push Down", category: "UI-Push", duration: "STANDARD", intensity: "standard", implemented: true, phase: 1, bestUse: "Dismiss upward stack, close overlay screen" },
+    { id: "EVT_UI_PUSH_SCALE", name: "UI Push + Scale", category: "UI-Push", duration: "STANDARD", intensity: "subtle", implemented: true, phase: 1, bestUse: "Card or modal swap without a hard slide" },
+    { id: "EVT_UI_PUSH_DEPTH", name: "UI Push + Depth", category: "UI-Push", duration: "SMOOTH", intensity: "subtle", implemented: true, phase: 1, bestUse: "Recede outgoing, lift incoming — product tour" },
+    { id: "EVT_UI_PUSH_SOFT", name: "UI Push Soft", category: "UI-Push", duration: "SMOOTH", intensity: "subtle", implemented: true, phase: 2, bestUse: "Same as left with longer settle" },
+    { id: "EVT_UI_PUSH_SNAP", name: "UI Push Snap", category: "UI-Push", duration: "FAST", intensity: "bold", implemented: true, phase: 2, bestUse: "Short product chrome, tab-to-tab" },
+    { id: "EVT_UI_PUSH_OVERSHOOT", name: "UI Push Overshoot", category: "UI-Push", duration: "STANDARD", intensity: "standard", implemented: true, phase: 2, bestUse: "Push with a quieter elastic settle" },
+    { id: "EVT_UI_PUSH_PARALLAX", name: "UI Push Parallax", category: "UI-Push", duration: "SMOOTH", intensity: "subtle", implemented: true, phase: 2, bestUse: "Foreground moves more than background" },
+    { id: "EVT_UI_PUSH_FADE", name: "UI Push Fade", category: "UI-Push", duration: "STANDARD", intensity: "subtle", implemented: true, phase: 2, bestUse: "Push plus crossfade for busy UI" },
+    { id: "EVT_UI_PUSH_COVER", name: "UI Push Cover", category: "UI-Push", duration: "STANDARD", intensity: "standard", implemented: true, phase: 2, bestUse: "Incoming covers outgoing; outgoing stays" },
+    { id: "EVT_UI_PUSH_PANEL", name: "Panel Push", category: "UI-Push", duration: "STANDARD", intensity: "standard", implemented: true, phase: 2, bestUse: "Inspector / side panel covers content from the trailing edge" },
+    { id: "EVT_UI_PUSH_DASHBOARD", name: "Dashboard Push", category: "UI-Push", duration: "SMOOTH", intensity: "standard", implemented: true, phase: 2, bestUse: "Dashboard → next view with a quiet depth push" },
+    { id: "EVT_UI_PUSH_SPLIT", name: "Split Panel Push", category: "UI-Push", duration: "STANDARD", intensity: "standard", implemented: true, phase: 2, bestUse: "Master–detail split: panes part, incoming takes the open half" },
     { id: "EVT_SLIDE_CARD_LEFT", category: "UI-Slide", duration: "FAST", intensity: "subtle", implemented: false, phase: 3, bestUse: "Single card enters from right" },
     { id: "EVT_SLIDE_CARD_RIGHT", category: "UI-Slide", duration: "FAST", intensity: "subtle", implemented: false, phase: 3, bestUse: "Single card enters from left" },
     { id: "EVT_SLIDE_PANEL_IN", category: "UI-Slide", duration: "STANDARD", intensity: "standard", implemented: false, phase: 3, bestUse: "Side panel / inspector in" },
@@ -189,12 +201,24 @@
   function secondsFromFrames(frames, fps) {
     return Number(frames) / (fps || DEFAULT_FPS);
   }
-  function phaseFrames(d) {
-    var anticipate, mid, settle;
+  function phaseFrames(d, profile) {
+    var anticipate, mid, settle, anticipateR, midR, settleR;
     d = Math.max(2, Math.round(d));
-    anticipate = Math.max(1, Math.round(d * 0.125));
-    mid = Math.max(anticipate + 1, Math.round(d * 0.5));
-    settle = Math.max(mid + 1, Math.round(d * 0.82));
+    anticipateR = 0.125;
+    midR = 0.5;
+    settleR = 0.82;
+    if (profile === "soft") {
+      anticipateR = 0.14;
+      midR = 0.44;
+      settleR = 0.64;
+    } else if (profile === "snap") {
+      anticipateR = 0.08;
+      midR = 0.5;
+      settleR = 0.9;
+    }
+    anticipate = Math.max(1, Math.round(d * anticipateR));
+    mid = Math.max(anticipate + 1, Math.round(d * midR));
+    settle = Math.max(mid + 1, Math.round(d * settleR));
     return {
       start: 0,
       anticipate: Math.min(anticipate, d - 1),
@@ -202,6 +226,12 @@
       settle: Math.min(settle, d - 1),
       end: d
     };
+  }
+  function axisOf(dir) {
+    if (dir === "right") return { x: 1, y: 0 };
+    if (dir === "up") return { x: 0, y: -1 };
+    if (dir === "down") return { x: 0, y: 1 };
+    return { x: -1, y: 0 };
   }
   function easeInf(kind) {
     return EASE[kind] || EASE["premium-smooth"];
@@ -349,22 +379,18 @@
     var distance = travelDistance(dir, comp, 100, 100);
     var anti = anticipatePx(distance);
     var over = overshootPx(distance, 6);
-    var ax = 0, ay = 0;
-    if (dir === "left") ax = -1;
-    if (dir === "right") ax = 1;
-    if (dir === "up") ay = -1;
-    if (dir === "down") ay = 1;
+    var a = axisOf(dir);
     return {
       outgoing: [
         key(ph.start, fps, 0, 0, 100, 100, 0, "anticipate"),
-        key(ph.anticipate, fps, -ax * anti, -ay * anti, 100, 100, 0, "action"),
-        key(ph.mid, fps, ax * distance * 0.5, ay * distance * 0.5, 99.2, 55, 2, "crossover"),
-        key(ph.end, fps, ax * distance, ay * distance, 98, 0, 6, "done")
+        key(ph.anticipate, fps, -a.x * anti, -a.y * anti, 100, 100, 0, "action"),
+        key(ph.mid, fps, a.x * distance * 0.5, a.y * distance * 0.5, 99.2, 55, 2, "crossover"),
+        key(ph.end, fps, a.x * distance, a.y * distance, 98, 0, 6, "done")
       ],
       incoming: [
-        key(ph.start, fps, -ax * distance, -ay * distance, 101.5, 0, 6, "anticipate"),
-        key(ph.mid, fps, -ax * distance * 0.18, -ay * distance * 0.18, 100.4, 78, 2, "crossover"),
-        key(ph.settle, fps, ax * over, ay * over, 100.2, 100, 0, "settle"),
+        key(ph.start, fps, -a.x * distance, -a.y * distance, 101.5, 0, 6, "anticipate"),
+        key(ph.mid, fps, -a.x * distance * 0.18, -a.y * distance * 0.18, 100.4, 78, 2, "crossover"),
+        key(ph.settle, fps, a.x * over, a.y * over, 100.2, 100, 0, "settle"),
         key(ph.end, fps, 0, 0, 100, 100, 0, "done")
       ],
       phases: ph
@@ -406,6 +432,226 @@
       phases: ph
     };
   }
+  function planSoft(dir, frames, fps, comp) {
+    var ph = phaseFrames(frames, "soft");
+    var distance = travelDistance(dir, comp, 100, 100) * 0.92;
+    var anti = anticipatePx(distance);
+    var over = overshootPx(distance, 3);
+    var a = axisOf(dir);
+    return {
+      outgoing: [
+        key(ph.start, fps, 0, 0, 100, 100, 0, "anticipate"),
+        key(ph.anticipate, fps, -a.x * anti, -a.y * anti, 100.4, 100, 0, "action"),
+        key(ph.mid, fps, a.x * distance * 0.42, a.y * distance * 0.42, 99.6, 62, 1, "crossover"),
+        key(ph.end, fps, a.x * distance, a.y * distance, 98.8, 0, 3, "done")
+      ],
+      incoming: [
+        key(ph.start, fps, -a.x * distance, -a.y * distance, 101.2, 12, 3, "anticipate"),
+        key(ph.mid, fps, -a.x * distance * 0.2, -a.y * distance * 0.2, 100.3, 80, 1, "crossover"),
+        key(ph.settle, fps, a.x * over, a.y * over, 100.1, 100, 0, "settle"),
+        key(ph.end, fps, 0, 0, 100, 100, 0, "done")
+      ],
+      phases: ph
+    };
+  }
+  function planSnap(dir, frames, fps, comp) {
+    var ph = phaseFrames(frames, "snap");
+    var distance = travelDistance(dir, comp, 100, 100) * 0.42;
+    var anti = anticipatePx(distance);
+    var over = overshootPx(distance, 2);
+    var a = axisOf(dir);
+    return {
+      outgoing: [
+        key(ph.start, fps, 0, 0, 100, 100, 0, "anticipate"),
+        key(ph.anticipate, fps, -a.x * anti * 0.5, -a.y * anti * 0.5, 99.8, 100, 0, "action"),
+        key(ph.mid, fps, a.x * distance * 0.55, a.y * distance * 0.55, 99.6, 40, 0, "crossover"),
+        key(ph.end, fps, a.x * distance, a.y * distance, 99, 0, 1, "done")
+      ],
+      incoming: [
+        key(ph.start, fps, -a.x * distance, -a.y * distance, 100.6, 0, 1, "anticipate"),
+        key(ph.mid, fps, -a.x * distance * 0.08, -a.y * distance * 0.08, 100.2, 88, 0, "crossover"),
+        key(ph.settle, fps, a.x * over, a.y * over, 100.1, 100, 0, "settle"),
+        key(ph.end, fps, 0, 0, 100, 100, 0, "done")
+      ],
+      phases: ph
+    };
+  }
+  function planOvershoot(dir, frames, fps, comp) {
+    var ph = phaseFrames(frames);
+    var distance = travelDistance(dir, comp, 100, 100);
+    var anti = anticipatePx(distance);
+    var over = overshootPx(distance, 16);
+    var a = axisOf(dir);
+    return {
+      outgoing: [
+        key(ph.start, fps, 0, 0, 100, 100, 0, "anticipate"),
+        key(ph.anticipate, fps, -a.x * anti, -a.y * anti, 100.3, 100, 0, "action"),
+        key(ph.mid, fps, a.x * distance * 0.52, a.y * distance * 0.52, 99, 48, 2, "crossover"),
+        key(ph.end, fps, a.x * distance, a.y * distance, 97.8, 0, 5, "done")
+      ],
+      incoming: [
+        key(ph.start, fps, -a.x * distance, -a.y * distance, 102.2, 0, 5, "anticipate"),
+        key(ph.mid, fps, -a.x * distance * 0.08, -a.y * distance * 0.08, 100.8, 84, 1, "crossover"),
+        key(ph.settle, fps, a.x * over, a.y * over, 101.4, 100, 0, "settle"),
+        key(ph.end, fps, 0, 0, 100, 100, 0, "done")
+      ],
+      phases: ph
+    };
+  }
+  function planParallax(dir, frames, fps, comp) {
+    var ph = phaseFrames(frames);
+    var foreground = travelDistance(dir, comp, 100, 100);
+    var background = foreground * 0.28;
+    var anti = anticipatePx(background);
+    var over = overshootPx(foreground, 6);
+    var a = axisOf(dir);
+    return {
+      outgoing: [
+        key(ph.start, fps, 0, 0, 100, 100, 0, "anticipate"),
+        key(ph.anticipate, fps, -a.x * anti * 0.5, -a.y * anti * 0.5, 99.6, 100, 1, "action"),
+        key(ph.mid, fps, a.x * background * 0.5, a.y * background * 0.5, 99, 62, 3, "crossover"),
+        key(ph.end, fps, a.x * background, a.y * background, 97.5, 28, 6, "done")
+      ],
+      incoming: [
+        key(ph.start, fps, -a.x * foreground, -a.y * foreground, 102, 0, 4, "anticipate"),
+        key(ph.mid, fps, -a.x * foreground * 0.16, -a.y * foreground * 0.16, 100.6, 82, 1, "crossover"),
+        key(ph.settle, fps, a.x * over, a.y * over, 100.2, 100, 0, "settle"),
+        key(ph.end, fps, 0, 0, 100, 100, 0, "done")
+      ],
+      phases: ph
+    };
+  }
+  function planFade(dir, frames, fps, comp) {
+    var ph = phaseFrames(frames);
+    var distance = travelDistance(dir, comp, 100, 100) * 0.36;
+    var anti = anticipatePx(distance);
+    var over = overshootPx(distance, 4);
+    var a = axisOf(dir);
+    return {
+      outgoing: [
+        key(ph.start, fps, 0, 0, 100, 100, 0, "anticipate"),
+        key(ph.anticipate, fps, -a.x * anti, -a.y * anti, 99.8, 88, 1, "action"),
+        key(ph.mid, fps, a.x * distance * 0.35, a.y * distance * 0.35, 99.6, 38, 3, "crossover"),
+        key(ph.end, fps, a.x * distance, a.y * distance, 99, 0, 5, "done")
+      ],
+      incoming: [
+        key(ph.start, fps, -a.x * distance, -a.y * distance, 100.8, 0, 5, "anticipate"),
+        key(ph.mid, fps, -a.x * distance * 0.12, -a.y * distance * 0.12, 100.3, 62, 2, "crossover"),
+        key(ph.settle, fps, a.x * over * 0.5, a.y * over * 0.5, 100.1, 100, 0, "settle"),
+        key(ph.end, fps, 0, 0, 100, 100, 0, "done")
+      ],
+      phases: ph
+    };
+  }
+  function planCover(dir, frames, fps, comp) {
+    var ph = phaseFrames(frames);
+    var distance = travelDistance(dir, comp, 100, 100);
+    var anti = anticipatePx(distance) * 0.4;
+    var over = overshootPx(distance, 4);
+    var a = axisOf(dir);
+    return {
+      outgoing: [
+        key(ph.start, fps, 0, 0, 100, 100, 0, "anticipate"),
+        key(ph.anticipate, fps, -a.x * anti, -a.y * anti, 99.8, 100, 0, "action"),
+        key(ph.mid, fps, 0, 0, 99.4, 100, 0, "crossover"),
+        key(ph.end, fps, 0, 0, 98.8, 100, 0, "done")
+      ],
+      incoming: [
+        key(ph.start, fps, -a.x * distance, -a.y * distance, 100, 100, 0, "anticipate"),
+        key(ph.mid, fps, -a.x * distance * 0.22, -a.y * distance * 0.22, 100, 100, 0, "crossover"),
+        key(ph.settle, fps, a.x * over, a.y * over, 100.1, 100, 0, "settle"),
+        key(ph.end, fps, 0, 0, 100, 100, 0, "done")
+      ],
+      phases: ph
+    };
+  }
+  function planPanel(dir, frames, fps, comp) {
+    var ph = phaseFrames(frames);
+    var distance = travelDistance(dir, comp, 100, 100) * 0.4;
+    var anti = anticipatePx(distance);
+    var over = overshootPx(distance, 4);
+    var from = axisOf(dir);
+    return {
+      outgoing: [
+        key(ph.start, fps, 0, 0, 100, 100, 0, "anticipate"),
+        key(ph.anticipate, fps, from.x * anti * 0.4, from.y * anti * 0.4, 99.8, 100, 0, "action"),
+        key(ph.mid, fps, -from.x * distance * 0.22, -from.y * distance * 0.22, 98.6, 74, 2, "crossover"),
+        key(ph.end, fps, -from.x * distance * 0.32, -from.y * distance * 0.32, 97.8, 64, 3, "done")
+      ],
+      incoming: [
+        key(ph.start, fps, from.x * distance, from.y * distance, 100, 100, 0, "anticipate"),
+        key(ph.mid, fps, from.x * distance * 0.18, from.y * distance * 0.18, 100, 100, 0, "crossover"),
+        key(ph.settle, fps, -from.x * over, -from.y * over, 100.1, 100, 0, "settle"),
+        key(ph.end, fps, 0, 0, 100, 100, 0, "done")
+      ],
+      phases: ph
+    };
+  }
+  function planDashboard(dir, frames, fps, comp) {
+    var ph = phaseFrames(frames);
+    var distance = travelDistance(dir, comp, 100, 100);
+    var anti = anticipatePx(distance);
+    var over = overshootPx(distance, 6);
+    var a = axisOf(dir);
+    return {
+      outgoing: [
+        key(ph.start, fps, 0, 0, 100, 100, 0, "anticipate"),
+        key(ph.anticipate, fps, -a.x * anti, -a.y * anti + 3, 100.5, 100, 0, "action"),
+        key(ph.mid, fps, a.x * distance * 0.46, a.y * distance * 0.46 + 8, 97.2, 46, 5, "crossover"),
+        key(ph.end, fps, a.x * distance, a.y * distance + 14, 93.5, 0, 10, "done")
+      ],
+      incoming: [
+        key(ph.start, fps, -a.x * distance, -a.y * distance - 10, 105, 0, 7, "anticipate"),
+        key(ph.mid, fps, -a.x * distance * 0.16, -a.y * distance * 0.16 - 3, 101.6, 74, 2, "crossover"),
+        key(ph.settle, fps, a.x * over, a.y * over + 1, 100.4, 100, 0, "settle"),
+        key(ph.end, fps, 0, 0, 100, 100, 0, "done")
+      ],
+      phases: ph
+    };
+  }
+  function planSplit(dir, frames, fps, comp) {
+    var ph = phaseFrames(frames);
+    var distance = travelDistance(dir, comp, 100, 100) * 0.55;
+    var anti = anticipatePx(distance);
+    var over = overshootPx(distance, 5);
+    var a = axisOf(dir);
+    return {
+      outgoing: [
+        key(ph.start, fps, 0, 0, 100, 100, 0, "anticipate"),
+        key(ph.anticipate, fps, -a.x * anti, -a.y * anti, 99.6, 100, 0, "action"),
+        key(ph.mid, fps, a.x * distance * 0.5, a.y * distance * 0.5, 98.8, 82, 1, "crossover"),
+        key(ph.end, fps, a.x * distance, a.y * distance, 97.5, 0, 4, "done")
+      ],
+      incoming: [
+        key(ph.start, fps, -a.x * distance, -a.y * distance, 101.2, 0, 4, "anticipate"),
+        key(ph.mid, fps, -a.x * distance * 0.5, -a.y * distance * 0.5, 100.4, 88, 1, "crossover"),
+        key(ph.settle, fps, a.x * over, a.y * over, 100.2, 100, 0, "settle"),
+        key(ph.end, fps, 0, 0, 100, 100, 0, "done")
+      ],
+      phases: ph
+    };
+  }
+  function planForId(id, dir, frames, fps, comp) {
+    if (id === "EVT_UI_PUSH_SCALE") return planScale(frames, fps);
+    if (id === "EVT_UI_PUSH_DEPTH") return planDepth(frames, fps);
+    if (id === "EVT_UI_PUSH_SOFT") return planSoft(dir, frames, fps, comp);
+    if (id === "EVT_UI_PUSH_SNAP") return planSnap(dir, frames, fps, comp);
+    if (id === "EVT_UI_PUSH_OVERSHOOT") return planOvershoot(dir, frames, fps, comp);
+    if (id === "EVT_UI_PUSH_PARALLAX") return planParallax(dir, frames, fps, comp);
+    if (id === "EVT_UI_PUSH_FADE") return planFade(dir, frames, fps, comp);
+    if (id === "EVT_UI_PUSH_COVER") return planCover(dir, frames, fps, comp);
+    if (id === "EVT_UI_PUSH_PANEL") return planPanel(dir, frames, fps, comp);
+    if (id === "EVT_UI_PUSH_DASHBOARD") return planDashboard(dir, frames, fps, comp);
+    if (id === "EVT_UI_PUSH_SPLIT") return planSplit(dir, frames, fps, comp);
+    return planDirectional(dir, frames, fps, comp);
+  }
+  function defaultDirForId(id) {
+    if (id === "EVT_UI_PUSH_RIGHT") return "right";
+    if (id === "EVT_UI_PUSH_UP") return "up";
+    if (id === "EVT_UI_PUSH_DOWN") return "down";
+    if (id === "EVT_UI_PUSH_PANEL") return "right";
+    return "left";
+  }
   function remapId(id, dir) {
     if (id === "EVT_UI_PUSH_LEFT" || id === "EVT_UI_PUSH_RIGHT" || id === "EVT_UI_PUSH_UP" || id === "EVT_UI_PUSH_DOWN") {
       if (dir === "left") return "EVT_UI_PUSH_LEFT";
@@ -432,7 +678,7 @@
     id = remapId(row.id, dir);
     row = findCatalog(id) || row;
     if (!row.implemented) {
-      alert(row.id + " is catalogued for Phase " + row.phase + ".\nPhase 1 applies the six UI Push IDs only.\nSee docs/TRANSITION_PHASES.md.");
+      alert(row.id + " is catalogued for Phase " + row.phase + ".\nPhase 2 applies the full UI Push family.\nSee docs/TRANSITION_PHASES.md.");
       return;
     }
     if (sel.length < 2) { alert("Select outgoing, then incoming (two layers)."); return; }
@@ -441,9 +687,7 @@
     frames = durationFrames(group, fps);
     ease = EASING_IDS[easeList.selection ? easeList.selection.index : 0] || "premium-smooth";
     t0 = comp.time;
-    if (id === "EVT_UI_PUSH_SCALE") plan = planScale(frames, fps);
-    else if (id === "EVT_UI_PUSH_DEPTH") plan = planDepth(frames, fps);
-    else plan = planDirectional(dir, frames, fps, comp);
+    plan = planForId(id, dir, frames, fps, comp);
     undo = "Evotechly Transition · " + id;
     app.beginUndoGroup(undo);
     try {
@@ -463,7 +707,7 @@
     alert(undo + "\n" + frames + "f @" + Math.round(fps) + "fps · " + ease + " · " + STYLE + "\nanticipate→action→crossover→settle");
   }
   function catalogLabel(row) {
-    return (row.implemented ? "● " : "○ ") + row.id + "  ·  " + row.category;
+    return (row.implemented ? "● " : "○ ") + (row.name || row.id) + "  ·  " + row.category;
   }
   function refreshList(list, searchField, catList) {
     var q = String(searchField.text || "").toLowerCase();
@@ -474,7 +718,7 @@
     for (i = 0; i < CATALOG.length; i++) {
       row = CATALOG[i];
       if (cat !== "All" && row.category !== cat) continue;
-      blob = (row.id + " " + row.category + " " + row.bestUse + " " + row.duration).toLowerCase();
+      blob = (row.id + " " + (row.name || "") + " " + row.category + " " + row.bestUse + " " + row.duration).toLowerCase();
       if (q && blob.indexOf(q) === -1) continue;
       filtered.push(row);
       list.add("item", catalogLabel(row));
@@ -490,7 +734,7 @@
     win.spacing = 8;
     win.margins = 10;
     win.add("statictext", undefined, "EVOTECHLY  ·  Transitions");
-    intro = win.add("statictext", undefined, "Phase 1 · six UI Push plans. Catalog is searchable. Companion to Motion OS — does not replace v0.32. Node is source of truth; this panel mirrors apply numbers.", { multiline: true });
+    intro = win.add("statictext", undefined, "Phase 2 · full UI Push family. Catalog is searchable. Companion to Motion OS — does not replace v0.32. Node is source of truth; this panel mirrors apply numbers.", { multiline: true });
     intro.characters = 46;
 
     g = win.add("group");
@@ -518,7 +762,7 @@
 
     win.add("button", undefined, "Apply").onClick = function () { runApply(list, groupList, dirList, easeList); };
 
-    note = win.add("statictext", undefined, "Select outgoing, then incoming. ● = Phase 1 apply. ○ = catalog only. Control null: EVOTECHLY_TRANSITION_CONTROL. SFX = markers only.", { multiline: true });
+    note = win.add("statictext", undefined, "Select outgoing, then incoming. ● = UI Push apply. ○ = later phase. Control null: EVOTECHLY_TRANSITION_CONTROL. SFX = markers only.", { multiline: true });
     note.characters = 46;
 
     foot = win.add("statictext", undefined, "Install: Scripts/ScriptUI Panels next to Motion OS Hub. Docs: TRANSITION_KIT.md · TRANSITION_PHASES.md.", { multiline: true });
@@ -527,7 +771,15 @@
     function onFilter() { refreshList(list, searchField, catList); }
     searchField.onChanging = onFilter;
     catList.onChange = onFilter;
+    list.onChange = function () {
+      var row = list.selection ? filtered[list.selection.index] : null;
+      var d;
+      if (!row) return;
+      d = defaultDirForId(row.id);
+      dirList.selection = DIRS.indexOf(d);
+    };
     refreshList(list, searchField, catList);
+    if (list.selection) list.onChange();
 
     win.onResizing = win.onResize = function () { this.layout.resize(); };
     if (win instanceof Window) { win.center(); win.show(); }

@@ -10,7 +10,7 @@ Four JSX files on Ultimate 2.0.0, plus the Transition Kit companion. No Node.
 
 `ae/Caption Style Tools.jsx` — **Window → Caption Style Tools** (keyword color + fade/scale/slideUp/typewriter/blur — P1c)
 
-`ae/Evotechly Transitions.jsx` — **Window → Evotechly Transitions** (Transition Kit Phase 1). Install beside the Hub. See `docs/TRANSITION_KIT.md`.
+`ae/Evotechly Transitions.jsx` — **Window → Evotechly Transitions** (Transition Kit Phase 2 — full UI Push family). Install beside the Hub. See `docs/TRANSITION_KIT.md`.
 
 `ae/Seed Golden Project.jsx` — **File → Scripts → Run Script File…** (or Hub → Home → Seed). Required. Not a Window panel.
 
