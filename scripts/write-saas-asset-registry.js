@@ -55,6 +55,15 @@ const NATIVE_STAGGER = [
   { id: "EVT_WAVE_SOFT", name: "Wave Soft", implemented: true, phase: 13, bestUse: "Soft delay wave, no bounce" }
 ];
 
+const NATIVE_MASK = [
+  { id: "EVT_MASK_CIRCLE", name: "Mask Circle", implemented: true, phase: 6, bestUse: "Soft circular reveal on a card" },
+  { id: "EVT_MASK_RECT", name: "Mask Rect", implemented: true, phase: 6, bestUse: "Rounded-rect expand" },
+  { id: "EVT_MASK_SOFT_EDGE", name: "Mask Soft Edge", implemented: true, phase: 6, bestUse: "Feathered matte, no hard wipe" },
+  { id: "EVT_MASK_EXPAND", name: "Mask Expand", implemented: true, phase: 6, bestUse: "Mask expansion from center" },
+  { id: "EVT_REVEAL_IRIS", name: "Reveal Iris", implemented: true, phase: 6, bestUse: "Quiet iris on a screenshot" },
+  { id: "EVT_REVEAL_WIPE_SOFT", name: "Reveal Wipe Soft", implemented: true, phase: 6, bestUse: "Soft directional matte, not a bar wipe" }
+];
+
 const NATIVE_SLIDE = [
   { id: "EVT_SLIDE_CARD_LEFT", name: "Slide Card Left", implemented: true, phase: 3, bestUse: "Single card enters from right" },
   { id: "EVT_SLIDE_CARD_RIGHT", name: "Slide Card Right", implemented: true, phase: 3, bestUse: "Single card enters from left" },
@@ -186,6 +195,10 @@ function nativeStaggerRow(row) {
   return nativeKitRow(row, "staggerCascade.js");
 }
 
+function nativeMaskRow(row) {
+  return nativeKitRow(row, "maskReveal.js");
+}
+
 function otherNativeRow(row) {
   return {
     id: row.id,
@@ -247,7 +260,7 @@ const registry = {
   style: "premium-saas",
   schemaVersion: 1,
   note:
-    "P2b native charts / device plates + P1 text / UI / cursor + Transition Kit Phase 13 Stagger-Cascade (plus Phase 2–4 UI Push / UI-Slide / Scale-Zoom, Phase 9 Overlay-Modal, Phase 10 Page-Screen, and Phase 12 Shared-Element). sourceType native, commercialUse true. No AEJuice / Motion Bro / Bento binaries.",
+    "P2b native charts / device plates + P1 text / UI / cursor + Transition Kit Phase 6 Mask-Reveal (plus Phase 2–4 UI Push / UI-Slide / Scale-Zoom, Phase 9 Overlay-Modal, Phase 10 Page-Screen, Phase 12 Shared-Element, and Phase 13 Stagger-Cascade). sourceType native, commercialUse true. No AEJuice / Motion Bro / Bento binaries.",
   fields: {
     id: "EVT_* unique pack id",
     sourceType: "native | thirdParty",
@@ -262,6 +275,7 @@ const registry = {
     .concat(NATIVE_OVERLAY.map(nativeOverlayRow))
     .concat(NATIVE_PAGE.map(nativePageRow))
     .concat(NATIVE_STAGGER.map(nativeStaggerRow))
+    .concat(NATIVE_MASK.map(nativeMaskRow))
     .concat(OTHER_NATIVE.map(otherNativeRow))
     .concat(P1_NATIVE.map(otherNativeRow))
     .concat(lucideRows())

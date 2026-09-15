@@ -157,6 +157,7 @@ test("every implemented ID produces a deterministic complete plan", function () 
   const overlayModal = require("../core/transitions/overlayModal");
   const pageScreen = require("../core/transitions/pageScreen");
   const staggerCascade = require("../core/transitions/staggerCascade");
+  const maskReveal = require("../core/transitions/maskReveal");
   const ids = engine.IMPLEMENTED_IDS.slice();
   assert.deepEqual(
     ids,
@@ -166,6 +167,7 @@ test("every implemented ID produces a deterministic complete plan", function () 
       .concat(overlayModal.OVERLAY_MODAL_IDS)
       .concat(pageScreen.PAGE_SCREEN_IDS)
       .concat(staggerCascade.STAGGER_CASCADE_IDS)
+      .concat(maskReveal.MASK_REVEAL_IDS)
   );
   assert.deepEqual(ids, [
     "EVT_UI_PUSH_LEFT",
@@ -223,7 +225,13 @@ test("every implemented ID produces a deterministic complete plan", function () 
     "EVT_CASCADE_IN",
     "EVT_CASCADE_OUT",
     "EVT_STAGGER_FADE",
-    "EVT_WAVE_SOFT"
+    "EVT_WAVE_SOFT",
+    "EVT_MASK_CIRCLE",
+    "EVT_MASK_RECT",
+    "EVT_MASK_SOFT_EDGE",
+    "EVT_MASK_EXPAND",
+    "EVT_REVEAL_IRIS",
+    "EVT_REVEAL_WIPE_SOFT"
   ]);
   ids.forEach(function (id) {
     const opts = {
@@ -254,19 +262,21 @@ test("every implemented ID produces a deterministic complete plan", function () 
     assert.ok(a.anatomy.action);
     assert.ok(a.anatomy.crossover);
     assert.ok(a.anatomy.settle);
-    const name = staggerCascade.isStaggerCascadeId(id)
-      ? staggerCascade.displayName(id)
-      : pageScreen.isPageScreenId(id)
-      ? pageScreen.displayName(id)
-      : overlayModal.isOverlayModalId(id)
-        ? overlayModal.displayName(id)
-        : sharedElement.isSharedElementId(id)
-          ? sharedElement.displayName(id)
-          : scaleZoom.isScaleZoomId(id)
-            ? scaleZoom.displayName(id)
-            : uiSlide.isUiSlideId(id)
-              ? uiSlide.displayName(id)
-              : uiPush.displayName(id);
+    const name = maskReveal.isMaskRevealId(id)
+      ? maskReveal.displayName(id)
+      : staggerCascade.isStaggerCascadeId(id)
+        ? staggerCascade.displayName(id)
+        : pageScreen.isPageScreenId(id)
+          ? pageScreen.displayName(id)
+          : overlayModal.isOverlayModalId(id)
+            ? overlayModal.displayName(id)
+            : sharedElement.isSharedElementId(id)
+              ? sharedElement.displayName(id)
+              : scaleZoom.isScaleZoomId(id)
+                ? scaleZoom.displayName(id)
+                : uiSlide.isUiSlideId(id)
+                  ? uiSlide.displayName(id)
+                  : uiPush.displayName(id);
     assert.equal(a.name, name);
     assert.ok(a.outgoing.keys.length >= 3, id + " outgoing keys");
     assert.ok(a.incoming.keys.length >= 3, id + " incoming keys");
@@ -996,6 +1006,142 @@ test("Stagger-Cascade family reuses staggerReveal offset/travel and stays bounce
   assert.equal(customOffset.incoming.keys[0].frame, customOffset.outgoing.keys[0].frame + 5);
 });
 
+test("Mask-Reveal family uses native expansion, no bounce, and wipe-from-bounds", function () {
+  const maskReveal = require("../core/transitions/maskReveal");
+  assert.deepEqual(maskReveal.MASK_REVEAL_IDS, [
+    "EVT_MASK_CIRCLE",
+    "EVT_MASK_RECT",
+    "EVT_MASK_SOFT_EDGE",
+    "EVT_MASK_EXPAND",
+    "EVT_REVEAL_IRIS",
+    "EVT_REVEAL_WIPE_SOFT"
+  ]);
+  assert.equal(maskReveal.CIRCLE_START, -160);
+  assert.equal(maskReveal.CIRCLE_MID, -48);
+  assert.equal(maskReveal.CIRCLE_FEATHER, 10);
+  assert.equal(maskReveal.RECT_START, -140);
+  assert.equal(maskReveal.RECT_FEATHER, 6);
+  assert.equal(maskReveal.CORNER_RADIUS, 12);
+  assert.equal(maskReveal.SOFT_FEATHER, 28);
+  assert.equal(maskReveal.EXPAND_START, -180);
+  assert.equal(maskReveal.IRIS_START, -280);
+  assert.equal(maskReveal.IRIS_FEATHER, 14);
+  assert.equal(maskReveal.WIPE_START, -200);
+  assert.equal(maskReveal.WIPE_FEATHER, 18);
+  assert.equal(maskReveal.WIPE_SHIFT, 80);
+  assert.equal(maskReveal.EXPAND_END, 0);
+
+  maskReveal.MASK_REVEAL_IDS.forEach(function (id) {
+    const plan = engine.applyTransitionPlan({ id: id, durationFrames: 16, fps: 30 });
+    assert.equal(plan.implemented, true);
+    assert.equal(plan.category, "Mask-Reveal");
+    assert.equal(plan.travel.distance, 0);
+    assert.equal(plan.travel.mask, true);
+    assert.equal(plan.travel.native, true);
+    assert.equal(plan.travel.overshoot, 0);
+    assert.ok(plan.mask);
+    assert.equal(plan.mask.plugin, false);
+    assert.equal(plan.mask.native, true);
+    assert.equal(plan.incoming.mask.type, plan.mask.type);
+    assert.equal(plan.incoming.set.maskExpansion.length, 4);
+    assert.equal(plan.mask.expansionEnd, 0);
+    assert.ok(plan.mask.expansionStart < plan.mask.expansionMid);
+    assert.ok(plan.mask.expansionMid < 0);
+    plan.outgoing.keys.forEach(function (k) {
+      assert.equal(k.x, 0);
+      assert.equal(k.y, 0);
+      assert.equal(k.scale[0], 100);
+    });
+    plan.incoming.keys.forEach(function (k) {
+      assert.equal(k.x, 0);
+      assert.equal(k.y, 0);
+      assert.equal(k.opacity, 100);
+      assert.equal(k.scale[0], 100);
+    });
+    assert.equal(plan.outgoing.keys[plan.outgoing.keys.length - 1].opacity, 0);
+  });
+
+  const circle = engine.applyTransitionPlan({ id: "EVT_MASK_CIRCLE", durationFrames: 16, fps: 30 });
+  assert.equal(circle.mask.type, "ellipse");
+  assert.equal(circle.mask.feather, maskReveal.CIRCLE_FEATHER);
+  assert.equal(circle.mask.expansionStart, maskReveal.CIRCLE_START);
+  assert.equal(circle.mask.expansionMid, maskReveal.CIRCLE_MID);
+  assert.equal(circle.outgoing.keys[2].opacity, maskReveal.CIRCLE_OUT_MID);
+  assert.equal(circle.travel.card, true);
+  assert.equal(circle.group, "STANDARD");
+
+  const scaled = engine.applyTransitionPlan({
+    id: "EVT_MASK_CIRCLE",
+    durationFrames: 16,
+    fps: 30,
+    target: { layerBounds: { w: 720, h: 480 } }
+  });
+  assert.equal(scaled.mask.expansionScale, 2);
+  assert.equal(scaled.mask.expansionStart, maskReveal.CIRCLE_START * 2);
+  assert.equal(scaled.mask.expansionMid, maskReveal.CIRCLE_MID * 2);
+
+  const rect = engine.applyTransitionPlan({ id: "EVT_MASK_RECT", durationFrames: 16, fps: 30 });
+  assert.equal(rect.mask.type, "roundedRect");
+  assert.equal(rect.mask.cornerRadius, maskReveal.CORNER_RADIUS);
+  assert.equal(rect.mask.feather, maskReveal.RECT_FEATHER);
+  assert.equal(rect.outgoing.keys[2].opacity, maskReveal.RECT_OUT_MID);
+  assert.equal(rect.travel.crop, true);
+
+  const soft = engine.applyTransitionPlan({ id: "EVT_MASK_SOFT_EDGE", fps: 30 });
+  assert.equal(soft.group, "SMOOTH");
+  assert.equal(soft.mask.feather, maskReveal.SOFT_FEATHER);
+  assert.ok(soft.mask.feather > maskReveal.RECT_FEATHER);
+  assert.equal(soft.outgoing.keys[2].opacity, maskReveal.SOFT_OUT_MID);
+  assert.equal(soft.travel.soft, true);
+
+  const expand = engine.applyTransitionPlan({ id: "EVT_MASK_EXPAND", durationFrames: 16, fps: 30 });
+  assert.equal(expand.mask.type, "ellipse");
+  assert.equal(expand.mask.expansionStart, maskReveal.EXPAND_START);
+  assert.equal(expand.travel.fromCenter, true);
+  assert.equal(expand.outgoing.keys[2].opacity, maskReveal.EXPAND_OUT_MID);
+
+  const iris = engine.applyTransitionPlan({ id: "EVT_REVEAL_IRIS", fps: 30 });
+  assert.equal(iris.group, "SMOOTH");
+  assert.equal(iris.mask.type, "ellipse");
+  assert.equal(iris.mask.feather, maskReveal.IRIS_FEATHER);
+  assert.equal(iris.mask.expansionStart, maskReveal.IRIS_START);
+  assert.equal(iris.outgoing.keys[2].opacity, maskReveal.IRIS_OUT_MID);
+  assert.equal(iris.travel.screenshot, true);
+  assert.equal(iris.travel.quiet, true);
+  assert.ok(iris.outgoing.keys[2].opacity > circle.outgoing.keys[2].opacity);
+
+  const irisShot = engine.applyTransitionPlan({
+    id: "EVT_IRIS",
+    durationFrames: 21,
+    fps: 30,
+    target: { layerBounds: { width: 1920, height: 1080 } }
+  });
+  assert.equal(irisShot.id, "EVT_REVEAL_IRIS");
+  assert.equal(irisShot.mask.expansionScale, 2);
+  assert.equal(irisShot.mask.expansionStart, maskReveal.IRIS_START * 2);
+
+  const wipe = engine.applyTransitionPlan({ id: "EVT_REVEAL_WIPE_SOFT", durationFrames: 16, fps: 30, direction: "left" });
+  assert.equal(wipe.mask.type, "roundedRect");
+  assert.equal(wipe.mask.feather, maskReveal.WIPE_FEATHER);
+  assert.equal(wipe.travel.wipe, true);
+  assert.equal(wipe.travel.direction, "left");
+  assert.ok(wipe.mask.shift);
+  assert.equal(wipe.mask.shiftPx, maskReveal.WIPE_SHIFT);
+  assert.equal(wipe.mask.shift[0].x, -maskReveal.WIPE_SHIFT);
+  assert.equal(wipe.mask.shift[0].y, 0);
+  assert.equal(wipe.mask.shift[wipe.mask.shift.length - 1].x, 0);
+  assert.equal(wipe.outgoing.keys[2].opacity, maskReveal.WIPE_OUT_MID);
+
+  const wipeUp = engine.applyTransitionPlan({ id: "EVT_WIPE_FROM_BOUNDS", durationFrames: 16, fps: 30, direction: "up" });
+  assert.equal(wipeUp.id, "EVT_REVEAL_WIPE_SOFT");
+  assert.equal(wipeUp.mask.shift[0].x, 0);
+  assert.equal(wipeUp.mask.shift[0].y, -maskReveal.WIPE_SHIFT);
+
+  assert.equal(engine.applyTransitionPlan({ id: "EVT_MASK", durationFrames: 16, fps: 30 }).id, "EVT_MASK_CIRCLE");
+  assert.equal(engine.applyTransitionPlan({ id: "EVT_SCREENSHOT", durationFrames: 16, fps: 30 }).id, "EVT_REVEAL_IRIS");
+  assert.equal(engine.applyTransitionPlan({ id: "EVT_CARD_REVEAL", durationFrames: 16, fps: 30 }).id, "EVT_MASK_RECT");
+});
+
 test("unimplemented catalog IDs return a safe stub plan", function () {
   const plan = engine.applyTransitionPlan({ id: "EVT_MICRO_HOVER" });
   assert.equal(plan.implemented, false);
@@ -1011,6 +1157,7 @@ test("catalog has unique EVT_ IDs and implemented flags for shipped families", f
   const overlayModal = require("../core/transitions/overlayModal");
   const pageScreen = require("../core/transitions/pageScreen");
   const staggerCascade = require("../core/transitions/staggerCascade");
+  const maskReveal = require("../core/transitions/maskReveal");
   const list = registry.loadCatalog();
   assert.ok(list.length >= 90);
   assert.deepEqual(registry.uniqueIdErrors(), []);
@@ -1023,7 +1170,7 @@ test("catalog has unique EVT_ IDs and implemented flags for shipped families", f
     set[id] = true;
   });
   const implemented = registry.listImplemented();
-  assert.equal(implemented.length, 56);
+  assert.equal(implemented.length, 62);
   implemented.forEach(function (row) {
     assert.equal(row.implemented, true);
     assert.equal(row.style, "premium-saas");
@@ -1045,6 +1192,9 @@ test("catalog has unique EVT_ IDs and implemented flags for shipped families", f
     } else if (row.category === "Stagger-Cascade") {
       assert.equal(row.phase, 13);
       assert.equal(row.name, staggerCascade.displayName(row.id));
+    } else if (row.category === "Mask-Reveal") {
+      assert.equal(row.phase, 6);
+      assert.equal(row.name, maskReveal.displayName(row.id));
     } else {
       assert.equal(row.category, "UI-Push");
       assert.ok(uiPush.PHASE1_IDS.indexOf(row.id) !== -1 ? row.phase === 1 : row.phase === 2, row.id + " phase");
@@ -1126,6 +1276,17 @@ test("catalog has unique EVT_ IDs and implemented flags for shipped families", f
   assert.equal(registry.filterCatalog({ query: "stagger cards", category: "Stagger-Cascade" })[0].id, "EVT_STAGGER_CARDS");
   assert.equal(registry.filterCatalog({ query: "wave soft", category: "Stagger-Cascade" })[0].id, "EVT_WAVE_SOFT");
   assert.equal(registry.filterCatalog({ implemented: true, category: "Stagger-Cascade" }).length, 6);
+  assert.equal(registry.getById("EVT_MASK_CIRCLE").implemented, true);
+  assert.equal(registry.getById("EVT_MASK_CIRCLE").name, "Mask Circle");
+  assert.equal(registry.getById("EVT_MASK_RECT").name, "Mask Rect");
+  assert.equal(registry.getById("EVT_MASK_SOFT_EDGE").name, "Mask Soft Edge");
+  assert.equal(registry.getById("EVT_MASK_EXPAND").name, "Mask Expand");
+  assert.equal(registry.getById("EVT_REVEAL_IRIS").name, "Reveal Iris");
+  assert.equal(registry.getById("EVT_REVEAL_WIPE_SOFT").name, "Reveal Wipe Soft");
+  assert.equal(registry.listByCategory("Mask-Reveal").length, 6);
+  assert.equal(registry.filterCatalog({ query: "mask circle", category: "Mask-Reveal" })[0].id, "EVT_MASK_CIRCLE");
+  assert.equal(registry.filterCatalog({ query: "reveal iris", category: "Mask-Reveal" })[0].id, "EVT_REVEAL_IRIS");
+  assert.equal(registry.filterCatalog({ implemented: true, category: "Mask-Reveal" }).length, 6);
 });
 
 test("demo storyboard is a dashboard→card→analytics sequence", function () {
@@ -1193,6 +1354,12 @@ test("JSX companion embeds UI Push IDs and mirrored constants", function () {
   assert.ok(jsx.indexOf("function planCascadeOut") !== -1);
   assert.ok(jsx.indexOf("function planStaggerFade") !== -1);
   assert.ok(jsx.indexOf("function planWaveSoft") !== -1);
+  assert.ok(jsx.indexOf("function planMaskReveal") !== -1);
+  assert.ok(jsx.indexOf("function applyNativeMask") !== -1);
+  assert.ok(jsx.indexOf("function isMaskId") !== -1);
+  assert.ok(jsx.indexOf("function maskSpecForId") !== -1);
+  assert.ok(jsx.indexOf("function setEllipseMaskShape") !== -1);
+  assert.ok(jsx.indexOf("EVO_MASK_REVEAL") !== -1);
   assert.ok(jsx.indexOf("function shiftKeysJs") !== -1);
   assert.ok(jsx.indexOf("function planSharedMorphJs") !== -1);
   assert.ok(jsx.indexOf("function planTargetZoomJs") !== -1);
@@ -1229,6 +1396,12 @@ test("JSX companion embeds UI Push IDs and mirrored constants", function () {
   assert.ok(jsx.indexOf("Cascade Out") !== -1);
   assert.ok(jsx.indexOf("Stagger Fade") !== -1);
   assert.ok(jsx.indexOf("Wave Soft") !== -1);
+  assert.ok(jsx.indexOf("Mask Circle") !== -1);
+  assert.ok(jsx.indexOf("Mask Rect") !== -1);
+  assert.ok(jsx.indexOf("Mask Soft Edge") !== -1);
+  assert.ok(jsx.indexOf("Mask Expand") !== -1);
+  assert.ok(jsx.indexOf("Reveal Iris") !== -1);
+  assert.ok(jsx.indexOf("Reveal Wipe Soft") !== -1);
   assert.ok(/#target aftereffects/.test(jsx));
   assert.ok(jsx.indexOf("does not replace") !== -1);
   registry.catalogIds().forEach(function (id) {

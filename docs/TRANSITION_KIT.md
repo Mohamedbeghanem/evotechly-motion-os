@@ -2,7 +2,7 @@
 
 Premium SaaS screen-to-screen motion. Apple / Linear / Stripe / Raycast taste. Not a glitch pack.
 
-**Phase 0–4, Phase 9–10, and Phase 12–13** ship this document, the folder scaffold, a Node-testable engine, catalog metadata, and a companion ScriptUI panel. The full UI Push family, the UI-Slide card family, the Scale-Zoom family, the Shared-Element family, the Overlay-Modal family, the Page-Screen family, and the **Stagger-Cascade family** produce complete keyframe plans. Everything else is catalogued for later phases and AI pairing. Charts / device plates are **P2b SaaS assets** (`core/assets/chartsDevices.js` + Charts tab), not a Transition Kit family. Crossfade stays catalog-only.
+**Phase 0–4, Phase 6, Phase 9–10, and Phase 12–13** ship this document, the folder scaffold, a Node-testable engine, catalog metadata, and a companion ScriptUI panel. The full UI Push family, the UI-Slide card family, the Scale-Zoom family, the Shared-Element family, the Overlay-Modal family, the Page-Screen family, the Stagger-Cascade family, and the **Mask-Reveal family** produce complete keyframe plans. Everything else is catalogued for later phases and AI pairing. Charts / device plates are **P2b SaaS assets** (`core/assets/chartsDevices.js` + Charts tab), not a Transition Kit family. Crossfade stays catalog-only.
 
 This kit does **not** replace the v0.32 Motion tab transitions (shot-level Clean Push / Whip / Zoom Match). Those stay in `ae/Evotechly Motion OS.jsx` (~297 KB — never stub). This kit is UI-to-UI: dashboard → card → analytics.
 
@@ -14,7 +14,7 @@ This kit does **not** replace the v0.32 Motion tab transitions (shot-level Clean
 | Fast Box Blur / Gaussian Blur | Yes | Planned on those 6 (blur keys in the plan) |
 | Shy control null + Slider Controls | Yes | Plan + JSX wiring |
 | Target-frame zoom math | Yes (pure math) | **Implemented** — `planTargetZoom` + JSX apply |
-| Rounded mask expand / iris | Yes (masks) | Catalog only (Phase 6) |
+| Rounded mask expand / iris | Yes (masks) | **Implemented** — Phase 6 Mask-Reveal (native masks) |
 | Shared-element “morph” | Partial | **Phase 12 family implemented** — bounds match (pos+scale), not mesh warp |
 | True glass refraction | No (without a plugin) | Native frost only; Liquid Glass stays companion |
 | SFX | Markers only | Metadata hooks — **no audio files** |
@@ -23,7 +23,7 @@ This kit does **not** replace the v0.32 Motion tab transitions (shot-level Clean
 
 **CI cannot open After Effects.** Plans are deterministic JSON. Visual taste is an editor soak, same as the rest of Motion OS.
 
-**ExtendScript cannot `require` Node.** `core/transitions/*.js` is the source of truth for numbers and tests. `ae/Evotechly Transitions.jsx` mirrors the UI Push, UI-Slide, Scale-Zoom, Shared-Element, Overlay-Modal, Page-Screen, and Stagger-Cascade constants and apply math. If they drift, fix Node first, then the JSX.
+**ExtendScript cannot `require` Node.** `core/transitions/*.js` is the source of truth for numbers and tests. `ae/Evotechly Transitions.jsx` mirrors the UI Push, UI-Slide, Scale-Zoom, Shared-Element, Overlay-Modal, Page-Screen, Stagger-Cascade, and Mask-Reveal constants and apply math. If they drift, fix Node first, then the JSX.
 
 **Progress slider** is reserved. Phase 1 keys are time-based. Driving the whole transition from `Progress` (0–100) is an Expressions-folder job in a later phase.
 
@@ -91,8 +91,8 @@ Shy guide null. JSX adds **Slider Control** effects (no custom Match Name plugin
 | Overshoot | 6 | Percent of travel, cap 24 px |
 | Depth | 50 | Depth-family later |
 | Opacity | 100 | Global opacity bias |
-| CornerRadius | 12 | Mask family later |
-| MaskExpansion | 0 | Mask family later |
+| CornerRadius | 12 | Mask-Reveal rounded-rect radius |
+| MaskExpansion | 0 | Mask-Reveal rest expansion (keys drive the reveal) |
 | Stagger | 3 | Cascade family offset (frames). Wave Soft uses 4 |
 | Settle | 20 | Percent of duration |
 | Easing | 0 | Index into easing IDs (metadata) |
@@ -113,7 +113,7 @@ Folder names under `transitions/`. Letters are A=01 … P=16.
 | B / 02 | UI-Slide | `02_UI-Slide/` | 3 | **8 IDs implemented (Phase 3)** |
 | C / 03 | Scale-Zoom | `03_Scale-Zoom/` | 4 | **8 IDs implemented (Phase 4)** |
 | D / 04 | Crossfade | `04_Crossfade/` | 5 | catalog |
-| E / 05 | Mask-Reveal | `05_Mask-Reveal/` | 6 | catalog |
+| E / 05 | Mask-Reveal | `05_Mask-Reveal/` | 6 | **6 IDs implemented (Phase 6)** |
 | F / 06 | Blur-Focus | `06_Blur-Focus/` | 7 | catalog |
 | G / 07 | Depth-Parallax | `07_Depth-Parallax/` | 8 | catalog |
 | H / 08 | Overlay-Modal | `08_Overlay-Modal/` | 9 | **7 IDs implemented (Phase 9)** |
@@ -211,6 +211,19 @@ EvoCRM list / table rows — deal pipeline, contacts, activity. Reuses `saasDemo
 
 Plans: `core/transitions/staggerCascade.js`. JSX apply: select 2+ row layers (top of selection = first).
 
+### Phase 6 implemented IDs (Mask-Reveal family)
+
+EvoCRM screenshot / card iris. Native AE masks only — expansion + feather, no plugins, no bounce.
+
+- `EVT_MASK_CIRCLE` — **Mask Circle**. Soft circular reveal on a card (ellipse + expansion, target-aware). `EVT_MASK` aliases this ID.
+- `EVT_MASK_RECT` — **Mask Rect**. Rounded-rect expand / card crop reveal. `EVT_CARD_REVEAL` aliases this ID.
+- `EVT_MASK_SOFT_EDGE` — **Mask Soft Edge**. Feathered matte, no hard wipe.
+- `EVT_MASK_EXPAND` — **Mask Expand**. Mask expansion from center.
+- `EVT_REVEAL_IRIS` — **Reveal Iris**. Quiet iris on a screenshot (ellipse, SMOOTH, target-aware). `EVT_IRIS` / `EVT_SCREENSHOT` alias this ID.
+- `EVT_REVEAL_WIPE_SOFT` — **Reveal Wipe Soft**. Soft directional matte from bounds, not a bar wipe. `EVT_WIPE_FROM_BOUNDS` aliases this ID.
+
+Plans: `core/transitions/maskReveal.js`. JSX apply: select outgoing, then incoming — incoming gets the native mask.
+
 ### Phase 1–2 implemented IDs (UI Push family)
 
 - `EVT_UI_PUSH_LEFT` / `RIGHT` / `UP` / `DOWN` — **UI Push Left/Right/Up/Down**. Outgoing travels on axis; incoming enters from the opposite edge; anticipate opposite; settle overshoot capped.
@@ -276,6 +289,11 @@ Suggested prompt → ID mapping (later Phase 18):
 | “cascade out”, “collapse the tree” | `EVT_CASCADE_OUT` |
 | “fade the rows”, “opacity stagger” | `EVT_STAGGER_FADE` |
 | “soft wave”, “delay wave” | `EVT_WAVE_SOFT` |
+| “iris”, “screenshot reveal”, “circle mask” | `EVT_REVEAL_IRIS` or `EVT_MASK_CIRCLE` |
+| “card crop”, “rounded mask” | `EVT_MASK_RECT` |
+| “soft matte”, “feathered reveal” | `EVT_MASK_SOFT_EDGE` |
+| “expand the mask”, “from center” | `EVT_MASK_EXPAND` |
+| “wipe from the edge”, “soft wipe” | `EVT_REVEAL_WIPE_SOFT` |
 | “quiet”, “calm”, “expensive” | `SMOOTH` + `premium-smooth` or `soft-ui` |
 | “snappy”, “product” | `FAST` + `fast-product` |
 | “glitch / RGB / explode / spin” | **Refuse.** No such IDs. |
@@ -311,6 +329,7 @@ Catalog `sfx: []` (or a short list of hook ids) is metadata for a future sound p
 | `core/transitions/overlayModal.js` | Overlay-Modal dialog / sheet / dim / popover / toast |
 | `core/transitions/pageScreen.js` | Page-Screen IA push / fade / nav / tab |
 | `core/transitions/staggerCascade.js` | Stagger-Cascade list / card / wave |
+| `core/transitions/maskReveal.js` | Mask-Reveal iris / card crop / soft wipe |
 | `core/transitions/registry.js` | Catalog load / filter |
 | `transitions/Metadata/catalog.json` | Every planned `EVT_*` |
 | `ae/Evotechly Transitions.jsx` | Companion panel |
@@ -339,7 +358,7 @@ Do not: RGB split, glitch, lens flares, explosions, 360 spins, bounce loops, com
 
 1. AE is not in CI. Green tests ≠ soaked comps.
 2. JSX is a mirror, not a `require`.
-3. UI Push (15) + UI-Slide (8) + Scale-Zoom (8) + Shared-Element (6) + Overlay-Modal (7) + Page-Screen (6) + Stagger-Cascade (6) implemented. Other catalog rows are metadata.
+3. UI Push (15) + UI-Slide (8) + Scale-Zoom (8) + Shared-Element (6) + Overlay-Modal (7) + Page-Screen (6) + Stagger-Cascade (6) + Mask-Reveal (6) implemented. Other catalog rows are metadata.
 4. No `.ffx`, `.aep`, or vendored plugins.
 5. No SFX audio.
 6. Target zoom and popover bounds are math; JSX apply reads selected-layer bounds.

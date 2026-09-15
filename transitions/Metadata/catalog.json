@@ -1,5 +1,5 @@
 {
-  "version": "phase-13",
+  "version": "phase-6",
   "style": "premium-saas",
   "aspectRatios": [
     "16:9",
@@ -8,7 +8,7 @@
     "4:5"
   ],
   "generated": "transitions/Metadata/catalog.json",
-  "note": "Phase 13 implements the Stagger-Cascade family (plus Phase 2–4 UI Push / UI-Slide / Scale-Zoom, Phase 9 Overlay-Modal, Phase 10 Page-Screen, and Phase 12 Shared-Element). Other rows are metadata for later phases and AI pairing.",
+  "note": "Phase 6 implements the Mask-Reveal family (plus Phase 2–4 UI Push / UI-Slide / Scale-Zoom, Phase 9 Overlay-Modal, Phase 10 Page-Screen, Phase 12 Shared-Element, and Phase 13 Stagger-Cascade). Crossfade stays catalog-only. Other rows are metadata for later phases and AI pairing.",
   "transitions": [
     {
       "id": "EVT_UI_PUSH_LEFT",
@@ -783,9 +783,12 @@
         "1:1",
         "4:5"
       ],
-      "sfx": [],
+      "sfx": [
+        "ui-soft-in"
+      ],
       "phase": 6,
-      "implemented": false
+      "implemented": true,
+      "name": "Mask Circle"
     },
     {
       "id": "EVT_MASK_RECT",
@@ -801,9 +804,12 @@
         "1:1",
         "4:5"
       ],
-      "sfx": [],
+      "sfx": [
+        "ui-soft-in"
+      ],
       "phase": 6,
-      "implemented": false
+      "implemented": true,
+      "name": "Mask Rect"
     },
     {
       "id": "EVT_MASK_SOFT_EDGE",
@@ -819,9 +825,12 @@
         "1:1",
         "4:5"
       ],
-      "sfx": [],
+      "sfx": [
+        "ui-cross"
+      ],
       "phase": 6,
-      "implemented": false
+      "implemented": true,
+      "name": "Mask Soft Edge"
     },
     {
       "id": "EVT_MASK_EXPAND",
@@ -837,9 +846,12 @@
         "1:1",
         "4:5"
       ],
-      "sfx": [],
+      "sfx": [
+        "ui-soft-in"
+      ],
       "phase": 6,
-      "implemented": false
+      "implemented": true,
+      "name": "Mask Expand"
     },
     {
       "id": "EVT_REVEAL_IRIS",
@@ -855,9 +867,12 @@
         "1:1",
         "4:5"
       ],
-      "sfx": [],
+      "sfx": [
+        "ui-soft-in"
+      ],
       "phase": 6,
-      "implemented": false
+      "implemented": true,
+      "name": "Reveal Iris"
     },
     {
       "id": "EVT_REVEAL_WIPE_SOFT",
@@ -873,9 +888,12 @@
         "1:1",
         "4:5"
       ],
-      "sfx": [],
+      "sfx": [
+        "ui-cross"
+      ],
       "phase": 6,
-      "implemented": false
+      "implemented": true,
+      "name": "Reveal Wipe Soft"
     },
     {
       "id": "EVT_BLUR_FOCUS",

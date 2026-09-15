@@ -1,10 +1,10 @@
 #target aftereffects
 /*
-  Evotechly Transitions — companion ScriptUI (Transition Kit Phase 13 Stagger-Cascade + Phase 10 Page-Screen + Phase 9 Overlay-Modal + Phase 12 Shared-Element + SaaS Assets P1 + P2b Charts/Devices).
+  Evotechly Transitions — companion ScriptUI (Transition Kit Phase 6 Mask-Reveal + Phase 13 Stagger-Cascade + Phase 10 Page-Screen + Phase 9 Overlay-Modal + Phase 12 Shared-Element + SaaS Assets P1 + P2b Charts/Devices).
   Window → Evotechly Transitions.
   Tabs: Transitions / Text / UI / Cursor / Charts.
   Numbers mirrored from core/transitions/*.js and core/assets/*.js — Node is source of truth.
-  ExtendScript cannot require Node. Apply UI Push + UI-Slide + Scale-Zoom + Shared-Element + Overlay-Modal + Page-Screen + Stagger-Cascade, P1 native assets, and P2b chart/device plates here.
+  ExtendScript cannot require Node. Apply UI Push + UI-Slide + Scale-Zoom + Shared-Element + Overlay-Modal + Page-Screen + Stagger-Cascade + Mask-Reveal, P1 native assets, and P2b chart/device plates here.
   Native AE only. No .ffx / .aep / vendor plugins.
   Does not replace Evotechly Motion OS v0.32 (~297 KB).
 */
@@ -74,7 +74,13 @@
     EVT_CASCADE_IN: 1,
     EVT_CASCADE_OUT: 1,
     EVT_STAGGER_FADE: 1,
-    EVT_WAVE_SOFT: 1
+    EVT_WAVE_SOFT: 1,
+    EVT_MASK_CIRCLE: 1,
+    EVT_MASK_RECT: 1,
+    EVT_MASK_SOFT_EDGE: 1,
+    EVT_MASK_EXPAND: 1,
+    EVT_REVEAL_IRIS: 1,
+    EVT_REVEAL_WIPE_SOFT: 1
   };
   /* influence pairs match core/transitions/easing.js + polish.js */
   var EASE = {
@@ -126,12 +132,12 @@
     { id: "EVT_FADE_DIP", category: "Crossfade", duration: "FAST", intensity: "standard", implemented: false, phase: 5, bestUse: "Brief dip to brand fill, then in" },
     { id: "EVT_DISSOLVE_UI", category: "Crossfade", duration: "STANDARD", intensity: "subtle", implemented: false, phase: 5, bestUse: "UI plate dissolve, keep chrome" },
     { id: "EVT_DISSOLVE_COLOR", category: "Crossfade", duration: "STANDARD", intensity: "subtle", implemented: false, phase: 5, bestUse: "Tinted dissolve, one brand color" },
-    { id: "EVT_MASK_CIRCLE", category: "Mask-Reveal", duration: "STANDARD", intensity: "standard", implemented: false, phase: 6, bestUse: "Soft circular reveal on a card" },
-    { id: "EVT_MASK_RECT", category: "Mask-Reveal", duration: "STANDARD", intensity: "standard", implemented: false, phase: 6, bestUse: "Rounded-rect expand" },
-    { id: "EVT_MASK_SOFT_EDGE", category: "Mask-Reveal", duration: "SMOOTH", intensity: "subtle", implemented: false, phase: 6, bestUse: "Feathered matte, no hard wipe" },
-    { id: "EVT_MASK_EXPAND", category: "Mask-Reveal", duration: "STANDARD", intensity: "standard", implemented: false, phase: 6, bestUse: "Mask expansion from center" },
-    { id: "EVT_REVEAL_IRIS", category: "Mask-Reveal", duration: "SMOOTH", intensity: "subtle", implemented: false, phase: 6, bestUse: "Quiet iris on a screenshot" },
-    { id: "EVT_REVEAL_WIPE_SOFT", category: "Mask-Reveal", duration: "STANDARD", intensity: "subtle", implemented: false, phase: 6, bestUse: "Soft directional matte, not a bar wipe" },
+    { id: "EVT_MASK_CIRCLE", name: "Mask Circle", category: "Mask-Reveal", duration: "STANDARD", intensity: "standard", implemented: true, phase: 6, bestUse: "Soft circular reveal on a card" },
+    { id: "EVT_MASK_RECT", name: "Mask Rect", category: "Mask-Reveal", duration: "STANDARD", intensity: "standard", implemented: true, phase: 6, bestUse: "Rounded-rect expand" },
+    { id: "EVT_MASK_SOFT_EDGE", name: "Mask Soft Edge", category: "Mask-Reveal", duration: "SMOOTH", intensity: "subtle", implemented: true, phase: 6, bestUse: "Feathered matte, no hard wipe" },
+    { id: "EVT_MASK_EXPAND", name: "Mask Expand", category: "Mask-Reveal", duration: "STANDARD", intensity: "standard", implemented: true, phase: 6, bestUse: "Mask expansion from center" },
+    { id: "EVT_REVEAL_IRIS", name: "Reveal Iris", category: "Mask-Reveal", duration: "SMOOTH", intensity: "subtle", implemented: true, phase: 6, bestUse: "Quiet iris on a screenshot" },
+    { id: "EVT_REVEAL_WIPE_SOFT", name: "Reveal Wipe Soft", category: "Mask-Reveal", duration: "STANDARD", intensity: "subtle", implemented: true, phase: 6, bestUse: "Soft directional matte, not a bar wipe" },
     { id: "EVT_BLUR_FOCUS", category: "Blur-Focus", duration: "STANDARD", intensity: "subtle", implemented: false, phase: 7, bestUse: "Outgoing blurs as incoming sharpens" },
     { id: "EVT_BLUR_PULL", category: "Blur-Focus", duration: "SMOOTH", intensity: "subtle", implemented: false, phase: 7, bestUse: "Focus pull toward the incoming plate" },
     { id: "EVT_BLUR_CROSS", category: "Blur-Focus", duration: "STANDARD", intensity: "subtle", implemented: false, phase: 7, bestUse: "Mid-cross blur, both plates" },
@@ -1887,6 +1893,144 @@
       phases: ph
     };
   }
+  function isMaskId(id) {
+    return id === "EVT_MASK_CIRCLE" || id === "EVT_MASK_RECT" || id === "EVT_MASK_SOFT_EDGE" || id === "EVT_MASK_EXPAND" || id === "EVT_REVEAL_IRIS" || id === "EVT_REVEAL_WIPE_SOFT";
+  }
+  function maskSpecForId(id) {
+    if (id === "EVT_MASK_CIRCLE") return { type: "ellipse", feather: 10, start: -160, mid: -48, end: 0, outMid: 64, profile: null, targetAware: 1, defaultW: 360, defaultH: 240 };
+    if (id === "EVT_MASK_RECT") return { type: "roundedRect", feather: 6, start: -140, mid: -36, end: 0, outMid: 58, profile: null };
+    if (id === "EVT_MASK_SOFT_EDGE") return { type: "roundedRect", feather: 28, start: -120, mid: -32, end: 0, outMid: 78, profile: "soft" };
+    if (id === "EVT_MASK_EXPAND") return { type: "ellipse", feather: 8, start: -180, mid: -50, end: 0, outMid: 52, profile: null };
+    if (id === "EVT_REVEAL_IRIS") return { type: "ellipse", feather: 14, start: -280, mid: -90, end: 0, outMid: 88, profile: "soft", targetAware: 1, defaultW: 960, defaultH: 540 };
+    return { type: "roundedRect", feather: 18, start: -200, mid: -56, end: 0, outMid: 70, profile: null, wipe: 1, shift: 80 };
+  }
+  function maskExpansionScale(spec, layer, t0) {
+    var rect, cover, base, scale;
+    if (!spec.targetAware) return 1;
+    try {
+      rect = layer.sourceRectAtTime(t0, false);
+      cover = Math.max(rect.width, rect.height);
+      base = Math.max(spec.defaultW, spec.defaultH);
+      scale = cover / base;
+      if (scale < 0.6) return 0.6;
+      if (scale > 2.4) return 2.4;
+      return r4(scale);
+    } catch (e) {
+      return 1;
+    }
+  }
+  function planMaskReveal(id, dir, frames, fps) {
+    var spec = maskSpecForId(id);
+    var ph = phaseFrames(frames, spec.profile);
+    var start = spec.start;
+    var mid = spec.mid;
+    var a = axisOf(dir);
+    var mask = {
+      type: spec.type,
+      feather: spec.feather,
+      start: start,
+      mid: mid,
+      end: spec.end,
+      wipe: spec.wipe ? 1 : 0,
+      shift: spec.shift || 0,
+      dir: dir,
+      expansion: [
+        { t: secondsFromFrames(ph.start, fps), value: start },
+        { t: secondsFromFrames(ph.anticipate, fps), value: start },
+        { t: secondsFromFrames(ph.mid, fps), value: mid },
+        { t: secondsFromFrames(ph.end, fps), value: spec.end }
+      ]
+    };
+    if (spec.wipe) {
+      mask.shiftKeys = [
+        { t: secondsFromFrames(ph.start, fps), x: a.x * spec.shift, y: a.y * spec.shift },
+        { t: secondsFromFrames(ph.anticipate, fps), x: a.x * spec.shift, y: a.y * spec.shift },
+        { t: secondsFromFrames(ph.mid, fps), x: a.x * spec.shift * 0.28, y: a.y * spec.shift * 0.28 },
+        { t: secondsFromFrames(ph.end, fps), x: 0, y: 0 }
+      ];
+    }
+    return {
+      outgoing: [
+        key(ph.start, fps, 0, 0, 100, 100, 0, "anticipate"),
+        key(ph.anticipate, fps, 0, 0, 100, 100, 0, "action"),
+        key(ph.mid, fps, 0, 0, 100, spec.outMid, 0, "crossover"),
+        key(ph.end, fps, 0, 0, 100, 0, 0, "done")
+      ],
+      incoming: [
+        key(ph.start, fps, 0, 0, 100, 100, 0, "anticipate"),
+        key(ph.anticipate, fps, 0, 0, 100, 100, 0, "action"),
+        key(ph.mid, fps, 0, 0, 100, 100, 0, "crossover"),
+        key(ph.settle, fps, 0, 0, 100, 100, 0, "settle"),
+        key(ph.end, fps, 0, 0, 100, 100, 0, "done")
+      ],
+      phases: ph,
+      mask: mask
+    };
+  }
+  function setEllipseMaskShape(mask, cx, cy, rx, ry) {
+    var shape = new Shape();
+    var k = 0.552284749831;
+    shape.vertices = [[cx, cy - ry], [cx + rx, cy], [cx, cy + ry], [cx - rx, cy]];
+    shape.inTangents = [[-rx * k, 0], [0, -ry * k], [rx * k, 0], [0, ry * k]];
+    shape.outTangents = [[rx * k, 0], [0, ry * k], [-rx * k, 0], [0, -ry * k]];
+    shape.closed = true;
+    mask.property("ADBE Mask Shape").setValue(shape);
+    return shape;
+  }
+  function setRectMaskShape(mask, left, top, w, h) {
+    var shape = new Shape();
+    shape.vertices = [[left, top], [left + w, top], [left + w, top + h], [left, top + h]];
+    shape.inTangents = [[0, 0], [0, 0], [0, 0], [0, 0]];
+    shape.outTangents = [[0, 0], [0, 0], [0, 0], [0, 0]];
+    shape.closed = true;
+    mask.property("ADBE Mask Shape").setValue(shape);
+    return shape;
+  }
+  function translateShape(shape, dx, dy) {
+    var next = new Shape();
+    var i, v;
+    next.vertices = [];
+    next.inTangents = [];
+    next.outTangents = [];
+    for (i = 0; i < shape.vertices.length; i++) {
+      v = shape.vertices[i];
+      next.vertices.push([v[0] + dx, v[1] + dy]);
+      next.inTangents.push(shape.inTangents[i]);
+      next.outTangents.push(shape.outTangents[i]);
+    }
+    next.closed = true;
+    return next;
+  }
+  function applyNativeMask(layer, mask, t0, ease, scale) {
+    var m, exp, rect, cx, cy, rx, ry, base, i, path, s;
+    if (!mask) return;
+    scale = scale == null ? 1 : scale;
+    try {
+      m = layer.Masks.addProperty("ADBE Mask Atom");
+      m.name = "EVO_MASK_REVEAL";
+      try { m.maskMode = MaskMode.ADD; } catch (e0) {}
+      try { rect = layer.sourceRectAtTime(t0, false); } catch (e1) { rect = { left: -100, top: -100, width: 200, height: 200 }; }
+      cx = rect.left + rect.width / 2;
+      cy = rect.top + rect.height / 2;
+      rx = rect.width / 2;
+      ry = rect.height / 2;
+      if (mask.type === "ellipse") base = setEllipseMaskShape(m, cx, cy, rx, ry);
+      else base = setRectMaskShape(m, rect.left, rect.top, rect.width, rect.height);
+      try { m.property("ADBE Mask Feather").setValue([mask.feather, mask.feather]); } catch (e2) {}
+      exp = m.property("ADBE Mask Offset");
+      if (!exp) exp = m.property("Mask Expansion");
+      for (i = 0; i < mask.expansion.length; i++) exp.setValueAtTime(t0 + mask.expansion[i].t, mask.expansion[i].value * scale);
+      applyEase(exp, ease);
+      if (mask.shiftKeys && mask.shiftKeys.length) {
+        path = m.property("ADBE Mask Shape");
+        for (i = 0; i < mask.shiftKeys.length; i++) {
+          s = mask.shiftKeys[i];
+          path.setValueAtTime(t0 + s.t, translateShape(base, s.x, s.y));
+        }
+        applyEase(path, ease);
+      }
+    } catch (e) {}
+  }
   function isStaggerId(id) {
     return id === "EVT_STAGGER_CARDS" || id === "EVT_STAGGER_LIST" || id === "EVT_CASCADE_IN" || id === "EVT_CASCADE_OUT" || id === "EVT_STAGGER_FADE" || id === "EVT_WAVE_SOFT";
   }
@@ -2009,6 +2153,7 @@
     if (id === "EVT_CASCADE_OUT") return planCascadeOut(dir, frames, fps);
     if (id === "EVT_STAGGER_FADE") return planStaggerFade(frames, fps);
     if (id === "EVT_WAVE_SOFT") return planWaveSoft(dir, frames, fps);
+    if (isMaskId(id)) return planMaskReveal(id, dir, frames, fps);
     return planDirectional(dir, frames, fps, comp);
   }
   function defaultDirForId(id) {
@@ -2055,7 +2200,7 @@
     id = remapId(row.id, dir);
     row = findCatalog(id) || row;
     if (!row.implemented) {
-      alert(row.id + " is catalogued for Phase " + row.phase + ".\nPhase 13 applies Stagger-Cascade (plus UI Push / UI-Slide / Scale-Zoom / Shared-Element / Overlay-Modal / Page-Screen).\nSee docs/TRANSITION_PHASES.md.");
+      alert(row.id + " is catalogued for Phase " + row.phase + ".\nPhase 6 applies Mask-Reveal (plus UI Push / UI-Slide / Scale-Zoom / Shared-Element / Overlay-Modal / Page-Screen / Stagger-Cascade).\nSee docs/TRANSITION_PHASES.md.");
       return;
     }
     if (sel.length < 2) {
@@ -2080,6 +2225,7 @@
       } else {
         applyLayerKeys(sel[0], plan.outgoing, t0, ease);
         applyLayerKeys(sel[1], plan.incoming, t0, ease);
+        if (plan.mask) applyNativeMask(sel[1], plan.mask, t0, ease, maskExpansionScale(maskSpecForId(id), sel[1], t0));
       }
       addMarker(comp, t0 + secondsFromFrames(plan.phases.start, fps), "EVT_SFX_ANTICIPATE", "sfx:ui-soft-in");
       addMarker(comp, t0 + secondsFromFrames(plan.phases.anticipate, fps), "EVT_SFX_ACTION", "sfx:ui-whoosh-soft");
@@ -2122,7 +2268,7 @@
     win.spacing = 8;
     win.margins = 10;
     win.add("statictext", undefined, "EVOTECHLY  ·  Transitions");
-    intro = win.add("statictext", undefined, "Phase 13 Stagger-Cascade + Phase 10 Page-Screen + Phase 9 Overlay-Modal + Phase 12 Shared-Element + Phase 4 Scale-Zoom + Phase 3 UI-Slide + Phase 2 UI Push + P1 native Text / UI / Cursor + P2b Charts / Devices. Catalog is searchable. Companion to Motion OS — does not replace v0.32. Node is source of truth; this panel mirrors apply numbers.", { multiline: true });
+    intro = win.add("statictext", undefined, "Phase 6 Mask-Reveal + Phase 13 Stagger-Cascade + Phase 10 Page-Screen + Phase 9 Overlay-Modal + Phase 12 Shared-Element + Phase 4 Scale-Zoom + Phase 3 UI-Slide + Phase 2 UI Push + P1 native Text / UI / Cursor + P2b Charts / Devices. Catalog is searchable. Companion to Motion OS — does not replace v0.32. Node is source of truth; this panel mirrors apply numbers.", { multiline: true });
     intro.characters = 46;
 
     g = win.add("group");

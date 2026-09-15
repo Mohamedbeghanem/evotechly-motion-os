@@ -1,6 +1,6 @@
 # Transition Kit — phase roadmap
 
-Status after this PR: **Phase 0–4, Phase 9, Phase 10, Phase 12, and Phase 13 are done.** Stagger-Cascade is the EvoCRM list/table-row family (deal pipeline, contacts, activity). Page-Screen is the IA family (dashboard → page, forward/back, tab content). Overlay-Modal is the dialog family. Shared-Element is the full bounds-match family (not mesh). Later phases are catalogued, not implemented. Charts / device plates are **P2b SaaS assets** (not a kit phase). Crossfade stays catalog-only — `PAGE_FADE` / `TAB_CROSS` already own dissolves. Highest-ROI kit leftovers: **Mask-Reveal** (Phase 6) or **Micro** (Phase 17).
+Status after this PR: **Phase 0–4, Phase 6, Phase 9, Phase 10, Phase 12, and Phase 13 are done.** Mask-Reveal is the EvoCRM screenshot / card iris family (native AE masks, no plugins). Stagger-Cascade is the list/table-row family. Page-Screen is the IA family. Overlay-Modal is the dialog family. Shared-Element is the full bounds-match family (not mesh). Later phases are catalogued, not implemented. Charts / device plates are **P2b SaaS assets** (not a kit phase). Crossfade stays catalog-only — `PAGE_FADE` / `TAB_CROSS` already own dissolves. Highest-ROI kit leftover: **Micro** (Phase 17 chrome hover/press not already in P1 UI).
 
 | Phase | Job | Status |
 |---|---|---|
@@ -10,7 +10,7 @@ Status after this PR: **Phase 0–4, Phase 9, Phase 10, Phase 12, and Phase 13 a
 | **3** | UI-Slide card family (card / panel / drawer / sheet / stack / peek) | **done** |
 | **4** | Scale-Zoom family + JSX apply for `planTargetZoom` + `EVT_SHARED_CARD` | **done** |
 | 5 | Crossfade family | planned |
-| 6 | Mask-Reveal family (native masks, no plugins) | planned |
+| **6** | Mask-Reveal family (native masks, no plugins) | **done** |
 | 7 | Blur-Focus family | planned |
 | 8 | Depth-Parallax family | planned |
 | **9** | Overlay-Modal family (modal / sheet / dim / popover / toast) | **done** |
@@ -80,6 +80,17 @@ Status after this PR: **Phase 0–4, Phase 9, Phase 10, Phase 12, and Phase 13 a
 - Registry: native `sourceType` rows, `commercialUse: true`
 - Tests: deterministic plans, unique IDs, implemented flags, axis / scale math
 - Charts / device plates are **P2b owned** (`core/assets/chartsDevices.js` + Charts tab) — not a Transition Kit family
+
+## Phase 6 — done
+
+- `core/transitions/maskReveal.js` — `EVT_MASK_CIRCLE` / `MASK_RECT` / `MASK_SOFT_EDGE` / `MASK_EXPAND` / `REVEAL_IRIS` / `REVEAL_WIPE_SOFT`
+- Native AE masks only (`ADBE Mask Offset` expansion + feather). Ellipse iris, rounded-rect card crop, wipe-from-bounds. No bounce / overshoot / plugins
+- EvoCRM paths: screenshot iris, card crop reveal, soft matte, directional bounds wipe
+- Catalog `implemented:true` + names on all 6 Mask-Reveal IDs (`phase: 6`)
+- JSX mirrors apply math in `ae/Evotechly Transitions.jsx` Transitions tab (incoming gets the native mask)
+- Registry: native `sourceType` rows, `commercialUse: true`
+- Tests: deterministic plans, unique IDs, implemented flags, expansion / feather / wipe-shift math
+- Charts / device plates are **P2b owned** (`core/assets/chartsDevices.js` + Charts tab) — not a Transition Kit family. Crossfade stays catalog-only
 
 ## Phase 13 — done
 

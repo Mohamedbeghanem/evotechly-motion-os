@@ -69,7 +69,7 @@ P1 KEEP ID rows (all **OWNED**, implemented):
 | Verdict | **KEEP** |
 | Score | **96** (20+25+15+15+10+10+1) — vendor risk n/a, tiny “we must not drift JSX” residual |
 | Downloaded? | N/A — already in repo (`core/transitions`, catalog, `ae/Evotechly Transitions.jsx`) |
-| Notes | `sourceType: native`, `commercialUse: true`. Full UI Push family (Phase 2) + UI-Slide card family (Phase 3) + Scale-Zoom (Phase 4) + Shared-Element (Phase 12) + Overlay-Modal (Phase 9) + Page-Screen (Phase 10) + **Stagger-Cascade (Phase 13)**. Other families catalog-only. |
+| Notes | `sourceType: native`, `commercialUse: true`. Full UI Push family (Phase 2) + UI-Slide card family (Phase 3) + Scale-Zoom (Phase 4) + Shared-Element (Phase 12) + Overlay-Modal (Phase 9) + Page-Screen (Phase 10) + Stagger-Cascade (Phase 13) + **Mask-Reveal (Phase 6)**. Other families catalog-only. |
 
 Phase 3 KEEP ID rows (all **OWNED**, implemented):
 
@@ -96,6 +96,10 @@ Phase 10 KEEP ID rows (all **OWNED**, implemented):
 Phase 13 KEEP ID rows (all **OWNED**, implemented):
 
 - Stagger: `EVT_STAGGER_CARDS`, `EVT_STAGGER_LIST`, `EVT_CASCADE_IN`, `EVT_CASCADE_OUT`, `EVT_STAGGER_FADE`, `EVT_WAVE_SOFT`
+
+Phase 6 KEEP ID rows (all **OWNED**, implemented):
+
+- Mask: `EVT_MASK_CIRCLE`, `EVT_MASK_RECT`, `EVT_MASK_SOFT_EDGE`, `EVT_MASK_EXPAND`, `EVT_REVEAL_IRIS`, `EVT_REVEAL_WIPE_SOFT`
 
 ### Lucide curated SVGs
 
@@ -258,7 +262,7 @@ Phase 13 KEEP ID rows (all **OWNED**, implemented):
 |---|---|---|---|
 | P2b native charts / devices | KEEP | 95 | Yes (`core/assets/chartsDevices.js` + registry) |
 | P1 native text / UI / cursor | KEEP | 95 | Yes (`core/assets` + registry) |
-| Transition Kit native (Push + Slide + Zoom + Shared + Overlay) | KEEP | 96 | Yes (Motion OS) |
+| Transition Kit native (Push + Slide + Zoom + Shared + Overlay + Mask) | KEEP | 96 | Yes (Motion OS) |
 | Lucide curated | KEEP | 92 | Yes (`ThirdParty/lucide`) |
 | Phosphor / Heroicons | REBUILD | 88 | No |
 | Mixkit Free SFX | KEEP local / REJECT zip | 74 | No |
